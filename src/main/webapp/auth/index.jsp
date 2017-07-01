@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="styles.css" rel="stylesheet">
+    <link href="../styles.css" rel="stylesheet">
 
     <!-- Put this script tag to the <head> of your page -->
     <script type="text/javascript" src="//vk.com/js/api/openapi.js?146"></script>
@@ -23,7 +23,6 @@
 <body>
 
 
-
 <!-- Put this div tag to the place, where Auth block will be -->
 <!--table width="100%" height="100%" border="5">
 <tr height="100%"><td align="center" valign="center" height="100%"> Пожалуйста, войдите через VK:<BR-->
@@ -31,7 +30,7 @@
 <div id="vk_auth" class="center-div"></div>
 
 <script type="text/javascript">
-    VK.Widgets.Auth("vk_auth", {authUrl: '/vkcheck'});
+    VK.Widgets.Auth("vk_auth", {authUrl: '/verify'});
 </script>
 <!--/td></tr>
 </table-->
