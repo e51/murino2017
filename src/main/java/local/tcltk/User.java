@@ -140,11 +140,11 @@ public class User {
             result = false;
         }
 
-        if (section <=0) {
+        if (section <= 0) {
             result = false;
         }
 
-        if (floor <=0 || floor > 12) {
+        if (floor <= 0 || floor > 12) {
             result = false;
         }
 

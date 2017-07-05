@@ -10,20 +10,20 @@
       based on the recommendations of the Application Developer's Guide.
   </description>
 
-    <servlet>
+    <!--servlet>
         <servlet-name>engine</servlet-name>
         <servlet-class>local.tcltk.IndexPage</servlet-class>
-    </servlet>
+    </servlet-->
 
     <servlet>
         <servlet-name>verify</servlet-name>
         <servlet-class>local.tcltk.VKCheckServlet</servlet-class>
     </servlet>
 
-  <servlet-mapping>
+  <!--servlet-mapping>
     <servlet-name>engine</servlet-name>
     <url-pattern>/show</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping-->
 
 
   <servlet-mapping>

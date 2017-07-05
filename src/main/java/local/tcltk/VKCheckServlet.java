@@ -1,7 +1,7 @@
 package local.tcltk;
 
 import local.tcltk.model.DatabaseManager;
-import org.json.simple.JSONArray;
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -22,6 +22,8 @@ import static local.tcltk.HTMLHelper.getVKResponse;
  */
 @WebServlet(name = "VKCheckServlet")
 public class VKCheckServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(VKCheckServlet.class);
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
@@ -32,20 +34,25 @@ public class VKCheckServlet extends HttpServlet {
         String vk_id = null;
         String code = null;
 
+//        System.out.println("[vkcheck] Start");
+        logger.info("[vkcheck] Start");
+
         HttpSession session = request.getSession();
 //        user = (User) session.getAttribute("user");
 
         String error = request.getParameter("error");
 
-        System.out.println(error);
+//        System.out.println("[vkcheck] request.error: " + error);
+        logger.info("[vkcheck] request.error: " + error);
+
         if (error == null) {
-            System.out.println("no errors occured");
+            logger.info("[vkcheck] no errors occured");
         }
 
         if (error != null) {
             // User cancelled auth - redirect to the index page
 
-            System.out.println("REDIRECTING");
+            logger.info("[vkcheck] auth error - Redirecting to index");
 
             String contextPath = SITE_URL;
             String contextParams = "";
@@ -82,7 +89,7 @@ public class VKCheckServlet extends HttpServlet {
 //        out.println("<a href='http://sosed.spb.ru/'>sosed.spb.ru</a>");
 
         code = request.getParameter("code");
-        System.out.println("code: " + code);
+        logger.info("[vkcheck] code: " + code);
 
 
         // Variant 1 - use VK API
@@ -120,16 +127,17 @@ public class VKCheckServlet extends HttpServlet {
 
         // Variant 2 - use web + json
 
+        // по коду необходимо запросить токен у vk
         String contextParams = "?client_id=" + VK_APP_ID +
                 "&client_secret=" + VK_CLIENT_SECRET +
                 "&redirect_uri=" + VK_REDIRECT_URI +
                 "&code=" + code;
-        String query = VK_GET_TOKEN_URL + contextParams;
 
-        String json = getVKResponse(query);
+        String json = getVKResponse(VK_GET_TOKEN_URL + contextParams);
 
-        System.out.println(json);
+        logger.info("[vkcheck] VK response json: " + json);
 
+        // for example:
         //{"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, '''user_id":66748}
         //{"error":"invalid_grant","error_description":"Code is expired."}
 
@@ -139,15 +147,27 @@ public class VKCheckServlet extends HttpServlet {
             obj = parser.parse(json);
         } catch (ParseException e) {
             e.printStackTrace();
+
+            logger.error("[vkcheck] ParseException - redirecting to index");
+            response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+            return;
+
         }
         JSONObject vkResponse = (JSONObject) obj;
+
+        error = String.valueOf(vkResponse.get("error"));
+        if (!"null".equals(error)) {
+            // Ошибка при получении токена, код просрочен
+            logger.info("[vkcheck] Code is expired - redirecting to index. error: " + error);
+            response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+            return;
+        }
 
         accessToken = String.valueOf(vkResponse.get("access_token"));
         vk_id = String.valueOf(vkResponse.get("user_id"));
 
-        System.out.println("access_token: " + accessToken);
-        System.out.println("user_id: " + vk_id);
-        System.out.println();
+        logger.info("[vkcheck] access_token: " + accessToken);
+        logger.info("[vkcheck] user_id: " + vk_id);
 
 
 //        String contextPath = "https://oauth.vk.com/access_token";
@@ -169,37 +189,35 @@ public class VKCheckServlet extends HttpServlet {
         // TODO: get vk id
 //        String vk_id = request.getParameter("uid");
 //        String vk_id = String.valueOf(actor.getId());
-        if (vk_id == null) {
-            System.out.println("[verify] vk_id == null");
+        if ("null".equals(vk_id)) {
+            logger.info("[verify] vk_id == null. Redirecting to index");
 //            String contextPath = "http://sosed.spb.ru/";
 //            String contextParams = "";
             response.sendRedirect(response.encodeRedirectURL(SITE_URL));
-
+            return;
         }
 
-        // TODO: check hash
-
-
+        // TODO: check hash - for variant 1 need to check hash
 
 
         // TODO: DB query
 
-
-        System.out.println("[verify] else - " + vk_id);
         // vk_id is ok (present)
         // looking for user data in the Database
 
+        logger.info("[vkcheck] get user from DB");
+        // get user with such id from DB
         user = DatabaseManager.getUserFromDB(vk_id);
         if (user == null) {
-            // no user found - make a new user
-            System.out.println("[verify] no user found in DB");
+            // no user found - make a new one
+            logger.info("[verify] no user found in DB. Creating a new user.");
 
             // create object with vk_id and default fields
             user = new User(vk_id, 0, 0, 0, 0);
 
-            System.out.println("[verify] " + user);
-
             DatabaseManager.createNewUserDB(user);
+
+            logger.info("[verify] User created: " + user);
         }
 
         user.setToken(accessToken);
@@ -208,22 +226,25 @@ public class VKCheckServlet extends HttpServlet {
         session.setAttribute("user", user);
 
 
+/*
+        // test sending message
         contextParams = "messages.send?user_id=" + user.getVk_id() +
                 "&message=test" +
-                "&access_token=" + user.getToken() +
+                "&access_token=" + MSG_TOKEN +
                 "&v=5.65";
 
-        json = getVKResponse(QUERY_URL + contextParams);
+        json = getVKResponse(VK_QUERY_URL + contextParams);
 
-        System.out.println(json);
+        System.out.println("[msg test]: " + json);
+*/
 
 
-
-        String contextPath = SITE_URL;
-        /*String */contextParams = "show?action=list";
+        logger.info("[vkcheck] Everything is OK. Redirecting to /show");
+        String contextPath = PROFILE_URL;
+        /*String */contextParams = "";
+//        String contextPath = SITE_URL;
+//        /*String */contextParams = "show?action=list";
         response.sendRedirect(response.encodeRedirectURL(contextPath + contextParams));
-
-
 
     }
 }

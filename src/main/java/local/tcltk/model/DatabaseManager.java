@@ -2,6 +2,7 @@ package local.tcltk.model;
 
 import local.tcltk.Constants;
 import local.tcltk.User;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.List;
  * Created by user on 24.06.2017.
  */
 public class DatabaseManager implements Constants {
+    private static final Logger logger = Logger.getLogger(DatabaseManager.class);
+
 //    private static DatabaseManage instance;
 
     /**
@@ -25,7 +28,7 @@ public class DatabaseManager implements Constants {
             Class.forName(JDBC_DRIVER);
 
             //STEP 3: Open a connection
-            System.out.println("Connecting to database...");
+//            System.out.println("Connecting to database...");
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
         }catch(SQLException se){
             //Handle errors for JDBC
@@ -50,17 +53,17 @@ public class DatabaseManager implements Constants {
 
         if (connection == null) {
             // error create connection
-            System.out.println("[INSERT] Error getting connection");
+            logger.info("[INSERT] Error getting connection");
             return;
         }
 
         try {
             //STEP 4: Execute a query
-            System.out.println("Creating INSERT statement...");
+            logger.info("Creating INSERT statement...");
             statement = connection.createStatement();
             String sql;
 
-            sql = "INSERT into neighbours (id, vk_id, building, section, floor, flat)" +
+            sql = "INSERT into " + TABLE_NAME + " (id, vk_id, building, section, floor, flat)" +
                     " VALUES (DEFAULT," +
                     " '" + user.getVk_id() + "'," +
                     " " + user.getBuilding() + "," +
@@ -70,7 +73,7 @@ public class DatabaseManager implements Constants {
 
             int num = statement.executeUpdate(sql); // -1 == ERROR!
 
-            System.out.println(num + " rows affected!");
+            logger.info(num + " rows affected!");
 
             //STEP 6: Clean-up environment
             statement.close();
@@ -95,7 +98,7 @@ public class DatabaseManager implements Constants {
                 se.printStackTrace();
             }//end finally try
         }//end try
-        System.out.println("INSERT finished");
+        logger.info("INSERT finished");
     }
 
     /**
@@ -114,11 +117,11 @@ public class DatabaseManager implements Constants {
 
         try {
             //STEP 4: Execute a query
-            System.out.println("Creating statement...");
+//            System.out.println("Creating statement...");
             statement = connection.createStatement();
             String sql;
 
-            sql = "UPDATE neighbours SET" +
+            sql = "UPDATE " + TABLE_NAME + " SET" +
                     " building = '" + user.getBuilding() + "'," +
                     " section = '" + user.getSection() + "'," +
                     " floor = '" + user.getFloor() + "'," +
@@ -127,7 +130,7 @@ public class DatabaseManager implements Constants {
 
             int num = statement.executeUpdate(sql);
 
-            System.out.println(num + " rows affected!");
+            logger.info(num + " rows affected!");
 
             //STEP 6: Clean-up environment
             statement.close();
@@ -152,7 +155,7 @@ public class DatabaseManager implements Constants {
                 se.printStackTrace();
             }//end finally try
         }//end try
-        System.out.println("UPDATE finished");
+        logger.info("UPDATE finished");
     }
 
     /**
@@ -176,11 +179,11 @@ public class DatabaseManager implements Constants {
 //            System.out.println("Creating statement...");
             statement = connection.createStatement();
             String sql;
-            sql = "SELECT * FROM neighbours WHERE vk_id = '" + lookingID + "'";
+            sql = "SELECT * FROM " + TABLE_NAME + " WHERE vk_id = '" + lookingID + "'";
 
             ResultSet rs = statement.executeQuery(sql);
 
-            System.out.println(rs.getWarnings());
+//            System.out.println("[getUserFromDB] warnings: " + rs.getWarnings());
 
             //STEP 5: Extract data from result set
             while(rs.next()){
@@ -195,7 +198,7 @@ public class DatabaseManager implements Constants {
                 int flat = rs.getInt("flat");
 
                 user = new User(vk_id, building, section, floor, flat);
-                System.out.println(user);
+                logger.info("[getUserFromDB] found user: " + user);
             }
             //STEP 6: Clean-up environment
             rs.close();
@@ -304,7 +307,7 @@ public class DatabaseManager implements Constants {
 //    }
 
     public static String getUsersCountByBuilding(int building) {
-        String sql = "SELECT COUNT(*) FROM neighbours WHERE" +
+        String sql = "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE" +
                 " building = " + building;
 
         String result = null;
@@ -325,14 +328,16 @@ public class DatabaseManager implements Constants {
             ResultSet rs = statement.executeQuery(sql);
 
 //            System.out.println(rs.getWarnings());
-            System.out.println(rs);
+            logger.info("[getUsersCountByBuilding] rs: " + rs);
             //STEP 5: Extract data from result set
             while(rs.next()){
+/*
                 System.out.println("********");
 //                System.out.println(rs.getInt(0));
                 System.out.println(rs.getInt(1));
                 System.out.println(rs.getInt("count"));
                 System.out.println("********");
+*/
 
                 result = String.valueOf(rs.getInt(1));
 

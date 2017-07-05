@@ -2,14 +2,10 @@ package local.tcltk;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.util.*;
-
-import static local.tcltk.Constants.QUERY_URL;
+import static local.tcltk.Constants.VK_QUERY_URL;
 import static local.tcltk.HTMLHelper.getVKResponse;
 
 /**
@@ -73,7 +69,7 @@ public class Solution {
         String queryParams = "users.get?user_id=6191031" +
                 "&fields=photo_50" +
                 "&v=5.52";
-        String query = QUERY_URL + queryParams;
+        String query = VK_QUERY_URL + queryParams;
 
         String json = getVKResponse(query);
         System.out.println(json);
