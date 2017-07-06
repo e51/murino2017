@@ -2,7 +2,6 @@ package local.tcltk;
 
 import local.tcltk.model.DatabaseManager;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -33,7 +32,7 @@ public class VKCheckServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = null;           // user object
+        User user = null;           // user object - create user after successful authentication
         String accessToken = null;  // user token from vk (not used actually?)
         String code = null;         // vk code for token request
         long vk_id = 0;             // vk user id
@@ -59,6 +58,7 @@ public class VKCheckServlet extends HttpServlet {
         code = request.getParameter("code");
         logger.info("[vkcheck] code: " + code);
 
+        // VK token request part - - - - - - - - -
         // Variant 2 - use web + json
         // use code for token request
         String contextParams = "?client_id=" + VK_APP_ID +
@@ -110,7 +110,7 @@ public class VKCheckServlet extends HttpServlet {
             return;
         }
 
-        // Database part ---
+        // Database part - - - - - - - - -
         // vk_id is ok (present and correct), looking for user data in the Database
         logger.info("[vkcheck] get user from DB");
         // get user with such id from DB
