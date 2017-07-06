@@ -14,31 +14,16 @@ import java.util.List;
 public class DatabaseManager implements Constants {
     private static final Logger logger = Logger.getLogger(DatabaseManager.class);
 
-//    private static DatabaseManage instance;
-
     /**
      * Get connection to the Database
      * @return Connection
      */
-    public static Connection getConnection() {
-        Connection connection = null;
+    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        //STEP 2: Register JDBC driver
+        Class.forName(JDBC_DRIVER);
 
-        try {
-            //STEP 2: Register JDBC driver
-            Class.forName(JDBC_DRIVER);
-
-            //STEP 3: Open a connection
-//            System.out.println("Connecting to database...");
-            connection = DriverManager.getConnection(DB_URL, USER, PASS);
-        }catch(SQLException se){
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(Exception e) {
-            //Handle errors for Class.forName
-            e.printStackTrace();
-        }
-
-        return connection;
+        //STEP 3: Open a connection
+        return DriverManager.getConnection(DB_URL, USER, PASS);
     }
 
 
@@ -48,58 +33,39 @@ public class DatabaseManager implements Constants {
      */
     public static void createNewUserDB(User user) {
 
-        Connection connection = DatabaseManager.getConnection();
-        Statement statement = null;
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
 
-        if (connection == null) {
-            // error create connection
-            logger.info("[INSERT] Error getting connection");
-            return;
-        }
+                //STEP 4: Execute a query
+                logger.info("Creating INSERT statement...");
 
-        try {
-            //STEP 4: Execute a query
-            logger.info("Creating INSERT statement...");
-            statement = connection.createStatement();
-            String sql;
+                String sql = "INSERT into " + TABLE_NAME + " (id, vk_id, building, section, floor, flat)" +
+                        " VALUES (DEFAULT," +
+                        " " + user.getVk_id() + "," +
+                        " " + user.getBuilding() + "," +
+                        " " + user.getSection() + "," +
+                        " " + user.getFloor() + "," +
+                        " " + user.getFlat() + ")";
 
-            sql = "INSERT into " + TABLE_NAME + " (id, vk_id, building, section, floor, flat)" +
-                    " VALUES (DEFAULT," +
-                    " '" + user.getVk_id() + "'," +
-                    " " + user.getBuilding() + "," +
-                    " " + user.getSection() + "," +
-                    " " + user.getFloor() + "," +
-                    " " + user.getFlat() + ")";
+                int num = statement.executeUpdate(sql); // -1 == ERROR!
 
-            int num = statement.executeUpdate(sql); // -1 == ERROR!
-
-            logger.info(num + " rows affected!");
-
-            //STEP 6: Clean-up environment
-            statement.close();
-            connection.close();
-        }catch(SQLException se){
+                logger.info(num + " rows affected!");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                logger.error("Error connection.createStatement()");
+            }
+        } catch (SQLException e) {
             //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(Exception e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }finally{
-            //finally block used to close resources
-            try{
-                if(statement!=null)
-                    statement.close();
-            }catch(SQLException se2){
-            }// nothing we can do
-            try{
-                if(connection!=null)
-                    connection.close();
-            }catch(SQLException se){
-                se.printStackTrace();
-            }//end finally try
-        }//end try
+        }
+
         logger.info("INSERT finished");
     }
+
+
 
     /**
      * Update a user database record
@@ -107,54 +73,32 @@ public class DatabaseManager implements Constants {
      */
     public static void updateUserInDB(User user) {
 
-        Connection connection = DatabaseManager.getConnection();
-        Statement statement = null;
+        try (Connection connection = DatabaseManager.getConnection()) {
+//        if (connection == null) {
+//            // error create connection
+//            return;
+//        }
+            // Может ли connection быть null?
 
-        if (connection == null) {
-            // error create connection
-            return;
-        }
+            try (Statement statement = connection.createStatement()) {
+                String sql = "UPDATE " + TABLE_NAME + " SET" +
+                        " building = " + user.getBuilding() + "," +
+                        " section = " + user.getSection() + "," +
+                        " floor = " + user.getFloor() + "," +
+                        " flat = " + user.getFlat() + "," +
+                        " updates = " + user.getUpdates() +
+                        " WHERE vk_id = " + user.getVk_id() + ";";
 
-        try {
-            //STEP 4: Execute a query
-//            System.out.println("Creating statement...");
-            statement = connection.createStatement();
-            String sql;
+                int num = statement.executeUpdate(sql);
 
-            sql = "UPDATE " + TABLE_NAME + " SET" +
-                    " building = '" + user.getBuilding() + "'," +
-                    " section = '" + user.getSection() + "'," +
-                    " floor = '" + user.getFloor() + "'," +
-                    " flat = '" + user.getFlat() + "'" +
-                    " WHERE vk_id = '" + user.getVk_id() + "';";
-
-            int num = statement.executeUpdate(sql);
-
-            logger.info(num + " rows affected!");
-
-            //STEP 6: Clean-up environment
-            statement.close();
-            connection.close();
-        }catch(SQLException se){
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(Exception e){
-            //Handle errors for Class.forName
+                logger.info(num + " rows affected!");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally{
-            //finally block used to close resources
-            try{
-                if(statement!=null)
-                    statement.close();
-            }catch(SQLException se2){
-            }// nothing we can do
-            try{
-                if(connection!=null)
-                    connection.close();
-            }catch(SQLException se){
-                se.printStackTrace();
-            }//end finally try
-        }//end try
+            logger.error("Error connection.createStatement()");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         logger.info("UPDATE finished");
     }
 
@@ -163,69 +107,43 @@ public class DatabaseManager implements Constants {
      * @param lookingID
      * @return User
      */
-    public static User getUserFromDB(String lookingID) {
+    public static User getUserFromDB(long lookingID) {
         User user = null;
 
-        Connection connection = DatabaseManager.getConnection();
-        Statement statement = null;
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                String sql = "SELECT * FROM " + TABLE_NAME + " WHERE vk_id = " + lookingID;
 
-        if (connection == null) {
-            // error create connection
-            return null;
-        }
-
-        try{
-            //STEP 4: Execute a query
-//            System.out.println("Creating statement...");
-            statement = connection.createStatement();
-            String sql;
-            sql = "SELECT * FROM " + TABLE_NAME + " WHERE vk_id = '" + lookingID + "'";
-
-            ResultSet rs = statement.executeQuery(sql);
+                ResultSet rs = statement.executeQuery(sql);
 
 //            System.out.println("[getUserFromDB] warnings: " + rs.getWarnings());
 
-            //STEP 5: Extract data from result set
-            while(rs.next()){
-                //Retrieve by column name
-//                System.out.println("got something");
+                //STEP 5: Extract data from result set
+                while(rs.next()){
+                    //Retrieve by column name
+                    int id  = rs.getInt("id");
+                    long vk_id = rs.getInt("vk_id");
+                    int building = rs.getInt("building");
+                    int section = rs.getInt("section");
+                    int floor = rs.getInt("floor");
+                    int flat = rs.getInt("flat");
+                    int updates = rs.getInt("updates");
 
-                int id  = rs.getInt("id");
-                String vk_id = rs.getString("vk_id");
-                int building = rs.getInt("building");
-                int section = rs.getInt("section");
-                int floor = rs.getInt("floor");
-                int flat = rs.getInt("flat");
-
-                user = new User(vk_id, building, section, floor, flat);
-                logger.info("[getUserFromDB] found user: " + user);
+                    user = new User(vk_id, building, section, floor, flat, updates);
+                    logger.info("[getUserFromDB] found user: " + user);
+                }
+                //STEP 6: Clean-up environment
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                logger.error("Error connection.createStatement()");
             }
-            //STEP 6: Clean-up environment
-            rs.close();
-            statement.close();
-            connection.close();
-        }catch(SQLException se){
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(Exception e){
-            //Handle errors for Class.forName
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally{
-            //finally block used to close resources
-            try{
-                if(statement!=null)
-                    statement.close();
-            }catch(SQLException se2){
-            }// nothing we can do
-            try{
-                if(connection!=null)
-                    connection.close();
-            }catch(SQLException se){
-                se.printStackTrace();
-            }//end finally try
-        }//end try
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 //        System.out.println("Goodbye!");
-
         return user;
     }
 
@@ -238,181 +156,96 @@ public class DatabaseManager implements Constants {
     public static List<User> getNeighboursFromDB(User user, String sql) {
         List<User> users = new ArrayList<User>();
 
-        Connection connection = DatabaseManager.getConnection();
-        Statement statement = null;
-
-        if (connection == null) {
-            // error create connection
-            return users;
-        }
-
-        try{
-            //STEP 4: Execute a query
-//            System.out.println("Creating statement...");
-            statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery(sql);
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                ResultSet rs = statement.executeQuery(sql);
 
 //            System.out.println(rs.getWarnings());
 
-            //STEP 5: Extract data from result set
-            while(rs.next()){
-                //Retrieve by column name
-//                System.out.println("got something");
+                //STEP 5: Extract data from result set
+                while(rs.next()){
+                    //Retrieve by column name
+                    int id  = rs.getInt("id");
+                    int vk_id = rs.getInt("vk_id");
+                    int building = rs.getInt("building");
+                    int section = rs.getInt("section");
+                    int floor = rs.getInt("floor");
+                    int flat = rs.getInt("flat");
+                    int updates = rs.getInt("updates");
 
-                int id  = rs.getInt("id");
-                String vk_id = rs.getString("vk_id");
-                int building = rs.getInt("building");
-                int section = rs.getInt("section");
-                int floor = rs.getInt("floor");
-                int flat = rs.getInt("flat");
-
-                User neighbour = new User(vk_id, building, section, floor, flat);
-                if (!neighbour.equals(user)) {
-                    users.add(neighbour);
+                    User neighbour = new User(vk_id, building, section, floor, flat, updates);
+                    if (!neighbour.equals(user)) {
+                        users.add(neighbour);
+                    }
                 }
+                //STEP 6: Clean-up environment
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                logger.error("Error connection.createStatement()");
             }
-            //STEP 6: Clean-up environment
-            rs.close();
-            statement.close();
-            connection.close();
-        }catch(SQLException se){
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(Exception e){
-            //Handle errors for Class.forName
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally{
-            //finally block used to close resources
-            try{
-                if(statement!=null)
-                    statement.close();
-            }catch(SQLException se2){
-            }// nothing we can do
-            try{
-                if(connection!=null)
-                    connection.close();
-            }catch(SQLException se){
-                se.printStackTrace();
-            }//end finally try
-        }//end try
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 //        System.out.println("Goodbye!");
-
         return users;
     }
 
 
-//    private static ResultSet getSomeQuery(String sql) {
-//
-//    }
+    private static int getCount(String sql) {
+        int result = 0;
 
-    public static String getUsersCountByBuilding(int building) {
-        String sql = "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE" +
-                " building = " + building;
-
-        String result = null;
-
-        Connection connection = DatabaseManager.getConnection();
-        Statement statement = null;
-
-        if (connection == null) {
-            // error create connection
-            return null;
-        }
-
-        try{
-            //STEP 4: Execute a query
-//            System.out.println("Creating statement...");
-            statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery(sql);
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                ResultSet rs = statement.executeQuery(sql);
 
 //            System.out.println(rs.getWarnings());
-            logger.info("[getUsersCountByBuilding] rs: " + rs);
-            //STEP 5: Extract data from result set
-            while(rs.next()){
-/*
-                System.out.println("********");
-//                System.out.println(rs.getInt(0));
-                System.out.println(rs.getInt(1));
-                System.out.println(rs.getInt("count"));
-                System.out.println("********");
-*/
+//                logger.info("[getCount] rs: " + rs);
 
-                result = String.valueOf(rs.getInt(1));
-
-                //Retrieve by column name
-//                System.out.println("got something");
-
-//                result = rs.
-//                int id  = rs.getInt("id");
-//                String vk_id = rs.getString("vk_id");
-//                int building = rs.getInt("building");
-//                int section = rs.getInt("section");
-//                int floor = rs.getInt("floor");
-//                int flat = rs.getInt("flat");
-//
-//                User neighbour = new User(vk_id, building, section, floor, flat);
-//                if (!neighbour.equals(user)) {
-//                    users.add(neighbour);
-//                }
+                //STEP 5: Extract data from result set
+                while(rs.next()){
+                    result = rs.getInt(1);
+                }
+                //STEP 6: Clean-up environment
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                logger.error("Error connection.createStatement()");
             }
-            //STEP 6: Clean-up environment
-            rs.close();
-            statement.close();
-            connection.close();
-        }catch(SQLException se){
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(Exception e){
-            //Handle errors for Class.forName
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally{
-            //finally block used to close resources
-            try{
-                if(statement!=null)
-                    statement.close();
-            }catch(SQLException se2){
-            }// nothing we can do
-            try{
-                if(connection!=null)
-                    connection.close();
-            }catch(SQLException se){
-                se.printStackTrace();
-            }//end finally try
-        }//end try
-//        System.out.println("Goodbye!");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return result;
-
     }
 
-//    public static void UpdateUser(User user) throws SQLException {
-//
-//        Connection con = null;
-//        PreparedStatement pstmt = null;
-//
-//        try {
-//            con = DriverManager.getConnection("jdbc:default:connection");
-//
-//            pstmt = con.prepareStatement(
-//                    "UPDATE neighbours " +
-//                            "SET korp = ? " +
-//                            "SET section = ? " +
-//                            "SET floor = ? " +
-//                            "SET flat = ? " +
-//                            "WHERE vk_id = ?");
-//
-//            pstmt.setInt(1, user.getBuilding());
-//            pstmt.setInt(2, user.getSection());
-//            pstmt.setInt(3, user.getFloor());
-//            pstmt.setInt(4, user.getFlat());
-//            pstmt.setString(5, user.getVk_id());
-//            pstmt.executeUpdate();
-//        } finally {
-//            if (pstmt != null) pstmt.close();
-//        }
-//    }
+
+    /**
+     * building = int - building #
+     *      or = 0 - all buildings
+     * @param building
+     * @return
+     */
+    public static int getUsersCountByBuilding(int building) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM " + TABLE_NAME);
+
+        if (building != 0) {
+            sql.append(" WHERE building = " + building);
+        }
+
+        return getCount(sql.toString());
+    }
+
+
+    public static int getUsersCountByBuildingAndFloor(int building, int floor) {
+        String sql = "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE building = " + building + " AND floor = " + floor;
+
+        return getCount(sql);
+    }
 
 
 

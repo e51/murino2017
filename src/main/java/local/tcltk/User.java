@@ -7,17 +7,25 @@ import com.vk.api.sdk.client.actors.UserActor;
  */
 
 public class User {
-    private String vk_id;
+    private long vk_id;
     private int building;
     private int section;
     private int floor;
     private int flat;
-    private UserActor actor;
+    private int updates;
 
     private String vkFirstName;
     private String vkLastName;
     private String vkPhoto;
     private String token;
+
+    public int getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(int updates) {
+        this.updates = updates;
+    }
 
     public String getVkFirstName() {
         return vkFirstName;
@@ -51,19 +59,11 @@ public class User {
         this.token = token;
     }
 
-    public UserActor getActor() {
-        return actor;
-    }
-
-    public void setActor(UserActor actor) {
-        this.actor = actor;
-    }
-
-    public String getVk_id() {
+    public long getVk_id() {
         return vk_id;
     }
 
-    public void setVk_id(String vk_id) {
+    public void setVk_id(long vk_id) {
         this.vk_id = vk_id;
     }
 
@@ -99,12 +99,13 @@ public class User {
         this.flat = flat;
     }
 
-    public User(String vk_id, int building, int section, int floor, int flat) {
+    public User(long vk_id, int building, int section, int floor, int flat, int updates) {
         this.vk_id = vk_id;
         this.building = building;
         this.section = section;
         this.floor = floor;
         this.flat = flat;
+        this.updates = updates;
     }
 
     @Override
@@ -125,12 +126,12 @@ public class User {
 
         User user = (User) o;
 
-        return vk_id.equals(user.vk_id);
+        return vk_id == user.vk_id;
     }
 
     @Override
     public int hashCode() {
-        return vk_id.hashCode();
+        return (int) vk_id;
     }
 
     public boolean checkCompleteData() {

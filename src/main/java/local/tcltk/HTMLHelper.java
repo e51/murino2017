@@ -80,10 +80,10 @@ public class HTMLHelper {
 
                 JSONObject elementMap = (JSONObject) array.get(i);
 
-                String id = String.valueOf(elementMap.get("id"));
+                long id = (long) elementMap.get("id");
 
                 for (User user : users) {
-                    if (user.getVk_id().equals(id)) {
+                    if (user.getVk_id() == id) {
                         user.setVkPhoto(String.valueOf(elementMap.get("photo_50")));
                         user.setVkFirstName(String.valueOf(elementMap.get("first_name")));
                         user.setVkLastName(String.valueOf(elementMap.get("last_name")));
@@ -103,6 +103,8 @@ public class HTMLHelper {
      */
     public static String makeHTMLPage(User user) {
         StringBuilder sb = new StringBuilder();
+
+        String neighbours = "Соседи по площадке:";
 
         String queryParams = "users.get?user_id=" + user.getVk_id() +
                 "&fields=photo_100" +
@@ -137,9 +139,15 @@ public class HTMLHelper {
         }
 
 
+//        if (!user.checkCompleteData()) {
+//
+//            logger.info("[view] incomplete user data");
+//            neighbours = "Без определённого места жительства:";
+//        }
+
         String dataSection;
 
-        if (true) {
+        if (!true) {
             dataSection = "" +
                     "<a href='https://vk.com/id" + user.getVk_id() + "'> <img src='" + user.getVkPhoto() + "'><BR>" +
                     "" + user.getVkFirstName() + "<BR>" +
@@ -157,7 +165,7 @@ public class HTMLHelper {
                     "            </form>\n" +
                     "" +
                     "            <BR>\n" +
-                    "            <form action='" + SITE_URL + "view/' method='post' align=center>\n" +
+                    "            <form action='" + VIEW_URL + "' method='post' align=center>\n" +
                     "                <p><input type='hidden' name='action' value='refresh'></p>\n" +
                     "                <p><input type='submit' value='Обновить'></p>\n" +
                     "            </form>\n" +
@@ -176,15 +184,29 @@ public class HTMLHelper {
                     "            <p>Секция: " + user.getSection() + "</p>\n" +
                     "            <p>Этаж: " + user.getFloor() + "</p>\n" +
                     "            <p>Квартира: " + user.getFlat() + "</p>\n" +
+                    "            <BR>\n" +
                     "            <BR>\n";
 
+            if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
+
+                String raz = "раз";
+                if (UPDATE_ATTEMPTS - user.getUpdates() == 2) {
+                    raz = "раза";
+                }
+
+                dataSection = dataSection + "" +
+                        "            <form action='" + PROFILE_URL + "' method='post' align=center>\n" +
+                        "                <p><input type='hidden' name='action' value='change'></p>\n" +
+                        "                <p><input type='submit' value=' Изменить (" + (UPDATE_ATTEMPTS - user.getUpdates()) + " " +  raz + ")'></p>\n" +
+                        "            </form>\n";
+            }
         }
 
         sb.append("<html>\n" +
                 "\n" +
                 "<table width=100% height=100%>\n" +
                 "    <tr>\n" +
-                "        <td valign=center width=30%>\n" +
+                "        <td align=center valign=center width=30%>\n" +
                 "" + dataSection +
                 "        </td>\n" +
                 "        <td align=center valign=center width=50%>\n" +
@@ -196,7 +218,7 @@ public class HTMLHelper {
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td valign='top'>\n" +
-                "                        <H1>Соседи по площадке:</H1><BR>\n" + getNeighboursSectionHTML(user) +
+                "                        <H1>" + neighbours + "</H1><BR>\n" + getNeighboursSectionHTML(user) +
                 "                    </td>\n" +
                 "                </tr>\n" +
                 "                <tr>\n" +
@@ -207,7 +229,10 @@ public class HTMLHelper {
                 "            </table>\n" +
                 "        </td>\n" +
                 "        <td width=20% valign='top' align='left'>" +
-                "<BR><BR>Нас уже: " + DatabaseManager.getUsersCountByBuilding(1) +
+                "<BR><BR><p class=count_total><H3>Нас уже: " + DatabaseManager.getUsersCountByBuilding(0) + "</H3></p>" +
+                "<BR>" + getStat() +
+                "" +
+                "" +
                 "" +
                 "        </td>" +
                 "    </tr>\n" +
@@ -222,6 +247,21 @@ public class HTMLHelper {
         return sb.toString();
     }
 
+    private static String getStat() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 1; i < INFRASTRUCTURE.length; i++ ) {
+            sb.append("<B>Корпус " + i + ": ").append(DatabaseManager.getUsersCountByBuilding(i)).append("</B><BR>");
+            for (int j = INFRASTRUCTURE[i]; j > 0 ; j--) {
+                sb.append("&nbsp;&nbsp;&nbsp;&nbsp;Этаж " + j + ": ").append(DatabaseManager.getUsersCountByBuildingAndFloor(i, j)).append("<BR>");
+            }
+            sb.append("<BR>");
+        }
+        sb.append("<BR><BR><BR><BR>");
+
+        return sb.toString();
+    }
+
     /**
      *
      * @param user
@@ -229,6 +269,11 @@ public class HTMLHelper {
      * @return
      */
     private static String getNeighboursHTML(User user, String sql) {
+
+        if (!user.checkCompleteData()) {
+            return "";
+        }
+
         // 1 - get users from Database
         List<User> neighbours = DatabaseManager.getNeighboursFromDB(user, sql);
 
@@ -239,9 +284,9 @@ public class HTMLHelper {
         StringBuilder sb = new StringBuilder();
 
         for (User usr : neighbours) {
-            sb.append("<a href='https://vk.com/id" + usr.getVk_id() + "' target='_blank'> <img src='" + usr.getVkPhoto() + "'><BR>" +
+            sb.append("<div id='neighbour'><a href='https://vk.com/id" + usr.getVk_id() + "' target='_blank'> <img src='" + usr.getVkPhoto() + "'><BR>" +
                     "" + usr.getVkFirstName() + "<BR>" +
-                    "" + usr.getVkLastName() + "</a><BR>");
+                    "" + usr.getVkLastName() + "</a><BR></div>");
         }
 
         return sb.toString();
