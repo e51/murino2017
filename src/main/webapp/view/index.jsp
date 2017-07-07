@@ -20,27 +20,15 @@
     session = request.getSession();
     user = (User) session.getAttribute("user");
 
-    String neighbours = "Соседи по площадке:";
-
-    logger.info("[view] got user object: " + user);
-
     if (user == null) {
         // отсутствует объект пользователя - странно, попросим залогиниться через vk ещё раз
-        logger.info("[view] no user object. Redirecting to index");
+        logger.error("[view] no user object. Redirecting to index");
 
         response.sendRedirect(response.encodeRedirectURL(SITE_URL));
         return;
     }
 
-    // Проверка полноты данных
-    if (!user.checkCompleteData()) {
-//        logger.info("[view] incomplete user data - redirecting to profile");
-//        response.sendRedirect(response.encodeRedirectURL(PROFILE_URL));
-//        return;
-    } else {
-        logger.info("[view] data is ok, show neighbours");
-    }
-
+    logger.info("[view] got user object: " + user + ", show neighbours");
 
     // make html page:
 %>
@@ -50,16 +38,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><%=SITE_TITLE%></title>
-    <style type="text/css">
-        body { margin: 0; }
-        #neighbour { position: relative; }
-        #neighbour { overflow: auto; padding: 10px; }
-        #neighbour {
-            width: 150px;
-            height: 90px;
-        }
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="<%=SITE_URL%>styles.css">
 </head>
 <body>
     <%=HTMLHelper.makeHTMLPage(user)%>

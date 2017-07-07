@@ -1,12 +1,8 @@
-<%@ page import="local.tcltk.HTMLHelper" %>
 <%@ page import="local.tcltk.User" %>
-<%@ page import="static local.tcltk.Constants.SITE_URL" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
-<%@ page import="static local.tcltk.Constants.PROFILE_URL" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="local.tcltk.VKCheckServlet" %>
-<%@ page import="static local.tcltk.Constants.VIEW_URL" %>
-<%@ page import="static local.tcltk.Constants.*" %><%--
+<%@ page import="static local.tcltk.Constants.*" %>
+<%--
   Created by IntelliJ IDEA.
   User: user
   Date: 28.06.2017
@@ -24,55 +20,32 @@
     user = (User) session.getAttribute("user");
     action = request.getParameter("action");
 
-    logger.info("[profile] got user object: " + user);
-    logger.info("[profile] got action: " + action);
+    logger.info("[profile] Start. got user object: " + user + ", got action: " + action);
 
     if (user == null) {
         // отсутствует объект пользователя - странно, попросим залогиниться через vk ещё раз
         logger.error("[profile] no user object. Redirecting to index");
-
         response.sendRedirect(response.encodeRedirectURL(SITE_URL));
         return;
     }
 
-    if (user.checkCompleteData() && !"update".equals(action) && !"change".equals(action)) {
-        logger.info("[profile] data is ok, no update action, no change action, redirecting to /view/");
-
+    if (user.isValid() && !"update".equals(action) && !"change".equals(action)) {
+        logger.info("[profile] data is correct, no 'update' action, no 'change' action, redirecting to /view/");
         response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
         return;
-
     }
 
     if ("change".equals(action) && user.getUpdates() >= UPDATE_ATTEMPTS) {
-        logger.info("[profile] change action, but no attempts, redirecting to /view/");
-
+        logger.error("[profile] MUST NOT BE HERE! 'change' action, but no attempts left, redirecting to /view/");
         response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
         return;
     }
 
-//    if (!user.checkCompleteData()) {
-//        // необходимо заполнить данные, прежде чем продолжать
-//        logger.info("[profile] incomplete data detected");
-//
-//
-////        htmlPage = HTMLHelper.makeCreateUserPage(user);
-//    } else if (!"update".equals(action)) {
-//        // всё заполнено - переслать на страницу просмотра
-//
-//        logger.info("[profile] data is ok, no update action, redirecting to /view");
-//
-//        response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
-//        return;
-//    }
-%>
-
-
-<%
     if ("update".equals(action)) {
         //обновление данных
         // update user data and redirect to main page
 
-        logger.info("[profile] action == 'update' - updating");
+        logger.info("[profile] 'update' action - trying to update...");
 
         int building = 0;
         int section = 0;
@@ -102,89 +75,107 @@
         }
 
         try {
-//            building = Integer.valueOf(request.getParameter("building"));
-//            section = Integer.valueOf(request.getParameter("section"));
-//            floor = Integer.valueOf(request.getParameter("floor"));
-//            flat = Integer.valueOf(request.getParameter("flat"));
             building = Integer.valueOf(strBuilding);
             section = Integer.valueOf(strSection);
             floor = Integer.valueOf(strFloor);
             flat = Integer.valueOf(strFlat);
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            logger.error("[profile] updating - NumberFormatException");
 
-            response.sendRedirect(response.encodeRedirectURL(PROFILE_URL));
+            logger.error("[profile] updating - NumberFormatException. Let's RETRY. (building=" + strBuilding + ", section=" + strSection + ", floor=" + strFloor + ", flat=" + strFlat + ")");
+            response.sendRedirect(response.encodeRedirectURL(PROFILE_URL + "?action=change"));
             return;
         }
 
+        // insert a new user record or already have one? -- should be changed to database request for user.id?
+        // valid user can be only from DB, invalid - no record in DB
+//        boolean insert = user.isValid() ? false : true;
+        boolean insert = DatabaseManager.getUserFromDB(user.getVk_id()) != null ? false : true;
+
+        logger.info("[profile] have to insert a new record? : " + insert);
+
+        // current (old) values
+        int oldBuilding = user.getBuilding();
+        int oldSection = user.getSection();
+        int oldFloor = user.getFloor();
+        int oldFlat = user.getFlat();
+
+        // set new values from form
         user.setBuilding(building);
         user.setSection(section);
         user.setFloor(floor);
         user.setFlat(flat);
-        if (user.checkCompleteData()) {
+        // and check them for valid
+        if (user.isValid()) {
+            // good data, let's update
             user.setUpdates(user.getUpdates() + 1);
-            DatabaseManager.updateUserInDB(user);
 
-        } else {
-            user.setBuilding(0);
-            user.setSection(0);
-            user.setFloor(0);
-            user.setFlat(0);
+            if (insert) {   // new user
+                DatabaseManager.createNewUserDB(user);
+            } else {        // update old user record
+                DatabaseManager.updateUserInDB(user);
+            }
+        } else {    // bad data
+            logger.error("[profile] updating has FAILED - BAD DATA. Let's RETRY. (building=" + building + ", section=" + section + ", floor=" + floor + ", flat=" + flat + ")");
 
-//            user.setUpdates(user.getUpdates());
+            // return old values
+            user.setBuilding(oldBuilding);
+            user.setSection(oldSection);
+            user.setFloor(oldFloor);
+            user.setFlat(oldFlat);
+
+            response.sendRedirect(response.encodeRedirectURL(PROFILE_URL + "?action=change"));
+            return;
         }
 
-//        DatabaseManager.updateUserInDB(user);
-
-        logger.info("[profile] updating is OK, redirecting to /profile to check");
-
+        logger.info("[profile] updating is SUCCESS, redirecting to /profile/ for checking");
         response.sendRedirect(response.encodeRedirectURL(PROFILE_URL));
         return;
     }
 
 //    if (action == null) {
         // новый пользователь
-    logger.info("[profile] no action - a new user?");
+//    logger.info("[profile] no action - modify data");
 
 //    }
-
-    logger.info("[profile] incomplete data detected");
-
-
+    logger.info("[profile] modify data request. Fill the form");
 %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><%=SITE_TITLE%></title>
+    <link rel="stylesheet" type="text/css" href="<%=SITE_URL%>styles.css">
 </head>
 <body>
 
-<table width=100% height=100%>
+<table width=100% height=100% class="text-normal">
     <tr>
         <td align=center valign=center>
-            <H3>Впервые у нас?</H3>
+            <div class="profile-container">
+            <H2>Впервые у нас?</H2>
             <BR>
             <form action='<%=PROFILE_URL%>' method='post' align=center>
-                <p>Корпус*: <input type='text' name='building' value='<%=user.getBuilding()%>'></p>
-                <p>Секция*: <input type='text' name='section' value='<%=user.getSection()%>'></p>
-                <p>Этаж*: <input type='text' name='floor' value='<%=user.getFloor()%>'></p>
-                <p>Квартира: <input type='text' name='flat' value='<%=user.getFlat()%>'></p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Например:
+                <p>&nbsp;Корпус<font color="red"><b>*</b></font>: <input type='text' name='building' value='<%=user.getBuilding()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1</p>
+                <p>&nbsp;Секция<font color="red"><b>*</b></font>: <input type='text' name='section' value='<%=user.getSection()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;Этаж<font color="red"><b>*</b></font>: <input type='text' name='floor' value='<%=user.getFloor()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
+                <p>Квартира: <input type='text' name='flat' value='<%=user.getFlat()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
                 <p><input type='hidden' name='action' value='update'></p>
-                <p><input type='submit' value='Применить'></p>
+                <p><input type='submit' value=' Сохранить ' class="text-normal"></p>
                 <BR>
-                <p>Введённые данные никому, кроме вас, не будут видны. Используются только для определения соседства.</p>
-                <p>Поля отмеченные "*" обязательны для заполнения.</p>
-                <p>Квартиру можно не указывать, но тогда не будут отображаться соседи сверху и снизу.</p>
-                <p>Изменить полностью введённые данные после сохранения самостоятельно нельзя.</p>
+                <p>Введённые данные никому, кроме Вас, не будут видны. Используются только для определения соседства.</p>
+                <p>Поля отмеченные "<font color="red"><b>*</b></font>" обязательны для заполнения.</p>
+                <p>Квартиру можно не указывать (влияет на отображение конкретно Ваших соседей сверху и снизу).</p>
             </form>
             <BR>
+            </div>
         </td>
     </tr>
 </table>
-
 
 </body>
 </html>

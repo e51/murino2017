@@ -1,4 +1,3 @@
-<%@ page import="java.io.PrintWriter" %>
 <%@ page import="static local.tcltk.Constants.*" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -27,7 +26,7 @@
             <H1>Войти:</H1><BR><BR>
             <a href="<%=(contextPath + contextParams)%>"><img src="<%=SITE_URL%>img/vk_logo.jpg" sizes="150"></a>
             <BR><BR><BR><BR><BR>
-            Made by <a href="https://vk.com/id6191031">me</a> =)
+            feedback: <a href="https://vk.com/id6191031">me</a>
         </td>
     </tr>
 

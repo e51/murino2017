@@ -39,13 +39,14 @@ public class DatabaseManager implements Constants {
                 //STEP 4: Execute a query
                 logger.info("Creating INSERT statement...");
 
-                String sql = "INSERT into " + TABLE_NAME + " (id, vk_id, building, section, floor, flat)" +
+                String sql = "INSERT into " + TABLE_NAME + " (id, vk_id, building, section, floor, flat, updates)" +
                         " VALUES (DEFAULT," +
                         " " + user.getVk_id() + "," +
                         " " + user.getBuilding() + "," +
                         " " + user.getSection() + "," +
                         " " + user.getFloor() + "," +
-                        " " + user.getFlat() + ")";
+                        " " + user.getFlat() + "," +
+                        " " + user.getUpdates() + ")";
 
                 int num = statement.executeUpdate(sql); // -1 == ERROR!
 
@@ -89,7 +90,10 @@ public class DatabaseManager implements Constants {
                         " updates = " + user.getUpdates() +
                         " WHERE vk_id = " + user.getVk_id() + ";";
 
+                logger.info("SQL: " + sql);
+
                 int num = statement.executeUpdate(sql);
+
 
                 logger.info(num + " rows affected!");
             }

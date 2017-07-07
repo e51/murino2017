@@ -1,7 +1,5 @@
 package local.tcltk;
 
-import com.vk.api.sdk.client.actors.UserActor;
-
 /**
  * Created by user on 24.06.2017.
  */
@@ -134,7 +132,7 @@ public class User {
         return (int) vk_id;
     }
 
-    public boolean checkCompleteData() {
+    public boolean isValid() {
         boolean result = true;
 
         if (building <= 0 || building > 2) {
