@@ -35,8 +35,9 @@
         return;
     }
 
-    if ("change".equals(action) && user.getUpdates() >= UPDATE_ATTEMPTS) {
-        logger.error("[profile] MUST NOT BE HERE! 'change' action, but no attempts left, redirecting to /view/");
+//    if ("change".equals(action) && user.getUpdates() >= UPDATE_ATTEMPTS) {
+    if (user.getUpdates() >= UPDATE_ATTEMPTS) {
+        logger.error("[profile] MUST NOT BE HERE! No attempts left, redirecting to /view/");
         response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
         return;
     }
