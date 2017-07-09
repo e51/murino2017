@@ -151,7 +151,7 @@ public class HTMLHelper {
                     "                <p>Корпус: <input type='text' name='building' value='" + user.getBuilding() + "'></p>\n" +
                     "                <p>Секция: <input type='text' name='section' value='" + user.getSection() + "'></p>\n" +
                     "                <p>Этаж: <input type='text' name='floor' value='" + user.getFloor() + "'></p>\n" +
-                    "                <p>Квартира: <input type='text' name='flat' value='" + user.getFlat() + "'></p>\n" +
+                    "                <!--p>Квартира: <input type='text' name='flat' value='" + user.getFlat() + "'></p-->\n" +
                     "                <p><input type='hidden' name='action' value='update'></p>\n" +
                     "                <p><input type='submit' value='Применить'></p>\n" +
                     "            </form>\n" +
@@ -161,22 +161,30 @@ public class HTMLHelper {
                     "            <p class='text-normal'>Корпус: " + user.getBuilding() + "</p>\n" +
                     "            <p class='text-normal'>Секция: " + user.getSection() + "</p>\n" +
                     "            <p class='text-normal'>Этаж: " + user.getFloor() + "</p>\n" +
-                    "            <p class='text-normal'>Квартира: " + user.getFlat() + "</p>\n" +
+                    "            <!--p class='text-normal'>Квартира: " + user.getFlat() + "</p-->\n" +
                     "            <BR>\n" +
                     "            <BR>\n";
+
+
 
             if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
 
                 String raz = "раз";
-                if (UPDATE_ATTEMPTS - user.getUpdates() == 2) {
+                if (UPDATE_ATTEMPTS - user.getUpdates() == 2 || UPDATE_ATTEMPTS - user.getUpdates() == 3) {
                     raz = "раза";
                 }
+
+                String buttonText = "Вселиться (1 раз)";
+//                if (user.getUpdates() > 0) {
+//                    buttonText = "Изменить (" + (UPDATE_ATTEMPTS - user.getUpdates()) + " " +  raz + ")";
+//                }
 
                 dataSection = dataSection +
                         "            <form action='" + PROFILE_URL + "' method='post' align=center>\n" +
                         "                <p><input type='hidden' name='action' value='change'></p>\n" +
-                        "                <p><input type='submit' value='  Вселиться (" + (UPDATE_ATTEMPTS - user.getUpdates()) + " " +  raz + ")  ' class='submit'></p>\n" +
-                        "            </form>\n";
+                        "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
+                        "            </form>\n" +
+                        "";
             }
         }
 
@@ -190,6 +198,8 @@ public class HTMLHelper {
                 "" + user.getVkLastName() + "</a><BR><BR>" +
                 "            <H1>Я здесь:</H1><BR>\n" +
                 "" + dataSection +
+                "<BR><BR><BR>" +
+                "Есть вопросы?<BR><a href='https://vk.com/id6191031' target=_blank>Пишите</a>" +
                 "        </td>\n" +
                 "        <td align=center valign=center width=50%>\n" +
                 "            <table width=100% height=100%>\n" +
@@ -298,8 +308,9 @@ public class HTMLHelper {
         String sql = "SELECT * FROM " +  TABLE_NAME + " WHERE" +
                 " building = '" + user.getBuilding() + "' AND" +
                 " section = '" + user.getSection() + "' AND" +
-                " floor = '" + (user.getFloor() + 1) + "' AND" +
-                " flat = '" + user.getFlat() + "'";
+                " floor = '" + (user.getFloor() + 1) + "'";
+//                " floor = '" + (user.getFloor() + 1) + "' AND" +
+//                " flat = '" + user.getFlat() + "'";
 
         return getNeighboursHTML(user, sql);
     }
@@ -312,8 +323,9 @@ public class HTMLHelper {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE" +
                 " building = '" + user.getBuilding() + "' AND" +
                 " section = '" + user.getSection() + "' AND" +
-                " floor = '" + (user.getFloor() - 1) + "' AND" +
-                " flat = '" + user.getFlat() + "'";
+                " floor = '" + (user.getFloor() - 1) + "'";
+//                " floor = '" + (user.getFloor() - 1) + "' AND" +
+//                " flat = '" + user.getFlat() + "'";
 
         return getNeighboursHTML(user, sql);
     }

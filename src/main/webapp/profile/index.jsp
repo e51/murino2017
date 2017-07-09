@@ -174,20 +174,24 @@
         <td align=center valign=center>
             <div class="profile-container">
             <H2>Впервые у нас?</H2>
-            <BR>
+            <!--BR-->
+                <p>Данные для заполнения брать из договора, где прописан адрес квартиры в формате 1.2.3.4<BR>
+                    Где: 1 - корпус, 2 - секция, 3 - этаж, 4 - квартира<BR>
+                    Если где-то фигурирует дробная секция, например: 1.5, то это означает: корпус 1, секция 5.<BR>
+                </p>
             <form action='<%=PROFILE_URL%>' method='post' align=center>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Например:
                 <p>&nbsp;Корпус<font color="red"><b>*</b></font>: <input type='text' name='building' value='<%=user.getBuilding()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1</p>
                 <p>&nbsp;Секция<font color="red"><b>*</b></font>: <input type='text' name='section' value='<%=user.getSection()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7</p>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;Этаж<font color="red"><b>*</b></font>: <input type='text' name='floor' value='<%=user.getFloor()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
-                <p>Квартира: <input type='text' name='flat' value='<%=user.getFlat()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
+                <!--p>Квартира: <input type='text' name='flat' value='<%=user.getFlat()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p-->
                 <p><input type='hidden' name='action' value='update'></p>
                 <p><input type='submit' value=' Сохранить ' class='submit-profile'></p>
                 <BR>
-                <p>Введённые данные никому, кроме Вас, не будут видны. Используются только для определения соседства.</p>
+                <p>Введённые данные никому, кроме Вас, видны не будут.</p>
                 <p>Поля отмеченные "<font color="red"><b>*</b></font>" обязательны для заполнения.</p>
-                <p>Квартиру можно не указывать (влияет на отображение конкретно Ваших соседей сверху и снизу).</p>
+                <!--p>Квартиру можно не указывать (влияет на отображение конкретно Ваших соседей сверху и снизу).</p-->
             </form>
             <BR>
             </div>
