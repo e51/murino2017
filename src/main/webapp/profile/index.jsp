@@ -2,6 +2,8 @@
 <%@ page import="local.tcltk.model.DatabaseManager" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="static local.tcltk.Constants.*" %>
+<%@ page import="static local.tcltk.HTMLHelper.getVKResponse" %>
+<%@ page import="java.net.URLEncoder" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -114,6 +116,20 @@
 
             if (insert) {   // new user
                 DatabaseManager.createNewUserDB(user);
+
+                // send a message to make admin happy
+                String message = "Новый жилец:\nhttps://vk.com/id" + user.getVk_id();
+
+                // test sending message
+                String contextParams = "messages.send?user_id=" + MY_VK_ID +
+                        "&message=" + URLEncoder.encode(message, "UTF-8") +
+                        "&access_token=" + MSG_PERM_TOKEN_MR_GREEN +
+                        "&v=5.65";
+
+                getVKResponse(VK_QUERY_URL + contextParams);
+
+//                System.out.println("[msg test]: " + json);
+
             } else {        // update old user record
                 DatabaseManager.updateUserInDB(user);
             }

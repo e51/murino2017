@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import static local.tcltk.Constants.*;
 import static local.tcltk.HTMLHelper.getVKResponse;
@@ -123,6 +124,19 @@ public class VKCheckServlet extends HttpServlet {
             // create object with vk_id and default fields
             user = new User(vk_id, 0, 0, 0, 0, 0);
             logger.info("[verify] {" + sid + "} no user found in DB. A new user detected. Creating object: " + user);
+
+
+            // send a message to make admin happy
+            String message = "Новый посетитель:\nhttps://vk.com/id" + vk_id;
+
+            // test sending message
+            contextParams = "messages.send?user_id=" + MY_VK_ID +
+                    "&message=" + URLEncoder.encode(message, "UTF-8") +
+                    "&access_token=" + MSG_PERM_TOKEN_MR_GREEN +
+                    "&v=5.65";
+
+            getVKResponse(VK_QUERY_URL + contextParams);
+
 
 //            DatabaseManager.createNewUserDB(user);
 
