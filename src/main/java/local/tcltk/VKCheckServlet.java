@@ -37,7 +37,8 @@ public class VKCheckServlet extends HttpServlet {
         String code = null;         // vk code for token request
         long vk_id = 0;             // vk user id
 
-        logger.info("[verify] Start checking");
+        String sid = request.getSession().getId().substring(request.getSession().getId().length() - 3);
+        logger.info("[verify] {" + sid + "} Start checking");
 
         // get current session
         HttpSession session = request.getSession();
@@ -45,18 +46,19 @@ public class VKCheckServlet extends HttpServlet {
         // check vk answer for error (parse GET parameters)
         String error = request.getParameter("error");
 
-        logger.info("[verify] request.error: " + error);
+//        logger.info("[verify] request.error: " + error);
 
         if (error != null) {
             // Got auth error - redirect to the index page
-            logger.error("[verify] auth error - Redirecting to index");
+            logger.error("[verify] {" + sid + "} auth error: " + request.getParameter("error_reason") + ", " + request.getParameter("error_description") + " - Redirecting to index");
+//            logger.error(request.getQueryString());
             response.sendRedirect(response.encodeRedirectURL(SITE_URL));
             return;
         }
 
         // get code from vk
         code = request.getParameter("code");
-        logger.info("[verify] code: " + code);
+        logger.info("[verify] {" + sid + "} code: " + code);
 
         // VK token request part - - - - - - - - -
         // Variant 2 - use web + json
@@ -68,7 +70,7 @@ public class VKCheckServlet extends HttpServlet {
 
         String json = getVKResponse(VK_GET_TOKEN_URL + contextParams);
 
-        logger.info("[verify] VK response json: " + json);
+        logger.info("[verify] {" + sid + "} VK response json: " + json);
         // possible json-answers are:
         //{"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":66748}
         //{"error":"invalid_grant","error_description":"Code is expired."}
@@ -81,7 +83,7 @@ public class VKCheckServlet extends HttpServlet {
         } catch (ParseException e) {
             e.printStackTrace();
 
-            logger.error("[verify] Parse json Exception - redirecting to index");
+            logger.error("[verify] {" + sid + "} Parse json Exception - redirecting to index");
             response.sendRedirect(response.encodeRedirectURL(SITE_URL));
             return;
         }
@@ -92,7 +94,7 @@ public class VKCheckServlet extends HttpServlet {
 //        if (!"null".equals(error)) {
         if (vkResponse.get("error") != null) {
             // Ошибка при получении токена
-            logger.error("[verify] Token request error - redirecting to index. Error: " + vkResponse.get("error") + ", description: " + vkResponse.get("error_description"));
+            logger.error("[verify] {" + sid + "} Token request error - redirecting to index. Error: " + vkResponse.get("error") + ", description: " + vkResponse.get("error_description"));
             response.sendRedirect(response.encodeRedirectURL(SITE_URL));
             return;
         }
@@ -105,14 +107,14 @@ public class VKCheckServlet extends HttpServlet {
 
         // check vk_id
         if (vk_id <= 0) {
-            logger.error("[verify] Incorrect value of vk_id == " + vk_id + ". Redirecting to index");
+            logger.error("[verify] {" + sid + "} Incorrect value of vk_id == " + vk_id + ". Redirecting to index");
             response.sendRedirect(response.encodeRedirectURL(SITE_URL));
             return;
         }
 
         // Database part - - - - - - - - -
         // vk_id is ok (present and correct), looking for user data in the Database
-        logger.info("[verify] looking for user from DB with vk_id = " + vk_id);
+        logger.info("[verify] {" + sid + "} looking for user from DB with vk_id = " + vk_id);
         // get user with such id from DB
         user = DatabaseManager.getUserFromDB(vk_id);
         if (user == null) {
@@ -120,7 +122,7 @@ public class VKCheckServlet extends HttpServlet {
 
             // create object with vk_id and default fields
             user = new User(vk_id, 0, 0, 0, 0, 0);
-            logger.info("[verify] no user found in DB. A new user detected. Creating object: " + user);
+            logger.info("[verify] {" + sid + "} no user found in DB. A new user detected. Creating object: " + user);
 
 //            DatabaseManager.createNewUserDB(user);
 
@@ -131,7 +133,7 @@ public class VKCheckServlet extends HttpServlet {
 
         session.setAttribute("user", user);
 
-        logger.info("[verify] verification PASSED. Redirecting to /view/");
+        logger.info("[verify] {" + sid + "} verification PASSED. Redirecting to /view/");
         response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
     }
 }

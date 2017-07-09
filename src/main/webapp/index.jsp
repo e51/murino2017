@@ -1,4 +1,5 @@
 <%@ page import="static local.tcltk.Constants.*" %>
+<%@ page import="org.apache.log4j.Logger" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -8,6 +9,8 @@
 </head>
 <body>
 <%
+    Logger logger = Logger.getLogger("index.jsp");
+
     session.invalidate();
 //    session.removeAttribute("user");
 
@@ -16,8 +19,12 @@
             "&redirect_uri=" + VK_REDIRECT_URI +
             "&display=page" +
             "&response_type=code" +
-            "&scope=notify" +
+//            "&scope=notify" +
+            "&scope=" +
             "&v=5.65";
+
+    String sid = request.getSession().getId().substring(request.getSession().getId().length() - 3);
+    logger.info("[index] {" + sid + "}, remote address: " + request.getRemoteAddr());
 
 %>
 <table height=100% width=100%>

@@ -17,18 +17,19 @@
 
     User user = null;
 
+    String sid = request.getSession().getId().substring(request.getSession().getId().length() - 3);
     session = request.getSession();
     user = (User) session.getAttribute("user");
 
     if (user == null) {
         // отсутствует объект пользователя - странно, попросим залогиниться через vk ещё раз
-        logger.error("[view] no user object. Redirecting to index");
+        logger.error("[view] {" + sid + "} no user object. Redirecting to index");
 
         response.sendRedirect(response.encodeRedirectURL(SITE_URL));
         return;
     }
 
-    logger.info("[view] got user object: " + user + ", show neighbours");
+    logger.info("[view] {" + sid + "} got user object: " + user + ", show neighbours");
 
     // make html page:
 %>

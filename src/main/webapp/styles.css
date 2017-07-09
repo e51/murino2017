@@ -52,6 +52,18 @@ body { margin: 0; }
     font-size: 20px;
 }
 
+input.submit {
+    width: 250px;
+    height: 50px;
+    font-size: 20px;
+}
+
+input.submit-profile {
+    width: 200px;
+    height: 40px;
+    font-size: 20px;
+}
+
 
 #top-container { height: 33%; width:100%; /*font-size: 0;*/ }
 #mid-container { height: 33%; width:100%; /*font-size: 0;*/ }

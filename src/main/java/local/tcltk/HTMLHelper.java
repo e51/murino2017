@@ -175,7 +175,7 @@ public class HTMLHelper {
                 dataSection = dataSection +
                         "            <form action='" + PROFILE_URL + "' method='post' align=center>\n" +
                         "                <p><input type='hidden' name='action' value='change'></p>\n" +
-                        "                <p><input type='submit' value='  Вселиться (" + (UPDATE_ATTEMPTS - user.getUpdates()) + " " +  raz + ")  ' class='text-normal'></p>\n" +
+                        "                <p><input type='submit' value='  Вселиться (" + (UPDATE_ATTEMPTS - user.getUpdates()) + " " +  raz + ")  ' class='submit'></p>\n" +
                         "            </form>\n";
             }
         }
@@ -267,6 +267,10 @@ public class HTMLHelper {
             sb.append("<div id='block'><a href='https://vk.com/id" + usr.getVk_id() + "' target='_blank'> <img src='" + usr.getVkPhoto() + "' class='round-you'><BR>" +
                     "" + usr.getVkFirstName() + "<BR>" +
                     "" + usr.getVkLastName() + "</a><BR></div>");
+        }
+
+        if (neighbours.isEmpty()) {
+            sb.append("пока нет соседей :(");
         }
 
         return sb.toString();

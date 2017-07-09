@@ -19,25 +19,26 @@
     session = request.getSession();
     user = (User) session.getAttribute("user");
     action = request.getParameter("action");
+    String sid = request.getSession().getId().substring(request.getSession().getId().length() - 3);
 
-    logger.info("[profile] Start. got user object: " + user + ", got action: " + action);
+    logger.info("[profile] {" + sid + "} Start. got user object: " + user + ", got action: " + action);
 
     if (user == null) {
         // отсутствует объект пользователя - странно, попросим залогиниться через vk ещё раз
-        logger.error("[profile] no user object. Redirecting to index");
+        logger.error("[profile] {" + sid + "} no user object. Redirecting to index");
         response.sendRedirect(response.encodeRedirectURL(SITE_URL));
         return;
     }
 
     if (user.isValid() && !"update".equals(action) && !"change".equals(action)) {
-        logger.info("[profile] data is correct, no 'update' action, no 'change' action, redirecting to /view/");
+        logger.info("[profile] {" + sid + "} data is correct, no 'update' action, no 'change' action, redirecting to /view/");
         response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
         return;
     }
 
 //    if ("change".equals(action) && user.getUpdates() >= UPDATE_ATTEMPTS) {
     if (user.getUpdates() >= UPDATE_ATTEMPTS) {
-        logger.error("[profile] MUST NOT BE HERE! No attempts left, redirecting to /view/");
+        logger.error("[profile] {" + sid + "} MUST NOT BE HERE! No attempts left, redirecting to /view/");
         response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
         return;
     }
@@ -46,7 +47,7 @@
         //обновление данных
         // update user data and redirect to main page
 
-        logger.info("[profile] 'update' action - trying to update...");
+        logger.info("[profile] {" + sid + "} 'update' action - trying to update...");
 
         int building = 0;
         int section = 0;
@@ -59,19 +60,19 @@
         String strFlat = request.getParameter("flat");
 
         if (strBuilding == null || strBuilding != null && strBuilding.isEmpty()) {
-            logger.info("[profile] flat is empty: " + strBuilding + ".");
+//            logger.info("[profile] building is empty: " + strBuilding + ".");
             strBuilding = "0";
         }
         if (strSection == null || strSection != null && strSection.isEmpty()) {
-            logger.info("[profile] flat is empty: " + strSection + ".");
+//            logger.info("[profile] section is empty: " + strSection + ".");
             strSection = "0";
         }
         if (strFloor == null || strFloor != null && strFloor.isEmpty()) {
-            logger.info("[profile] flat is empty: " + strFloor + ".");
+//            logger.info("[profile] floor is empty: " + strFloor + ".");
             strFloor = "0";
         }
         if (strFlat == null || strFlat != null && strFlat.isEmpty()) {
-            logger.info("[profile] flat is empty: " + strFlat + ".");
+//            logger.info("[profile] flat is empty: " + strFlat + ".");
             strFlat = "0";
         }
 
@@ -83,7 +84,7 @@
         } catch (NumberFormatException e) {
             e.printStackTrace();
 
-            logger.error("[profile] updating - NumberFormatException. Let's RETRY. (building=" + strBuilding + ", section=" + strSection + ", floor=" + strFloor + ", flat=" + strFlat + ")");
+            logger.error("[profile] {" + sid + "} updating - NumberFormatException. Let's RETRY. (building=" + strBuilding + ", section=" + strSection + ", floor=" + strFloor + ", flat=" + strFlat + ")");
             response.sendRedirect(response.encodeRedirectURL(PROFILE_URL + "?action=change"));
             return;
         }
@@ -93,7 +94,7 @@
 //        boolean insert = user.isValid() ? false : true;
         boolean insert = DatabaseManager.getUserFromDB(user.getVk_id()) != null ? false : true;
 
-        logger.info("[profile] have to insert a new record? : " + insert);
+        logger.info("[profile] {" + sid + "} have to insert a new record? : " + insert);
 
         // current (old) values
         int oldBuilding = user.getBuilding();
@@ -117,7 +118,7 @@
                 DatabaseManager.updateUserInDB(user);
             }
         } else {    // bad data
-            logger.error("[profile] updating has FAILED - BAD DATA. Let's RETRY. (building=" + building + ", section=" + section + ", floor=" + floor + ", flat=" + flat + ")");
+            logger.error("[profile] {" + sid + "} updating has FAILED - BAD DATA. Let's RETRY. (building=" + building + ", section=" + section + ", floor=" + floor + ", flat=" + flat + ")");
 
             // return old values
             user.setBuilding(oldBuilding);
@@ -129,7 +130,7 @@
             return;
         }
 
-        logger.info("[profile] updating is SUCCESS, redirecting to /profile/ for checking");
+        logger.info("[profile] {" + sid + "} updating is SUCCESS, redirecting to /profile/ for checking");
         response.sendRedirect(response.encodeRedirectURL(PROFILE_URL));
         return;
     }
@@ -139,7 +140,7 @@
 //    logger.info("[profile] no action - modify data");
 
 //    }
-    logger.info("[profile] modify data request. Fill the form");
+    logger.info("[profile] {" + sid + "} modify data request. Fill the form");
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -166,7 +167,7 @@
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;Этаж<font color="red"><b>*</b></font>: <input type='text' name='floor' value='<%=user.getFloor()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
                 <p>Квартира: <input type='text' name='flat' value='<%=user.getFlat()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
                 <p><input type='hidden' name='action' value='update'></p>
-                <p><input type='submit' value=' Сохранить ' class="text-normal"></p>
+                <p><input type='submit' value=' Сохранить ' class='submit-profile'></p>
                 <BR>
                 <p>Введённые данные никому, кроме Вас, не будут видны. Используются только для определения соседства.</p>
                 <p>Поля отмеченные "<font color="red"><b>*</b></font>" обязательны для заполнения.</p>
