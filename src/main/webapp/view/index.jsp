@@ -4,6 +4,7 @@
 <%@ page import="local.tcltk.HTMLHelper" %>
 <%@ page import="static local.tcltk.Constants.PROFILE_URL" %>
 <%@ page import="static local.tcltk.Constants.SITE_TITLE" %>
+<%@ page import="static local.tcltk.Constants.*" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -16,6 +17,7 @@
     Logger logger = Logger.getLogger("index.jsp");
 
     User user = null;
+    String use_flat = null;
 
     String sid = request.getSession().getId().substring(request.getSession().getId().length() - 3);
     session = request.getSession();
@@ -29,6 +31,16 @@
         return;
     }
 
+/*
+    use_flat = request.getParameter("f");
+
+    if ("1".equals(use_flat)) {
+        user.setUseFlat(true);
+    } else {
+        user.setUseFlat(false);
+    }
+*/
+
     logger.info("[view] {" + sid + "} got user object: " + user + ", show neighbours");
 
     // make html page:
@@ -40,6 +52,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><%=SITE_TITLE%></title>
     <link rel="stylesheet" type="text/css" href="<%=SITE_URL%>styles.css">
+    <!--script>
+        function use_flat_func(){
+            if(document.getElementById('use_flat').checked){
+                window.location='<%=VIEW_URL%>?f=1';
+                return false;
+            } else {
+                window.location='<%=VIEW_URL%>';
+                return false;
+            }
+            return true;
+        }
+    </script-->
 </head>
 <body>
     <%=HTMLHelper.makeHTMLPage(user)%>

@@ -17,6 +17,16 @@ public class User {
     private String vkPhoto;
     private String token;
 
+    private boolean isUseFlat;
+
+    public boolean isUseFlat() {
+        return isUseFlat;
+    }
+
+    public void setUseFlat(boolean useFlat) {
+        isUseFlat = useFlat;
+    }
+
     public int getUpdates() {
         return updates;
     }

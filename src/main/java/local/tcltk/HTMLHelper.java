@@ -103,8 +103,6 @@ public class HTMLHelper {
     public static String makeHTMLPage(User user) {
         StringBuilder sb = new StringBuilder();
 
-        String neighbours = "Соседи по площадке:";
-
         String queryParams = "users.get?user_id=" + user.getVk_id() +
                 "&fields=photo_200" +
                 "&v=5.52";
@@ -143,7 +141,24 @@ public class HTMLHelper {
 //            neighbours = "Без определённого места жительства:";
 //        }
 
+        String flatCheckbox = "";
+/*
+        if (user.isUseFlat()) {
+            flatCheckbox = "<input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' checked/>";
+        } else {
+            flatCheckbox = "<input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();'/>";
+        }
+*/
+
         String dataSection;
+
+        String strFlat = "";
+
+        if (user.getFlat() > MAX_FLAT_NUMBER_PER_SECTION) {
+            strFlat = "<font color=RED>" + user.getFlat() + " (ошибка)</font>";
+        } else {
+            strFlat = "" + user.getFlat();
+        }
 
         if (!true) {
             dataSection = "" +
@@ -161,9 +176,10 @@ public class HTMLHelper {
                     "            <p class='text-normal'>Корпус: " + user.getBuilding() + "</p>\n" +
                     "            <p class='text-normal'>Секция: " + user.getSection() + "</p>\n" +
                     "            <p class='text-normal'>Этаж: " + user.getFloor() + "</p>\n" +
-                    "            <!--p class='text-normal'>Квартира: " + user.getFlat() + "</p-->\n" +
-                    "            <BR>\n" +
-                    "            <BR>\n";
+                    "            <p class='text-normal'>Квартира: " + strFlat + "</p>\n" +
+                    "            <BR><!--p class='text-normal'>" + flatCheckbox + " Учитывать номер квартиры при<BR> поиске соседей сверху/снизу" + "</p-->\n" +
+                    "" +
+                    "";
 
 
 
@@ -188,6 +204,15 @@ public class HTMLHelper {
             }
         }
 
+        String topNeighboursTitle = "Все соседи этажом выше:";
+        String floorNeighboursTitle = "Соседи по площадке:";
+        String bottomNeighboursTitle = "Все соседи этажом ниже:";
+
+//        if (user.isUseFlat()) {
+            topNeighboursTitle = "Соседи над вами:";
+            bottomNeighboursTitle = "Соседи под вами:";
+//        }
+
         sb.append("<html>\n" +
                 "\n" +
                 "<table width=100% height=100%>\n" +
@@ -205,17 +230,17 @@ public class HTMLHelper {
                 "            <table width=100% height=100%>\n" +
                 "                <tr>\n" +
                 "                    <td valign='top'>\n" +
-                "                        <H1>Соседи сверху:</H1><BR>\n" + getNeighboursTopHTML(user) +
+                "                        <H1>" + topNeighboursTitle + "</H1><BR>\n" + getNeighboursTopHTML(user) +
                 "                    </td>\n" +
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td valign='top'>\n" +
-                "                        <H1>" + neighbours + "</H1><BR><div id='container'>\n" + getNeighboursSectionHTML(user) +
+                "                        <H1>" + floorNeighboursTitle + "</H1><BR><div id='container'>\n" + getNeighboursSectionHTML(user) +
                 "                    </div></td>\n" +
                 "                </tr>\n" +
                 "                <tr>\n" +
                 "                    <td valign='top'>\n" +
-                "                        <H1>Соседи снизу:</H1><BR>\n" + getNeighboursBottomHTML(user) +
+                "                        <H1>" + bottomNeighboursTitle + "</H1><BR>\n" + getNeighboursBottomHTML(user) +
                 "                    </td>\n" +
                 "                </tr>\n" +
                 "            </table>\n" +
@@ -312,6 +337,12 @@ public class HTMLHelper {
 //                " floor = '" + (user.getFloor() + 1) + "' AND" +
 //                " flat = '" + user.getFlat() + "'";
 
+//        if (user.isUseFlat() && user.getFlat() != 0) {
+        if (user.getFlat() != 0) {
+            sql = sql + " AND" +
+                " flat = '" + user.getFlat() + "'";
+        }
+
         return getNeighboursHTML(user, sql);
     }
 
@@ -326,6 +357,12 @@ public class HTMLHelper {
                 " floor = '" + (user.getFloor() - 1) + "'";
 //                " floor = '" + (user.getFloor() - 1) + "' AND" +
 //                " flat = '" + user.getFlat() + "'";
+
+//        if (user.isUseFlat() && user.getFlat() != 0) {
+        if (user.getFlat() != 0) {
+            sql = sql + " AND" +
+                    " flat = '" + user.getFlat() + "'";
+        }
 
         return getNeighboursHTML(user, sql);
     }
