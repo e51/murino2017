@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!--link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>reset.css"-->
     <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css">
+    <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>counter.css">
     <title><%=SITE_TITLE%></title>
 </head>
 <body>
@@ -30,13 +31,33 @@
     logger.info("[index] {" + sid + "}, remote address: " + request.getRemoteAddr());
 
 %>
+
+<%
+    int count = DatabaseManager.getUsersCountByBuilding(0);
+%>
+
 <table height=100% width=100% valign="center">
     <tr valign="center">
         <td valign="center" align="center">
             <H1>Войти:</H1><BR><BR>
             <a href="<%=(contextPath + contextParams)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
-            <BR><BR><BR>
-            <H1>Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%></H1><BR>
+            <BR><BR><BR><BR>
+            <!--H1>Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%></H1><BR-->
+            <div id="countdown" class="countdownHolder">
+                <span class="counterText" style="top: 0px;">Нас уже: </span>
+                <span class="countDigits">
+                    <span class="position">
+                        <span class="digit static" style="top: 0px; opacity: 1;"><%=count/100%></span>
+                    </span>
+                    <span class="position">
+                        <span class="digit static" style="top: 0px; opacity: 1;"><%=(count/10)%10%></span>
+                    </span>
+                    <span class="position">
+                        <span class="digit static" style="top: 0px; opacity: 1;"><%=count%10%></span>
+                    </span>
+                </span>
+            </div>
+
             <p class="text-normal">Последние изменения:<BR><BR>
                 Добавлена возможность отображения соседей сверху/снизу без привязки к номеру квартиры.<BR>
                 Также создано открытое <a href="https://vk.com/club149737048" target="_blank">сообщество в VK</a> для общения и обсуждений.<BR>
