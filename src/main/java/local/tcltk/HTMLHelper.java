@@ -142,13 +142,11 @@ public class HTMLHelper {
 //        }
 
         String flatCheckbox = "";
-/*
         if (user.isUseFlat()) {
             flatCheckbox = "<input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' checked/>";
         } else {
             flatCheckbox = "<input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();'/>";
         }
-*/
 
         String dataSection;
 
@@ -177,7 +175,7 @@ public class HTMLHelper {
                     "            <p class='text-normal'>Секция: " + user.getSection() + "</p>\n" +
                     "            <p class='text-normal'>Этаж: " + user.getFloor() + "</p>\n" +
                     "            <p class='text-normal'>Квартира: " + strFlat + "</p>\n" +
-                    "            <BR><!--p class='text-normal'>" + flatCheckbox + " Учитывать номер квартиры при<BR> поиске соседей сверху/снизу" + "</p-->\n" +
+                    "            <BR><p class='text-normal'>" + flatCheckbox + " Учитывать номер квартиры при<BR> поиске соседей сверху/снизу" + "</p>\n" +
                     "" +
                     "";
 
@@ -208,10 +206,10 @@ public class HTMLHelper {
         String floorNeighboursTitle = "Соседи по площадке:";
         String bottomNeighboursTitle = "Все соседи этажом ниже:";
 
-//        if (user.isUseFlat()) {
+        if (user.isUseFlat()) {
             topNeighboursTitle = "Соседи над вами:";
             bottomNeighboursTitle = "Соседи под вами:";
-//        }
+        }
 
         sb.append("<html>\n" +
                 "\n" +
@@ -337,8 +335,8 @@ public class HTMLHelper {
 //                " floor = '" + (user.getFloor() + 1) + "' AND" +
 //                " flat = '" + user.getFlat() + "'";
 
-//        if (user.isUseFlat() && user.getFlat() != 0) {
-        if (user.getFlat() != 0) {
+        if (user.isUseFlat() && user.getFlat() != 0) {
+//        if (user.getFlat() != 0) {
             sql = sql + " AND" +
                 " flat = '" + user.getFlat() + "'";
         }
@@ -358,8 +356,8 @@ public class HTMLHelper {
 //                " floor = '" + (user.getFloor() - 1) + "' AND" +
 //                " flat = '" + user.getFlat() + "'";
 
-//        if (user.isUseFlat() && user.getFlat() != 0) {
-        if (user.getFlat() != 0) {
+        if (user.isUseFlat() && user.getFlat() != 0) {
+//        if (user.getFlat() != 0) {
             sql = sql + " AND" +
                     " flat = '" + user.getFlat() + "'";
         }

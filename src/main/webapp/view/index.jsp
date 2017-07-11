@@ -2,7 +2,6 @@
 <%@ page import="local.tcltk.User" %>
 <%@ page import="static local.tcltk.Constants.SITE_URL" %>
 <%@ page import="local.tcltk.HTMLHelper" %>
-<%@ page import="static local.tcltk.Constants.PROFILE_URL" %>
 <%@ page import="static local.tcltk.Constants.SITE_TITLE" %>
 <%@ page import="static local.tcltk.Constants.*" %>
 <%--
@@ -31,7 +30,6 @@
         return;
     }
 
-/*
     use_flat = request.getParameter("f");
 
     if ("1".equals(use_flat)) {
@@ -39,7 +37,6 @@
     } else {
         user.setUseFlat(false);
     }
-*/
 
     logger.info("[view] {" + sid + "} got user object: " + user + ", show neighbours");
 
@@ -51,8 +48,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><%=SITE_TITLE%></title>
-    <link rel="stylesheet" type="text/css" href="<%=SITE_URL%>styles.css">
-    <!--script>
+    <!--link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>reset.css"-->
+    <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css">
+    <script>
         function use_flat_func(){
             if(document.getElementById('use_flat').checked){
                 window.location='<%=VIEW_URL%>?f=1';
@@ -63,7 +61,7 @@
             }
             return true;
         }
-    </script-->
+    </script>
 </head>
 <body>
     <%=HTMLHelper.makeHTMLPage(user)%>

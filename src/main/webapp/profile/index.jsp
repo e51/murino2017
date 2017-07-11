@@ -165,7 +165,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><%=SITE_TITLE%></title>
-    <link rel="stylesheet" type="text/css" href="<%=SITE_URL%>styles.css">
+    <!--link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>reset.css"-->
+    <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css">
 </head>
 <body>
 

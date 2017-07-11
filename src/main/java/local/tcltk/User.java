@@ -17,14 +17,14 @@ public class User {
     private String vkPhoto;
     private String token;
 
-    private boolean isUseFlat;
+    private boolean useFlat;
 
     public boolean isUseFlat() {
-        return isUseFlat;
+        return useFlat;
     }
 
     public void setUseFlat(boolean useFlat) {
-        isUseFlat = useFlat;
+        this.useFlat = useFlat;
     }
 
     public int getUpdates() {

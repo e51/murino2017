@@ -5,7 +5,8 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" type="text/css" href="<%=SITE_URL%>styles.css">
+    <!--link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>reset.css"-->
+    <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css">
     <title><%=SITE_TITLE%></title>
 </head>
 <body>
@@ -28,21 +29,20 @@
     logger.info("[index] {" + sid + "}, remote address: " + request.getRemoteAddr());
 
 %>
-<table height=100% width=100%>
-    <tr>
+<table height=100% width=100% valign="center">
+    <tr valign="center">
         <td valign="center" align="center">
             <H1>Войти:</H1><BR><BR>
-            <a href="<%=(contextPath + contextParams)%>"><img src="<%=SITE_URL%>img/vk_logo.jpg" sizes="150"></a>
+            <a href="<%=(contextPath + contextParams)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
             <BR><BR><BR>
-            <!--p class="text-normal">Последние изменения:<BR><BR>
-                Друзья! Идёт путаница с номерами квартир. Кто-то вносит трёхзначные номера (что неверно), кто-то - однозначные.<br>
-                Поскольку участников пока мало, и вероятность, что соседи ровно сверху/снизу найдутся - мала, пока отключаю<br>
-                поле "квартира" для заполнения. В соседях сверху и снизу будут отображаться все, кто живёт выше/ниже этажом в вашей секции.</p-->
-            <!--p class="text-normal">Последние изменения:<BR><BR>
-                При внесении данных часто возникает путаница, как же всё-таки заполнять.<br>
-                В форме заполнения данных добавлена подсказка по заполнению.</p-->
+            <p class="text-normal">Последние изменения:<BR><BR>
+                Добавлена возможность отображения соседей сверху/снизу без привязки к номеру квартиры.<BR>
+                Также создано открытое <a href="https://vk.com/club149737048" target="_blank">сообщество в VK</a> для общения и обсуждений.<BR>
+                Пишите свои предложения, отзывы, комментарии.
+
+            </p>
             <BR><BR>
-            Обратная связь: <a href="https://vk.com/id6191031" target="_blank">пишите</a>
+            Обратная связь: <a href="https://vk.com/id6191031" target="_blank">мой vk</a>
         </td>
     </tr>
 
