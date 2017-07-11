@@ -1,5 +1,6 @@
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="local.tcltk.model.DatabaseManager" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -35,6 +36,7 @@
             <H1>Войти:</H1><BR><BR>
             <a href="<%=(contextPath + contextParams)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
             <BR><BR><BR>
+            <H1>Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%></H1><BR>
             <p class="text-normal">Последние изменения:<BR><BR>
                 Добавлена возможность отображения соседей сверху/снизу без привязки к номеру квартиры.<BR>
                 Также создано открытое <a href="https://vk.com/club149737048" target="_blank">сообщество в VK</a> для общения и обсуждений.<BR>
