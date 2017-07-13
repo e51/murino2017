@@ -24,6 +24,25 @@ body { margin: 0; }
     /* box-shadow: 0 0 7px #666; /* Параметры тени */
 }
 
+.index-outer {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.index-middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.index-inner {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100%;
+}
+
 .profile-container {
     /*
     position: absolute;

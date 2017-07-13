@@ -48,8 +48,20 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title><%=SITE_TITLE%></title>
+
+    <!-- favicon part -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<%=SITE_URL%>/apple-touch-icon.png?v=GvJ4ke7akz">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%=SITE_URL%>/favicon-32x32.png?v=GvJ4ke7akz">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%=SITE_URL%>/favicon-16x16.png?v=GvJ4ke7akz">
+    <link rel="manifest" href="<%=SITE_URL%>/manifest.json?v=GvJ4ke7akz">
+    <link rel="mask-icon" href="<%=SITE_URL%>/safari-pinned-tab.svg?v=GvJ4ke7akz" color="#5bbad5">
+    <link rel="shortcut icon" href="<%=SITE_URL%>/favicon.ico?v=GvJ4ke7akz">
+    <meta name="theme-color" content="#ffffff">
+    <!-- end of favicon part -->
+
+
     <!--link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>reset.css"-->
-    <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css">
+    <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css?v=1.0">
     <script>
         function use_flat_func(){
             if(document.getElementById('use_flat').checked){
