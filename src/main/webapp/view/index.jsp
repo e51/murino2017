@@ -24,7 +24,7 @@
 
     if (user == null) {
         // отсутствует объект пользователя - странно, попросим залогиниться через vk ещё раз
-        logger.error("[view] {" + sid + "} no user object. Redirecting to index");
+        logger.error("[view] {" + sid + "} no user object. Redirecting to index. Request: " + request.getRequestURI() + "?" + request.getQueryString());
 
         response.sendRedirect(response.encodeRedirectURL(SITE_URL));
         return;

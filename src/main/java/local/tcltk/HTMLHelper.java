@@ -27,7 +27,7 @@ public class HTMLHelper {
             result = Jsoup.connect(uri).ignoreContentType(true).validateTLSCertificates(false).execute().body();
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("[getVKResponse] error request vk");
+            logger.error("[getVKResponse] Get Exception! - error request vk");
         }
 
         return result;

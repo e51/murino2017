@@ -69,12 +69,21 @@ public class VKCheckServlet extends HttpServlet {
                 "&redirect_uri=" + VK_REDIRECT_URI +
                 "&code=" + code;
 
+        logger.info("***[verify] {" + sid + "} request URL: " + VK_GET_TOKEN_URL + contextParams);
+
         String json = getVKResponse(VK_GET_TOKEN_URL + contextParams);
 
         logger.info("[verify] {" + sid + "} VK response json: " + json);
         // possible json-answers are:
         //{"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":66748}
         //{"error":"invalid_grant","error_description":"Code is expired."}
+
+        if (json == null) {
+            // error getting vk answer - redirect to index
+            logger.error("[verify] {" + sid + "} Got NULL answer from vk - redirecting to index");
+            response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+            return;
+        }
 
         // parse json
         JSONParser parser = new JSONParser();
