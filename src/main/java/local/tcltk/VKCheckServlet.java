@@ -69,8 +69,6 @@ public class VKCheckServlet extends HttpServlet {
                 "&redirect_uri=" + VK_REDIRECT_URI +
                 "&code=" + code;
 
-        logger.info("***[verify] {" + sid + "} request URL: " + VK_GET_TOKEN_URL + contextParams);
-
         String json = getVKResponse(VK_GET_TOKEN_URL + contextParams);
 
         logger.info("[verify] {" + sid + "} VK response json: " + json);
