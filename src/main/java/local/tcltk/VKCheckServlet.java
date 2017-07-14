@@ -78,7 +78,7 @@ public class VKCheckServlet extends HttpServlet {
 
         if (json == null) {
             // error getting vk answer - redirect to index
-            logger.error("[verify] {" + sid + "} Got NULL answer from vk - redirecting to index");
+            logger.error("[verify] {" + sid + "} Got NULL answer from vk - redirecting to index" + " /" + request.getRemoteAddr());
             response.sendRedirect(response.encodeRedirectURL(SITE_URL));
             return;
         }
