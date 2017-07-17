@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static local.tcltk.Constants.PROJECT_NAME;
+import static local.tcltk.Constants.*;
 
 public class ActionFactory {
 
@@ -21,8 +21,8 @@ public class ActionFactory {
     public static Action getAction(HttpServletRequest request) {
 //        return actions.get(request.getMethod() + request.getPathInfo());
 //        System.out.println("request.getPathInfo(): " + request.getPathInfo());
-//        System.out.println(request.getRequestURI());
 //        System.out.println(request.getRequestURI().substring(11));
-        return actions.get(request.getRequestURI().substring(PROJECT_NAME.length() + 2));
+//        return actions.get(request.getRequestURI().substring(PROJECT_NAME.length() + 2));
+        return actions.get(request.getRequestURI().substring(SITE_ROOT.length()).replace('/', ' ').trim());
     }
 }

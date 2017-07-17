@@ -20,18 +20,18 @@ public class ProfileAction implements Action {
         User user = null;
         String action = null;       // update or not
         String result = null;
+        String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
         // get current session
         HttpSession session = request.getSession();
 
         user = (User) session.getAttribute("user");
         action = request.getParameter("action");
-        String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - 3));
 
         logger.info(String.format("[profile] %s Start. Got user object: %s, got action: %s", sid, user, action));
 
         if (user == null) {
-            // Mustn't be here without user object in session. Have to login again.
+            // Mustn't be here without user object in session. Have to login again - redirect to index.
 //            throw new ProfileException("[profile] " + sid + " no user object. Redirecting to index. Request: " + request.getRequestURI() + "?" + request.getQueryString() + " IP: " + request.getRemoteAddr());
 
             throw new ProfileException(String.format("[profile] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
@@ -39,40 +39,19 @@ public class ProfileAction implements Action {
 //            logger.error(String.format("[profile] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
 //            result = "auth";
 //            return result;
-
-//            logger.error("[profile] {" + sid + "} no user object. Redirecting to index. Request: " + request.getRequestURI() + "?" + request.getQueryString() + " IP: " + request.getRemoteAddr());
-//            response.sendRedirect(response.encodeRedirectURL(SITE_URL));
-//            return;
         }
 
-/*
-//        if (user.isValid() && !"update".equals(action) && !"change".equals(action)) {
-//        if (user.isValid() && !"update".equals(action) && user.getUpdates() >= UPDATE_ATTEMPTS) {
-        if (user.isValid() && user.getUpdates() >= UPDATE_ATTEMPTS) {
-            // if user is valid but no attempts left - then go to the view
-//            logger.info("[profile] " + sid + " data is correct, no 'update' action, no 'change' action, redirecting to /view/");
-            logger.info("[profile] " + sid + " data is correct, no 'update' action, no attempts left, so redirecting to /view/");
-            result = "view";
-            return result;
-//            response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
-//            return;
-        }
-*/
-
-//    if ("change".equals(action) && user.getUpdates() >= UPDATE_ATTEMPTS) {
+        // have update attempts?
         if (user.getUpdates() >= UPDATE_ATTEMPTS) {
-//            logger.error("[profile] " + sid + " MUST NOT BE HERE! No attempts left, redirecting to /view/");
             logger.error(String.format("[profile] %s MUSTN'T BE HERE! No attempts left", sid));
             result = "view";
             return result;
-//            response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
-//            return;
         }
 
+        // update(create) data action
         if ("update".equals(action)) {
             // update user data and redirect to view page
 
-//            logger.info("[profile] " + sid + " 'update' action - trying to update...");
             logger.info(String.format("[profile] %s 'update' action - trying to update...", sid));
 
             int building = 0;
@@ -96,14 +75,9 @@ public class ProfileAction implements Action {
                 floor = Integer.valueOf(strFloor);
                 flat = Integer.valueOf(strFlat);
             } catch (NumberFormatException e) {
-//                e.printStackTrace();
-
-//                logger.error("[profile] " + sid + " updating - NumberFormatException. Let's RETRY. (building=" + strBuilding + ", section=" + strSection + ", floor=" + strFloor + ", flat=" + strFlat + ")");
                 logger.error(String.format("[profile] %s updating - NumberFormatException. Let's RETRY. (building=%s, section=%s, floor=%s, flat=%s)", sid, strBuilding, strSection, strFloor, strFlat));
                 result = "profile";
                 return result;
-//                response.sendRedirect(response.encodeRedirectURL(PROFILE_URL + "?action=change"));
-//                return;
             }
 
             // insert a new user record or already have one? -- should be changed to database request for user.id?
@@ -111,7 +85,6 @@ public class ProfileAction implements Action {
 //        boolean insert = user.isValid() ? false : true;
             boolean insert = DatabaseManager.getUserFromDB(user.getVk_id()) != null ? false : true;
 
-//            logger.info("[profile] " + sid + " Have to insert a new record? : " + insert);
             logger.info(String.format("[profile] %s Have to insert a new record? : %s", sid, insert));
 
             // current (old) values
@@ -135,23 +108,16 @@ public class ProfileAction implements Action {
 
                     // send a message to make admin happy
                     HTMLHelper.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
-
                 } else {        // update old user record
                     DatabaseManager.updateUserInDB(user);
                 }
 
-//            logger.info("[profile] " + sid + " Updating is SUCCESS, redirecting to /profile/ for checking");
-//                logger.info("[profile] " + sid + " Updating is SUCCESS, redirecting to /view/");
                 logger.info(String.format("[profile] %s Updating is SUCCESS", sid));
 
                 result = "view";
                 return result;
-//            response.sendRedirect(response.encodeRedirectURL(PROFILE_URL));
-//            return;
-
             } else {
                 // bad data
-//                logger.error("[profile] " + sid + " Updating has FAILED - BAD DATA. Let's RETRY. (building=" + building + ", section=" + section + ", floor=" + floor + ", flat=" + flat + ")");
                 logger.error(String.format("[profile] %s Updating has FAILED - BAD DATA. Let's RETRY. (building=%d, section=%d, floor=%d, flat=%d)", sid, building, section, floor, flat));
 
                 // return old values
@@ -162,9 +128,6 @@ public class ProfileAction implements Action {
 
                 result = "profile";
                 return result;
-
-//                response.sendRedirect(response.encodeRedirectURL(PROFILE_URL + "?action=change"));
-//                return;
             }
         }
 
