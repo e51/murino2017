@@ -120,6 +120,8 @@ public class User {
     public String toString() {
         return "User{" +
                 "vk_id='" + vk_id + '\'' +
+                ", vkLastName=" + vkLastName +
+                ", vkFirstName=" + vkFirstName +
                 ", building=" + building +
                 ", section=" + section +
                 ", floor=" + floor +

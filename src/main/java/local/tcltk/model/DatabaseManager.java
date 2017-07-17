@@ -37,7 +37,7 @@ public class DatabaseManager implements Constants {
             try (Statement statement = connection.createStatement()) {
 
                 //STEP 4: Execute a query
-                logger.info("Creating INSERT statement...");
+                logger.info("[createNewUserDB] Creating INSERT statement...");
 
                 String sql = "INSERT into " + TABLE_NAME + " (id, vk_id, building, section, floor, flat, updates)" +
                         " VALUES (DEFAULT," +
@@ -50,10 +50,10 @@ public class DatabaseManager implements Constants {
 
                 int num = statement.executeUpdate(sql); // -1 == ERROR!
 
-                logger.info(num + " rows affected!");
+                logger.info("[createNewUserDB] " + num + " rows affected!");
             } catch (SQLException e) {
                 e.printStackTrace();
-                logger.error("Error connection.createStatement()");
+                logger.error("[createNewUserDB] Error connection.createStatement()");
             }
         } catch (SQLException e) {
             //Handle errors for JDBC
@@ -63,7 +63,7 @@ public class DatabaseManager implements Constants {
             e.printStackTrace();
         }
 
-        logger.info("INSERT finished");
+        logger.info("[createNewUserDB] INSERT finished");
     }
 
 
@@ -90,20 +90,20 @@ public class DatabaseManager implements Constants {
                         " updates = " + user.getUpdates() +
                         " WHERE vk_id = " + user.getVk_id() + ";";
 
-                logger.info("SQL: " + sql);
+                logger.info("[updateUserInDB] SQL: " + sql);
 
                 int num = statement.executeUpdate(sql);
 
 
-                logger.info(num + " rows affected!");
+                logger.info("[updateUserInDB] " + num + " rows affected!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            logger.error("Error connection.createStatement()");
+            logger.error("[updateUserInDB] Error connection.createStatement()");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        logger.info("UPDATE finished");
+        logger.info("[updateUserInDB] UPDATE finished");
     }
 
     /**
@@ -140,7 +140,7 @@ public class DatabaseManager implements Constants {
                 rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                logger.error("Error connection.createStatement()");
+                logger.error("[getUserFromDB] Error connection.createStatement()");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,7 +186,7 @@ public class DatabaseManager implements Constants {
                 rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                logger.error("Error connection.createStatement()");
+                logger.error("[getNeighboursFromDB] Error connection.createStatement()");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -216,7 +216,7 @@ public class DatabaseManager implements Constants {
                 rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                logger.error("Error connection.createStatement()");
+                logger.error("[getCount] Error connection.createStatement()");
             }
         } catch (SQLException e) {
             e.printStackTrace();

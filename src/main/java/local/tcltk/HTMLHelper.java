@@ -9,6 +9,8 @@ import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import static local.tcltk.Constants.*;
@@ -20,17 +22,33 @@ public class HTMLHelper {
     private static final Logger logger = Logger.getLogger(HTMLHelper.class);
 
     public static String getVKResponse(String uri) {
-
         String result = null;
 
         try {
             result = Jsoup.connect(uri).ignoreContentType(true).validateTLSCertificates(false).execute().body();
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("[getVKResponse] Get Exception! - error request vk");
+            logger.error("[getVKResponse] Got Exception! - error request vk");
         }
 
         return result;
+    }
+
+    /**
+     * Send notify message to admin
+     * @param message
+     */
+    public static void notify(String message) {
+        String contextParams = null;
+        try {
+            contextParams = "messages.send?user_id=" + MY_VK_ID +
+                    "&message=" + URLEncoder.encode(message, "UTF-8") +
+                    "&access_token=" + MSG_PERM_TOKEN_MR_GREEN +
+                    "&v=5.65";
+        } catch (UnsupportedEncodingException e) {
+            logger.error("[HTMLHelper.notify] Error notify admin - UnsupportedEncodingException");
+        }
+
+        getVKResponse(VK_QUERY_URL + contextParams);
     }
 
     /**
@@ -40,7 +58,6 @@ public class HTMLHelper {
      * @param users
      */
     private static void fillNeighboursVKData(List<User> users) {
-
         StringBuilder queryParams = new StringBuilder();
 
         queryParams.append("users.get?user_ids=");
@@ -90,6 +107,8 @@ public class HTMLHelper {
                     }
                 }
             }
+        } catch (NullPointerException e) {
+            logger.error("[fillNeighboursVKData] Got NULL answer from vk, json = null");
         } catch (ParseException e) {
             e.printStackTrace();
             logger.error("[fillNeighboursVKData] error - ParseException");
@@ -97,32 +116,30 @@ public class HTMLHelper {
     }
 
     /**
-     * HTML main info page (neighbours information)
-     * @return
+     * Fill user fields with VK data (last_name, first_name, photo)
+     * @param user
      */
-    public static String makeHTMLPage(User user) {
-        StringBuilder sb = new StringBuilder();
-
+    public static void fillUserInfo(User user) {
         String queryParams = "users.get?user_id=" + user.getVk_id() +
                 "&fields=photo_200" +
                 "&v=5.52";
-        String json = getVKResponse(VK_QUERY_URL + queryParams);
+//        String queryParams = String.format("users.get?user_id=%d&fields=photo_200&v=5.52", user.getVk_id());
 
+        String json = getVKResponse(VK_QUERY_URL + queryParams);
         // {"response":[{"id":210700286,"first_name":"Lindsey","last_name":"Stirling","photo_50":"https:\/\/pp.userapi.com\/c636821\/v636821286\/38a75\/Ay-bEZoJZw8.jpg"}]}
 
         JSONParser parser = new JSONParser();
-
         Object obj = null;
         try {
             obj = parser.parse(json);
 
             JSONObject responseMap = (JSONObject) obj;
 
-            logger.info("[view] user id response: " + responseMap.get("response"));
+//            logger.info("[HTMLHelper.fillUserInfo] user id response: " + responseMap.get("response"));
 
             JSONArray array = (JSONArray) responseMap.get("response");
 
-            logger.info("[view] user id response array size should be 1: " + array.size()); // 1
+//            logger.info("[HTMLHelper.fillUserInfo] user id response array size should be 1: " + array.size()); // 1
 
             JSONObject elementMap = (JSONObject) array.get(0);
 
@@ -130,137 +147,15 @@ public class HTMLHelper {
             user.setVkLastName(String.valueOf(elementMap.get("last_name")));
             user.setVkPhoto(String.valueOf(elementMap.get("photo_200")));
 
+        } catch (NullPointerException e) {
+            logger.error("[HTMLHelper.fillUserInfo] Got NULL answer from vk, json = null");
         } catch (ParseException e) {
-            e.printStackTrace();
-            logger.error("[view] user id request error - ParseException");
+            logger.error("[HTMLHelper.fillUserInfo] user id request error - ParseException");
         }
-
-//        if (!user.isValid()) {
-//
-//            logger.info("[view] incomplete user data");
-//            neighbours = "Без определённого места жительства:";
-//        }
-
-        String flatCheckbox = "";
-        if (user.isUseFlat()) {
-            flatCheckbox = "<input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' checked/>";
-        } else {
-            flatCheckbox = "<input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();'/>";
-        }
-
-        String dataSection;
-
-        String strFlat = "";
-
-        if (user.getFlat() > MAX_FLAT_NUMBER_PER_SECTION) {
-            strFlat = "<font color=RED>" + user.getFlat() + " (ошибка)</font>";
-        } else {
-            strFlat = "" + user.getFlat();
-        }
-
-        if (!true) {
-            dataSection = "" +
-                    "            <form action='" + PROFILE_URL + "' method='post' align=center>\n" +
-                    "                <p>Корпус: <input type='text' name='building' value='" + user.getBuilding() + "'></p>\n" +
-                    "                <p>Секция: <input type='text' name='section' value='" + user.getSection() + "'></p>\n" +
-                    "                <p>Этаж: <input type='text' name='floor' value='" + user.getFloor() + "'></p>\n" +
-                    "                <!--p>Квартира: <input type='text' name='flat' value='" + user.getFlat() + "'></p-->\n" +
-                    "                <p><input type='hidden' name='action' value='update'></p>\n" +
-                    "                <p><input type='submit' value='Применить'></p>\n" +
-                    "            </form>\n" +
-                    "";
-        } else {
-            dataSection = "" +
-                    "            <p class='text-normal'>Корпус: " + user.getBuilding() + "</p>\n" +
-                    "            <p class='text-normal'>Секция: " + user.getSection() + "</p>\n" +
-                    "            <p class='text-normal'>Этаж: " + user.getFloor() + "</p>\n" +
-                    "            <p class='text-normal'>Квартира: " + strFlat + "</p>\n" +
-                    "            <BR><p class='text-normal'>" + flatCheckbox + " Учитывать номер квартиры при<BR> поиске соседей сверху/снизу" + "</p>\n" +
-                    "" +
-                    "";
-
-
-
-            if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
-
-                String raz = "раз";
-                if (UPDATE_ATTEMPTS - user.getUpdates() == 2 || UPDATE_ATTEMPTS - user.getUpdates() == 3) {
-                    raz = "раза";
-                }
-
-                String buttonText = "Вселиться (1 раз)";
-//                if (user.getUpdates() > 0) {
-//                    buttonText = "Изменить (" + (UPDATE_ATTEMPTS - user.getUpdates()) + " " +  raz + ")";
-//                }
-
-                dataSection = dataSection +
-                        "            <form action='" + PROFILE_URL + "' method='post' align=center>\n" +
-                        "                <p><input type='hidden' name='action' value='change'></p>\n" +
-                        "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
-                        "            </form>\n" +
-                        "";
-            }
-        }
-
-        String topNeighboursTitle = "Все соседи этажом выше:";
-        String floorNeighboursTitle = "Соседи по площадке:";
-        String bottomNeighboursTitle = "Все соседи этажом ниже:";
-
-        if (user.isUseFlat()) {
-            topNeighboursTitle = "Соседи над вами:";
-            bottomNeighboursTitle = "Соседи под вами:";
-        }
-
-        sb.append("<html>\n" +
-                "\n" +
-                "<table width=100% height=100%>\n" +
-                "    <tr>\n" +
-                "        <td align=center valign=center width=30%>\n" +
-                "            <a href='https://vk.com/id" + user.getVk_id() + "'> <img src='" + user.getVkPhoto() + "' class='round-me'><BR>" +
-                "" + user.getVkFirstName() + "<BR>" +
-                "" + user.getVkLastName() + "</a><BR><BR>" +
-                "            <H1>Я здесь:</H1><BR>\n" +
-                "" + dataSection +
-                "<BR><BR><BR>" +
-                "Есть вопросы?<BR><a href='https://vk.com/id6191031' target=_blank>Пишите</a>" +
-                "        </td>\n" +
-                "        <td align=center valign=center width=50%>\n" +
-                "            <table width=100% height=100%>\n" +
-                "                <tr>\n" +
-                "                    <td valign='top'>\n" +
-                "                        <H1>" + topNeighboursTitle + "</H1><BR>\n" + getNeighboursTopHTML(user) +
-                "                    </td>\n" +
-                "                </tr>\n" +
-                "                <tr>\n" +
-                "                    <td valign='top'>\n" +
-                "                        <H1>" + floorNeighboursTitle + "</H1><BR><div id='container'>\n" + getNeighboursSectionHTML(user) +
-                "                    </div></td>\n" +
-                "                </tr>\n" +
-                "                <tr>\n" +
-                "                    <td valign='top'>\n" +
-                "                        <H1>" + bottomNeighboursTitle + "</H1><BR>\n" + getNeighboursBottomHTML(user) +
-                "                    </td>\n" +
-                "                </tr>\n" +
-                "            </table>\n" +
-                "        </td>\n" +
-                "        <td width=20% valign='top' align='left'>" +
-                "<BR><BR><p class='text-total'><H3>Нас уже: " + DatabaseManager.getUsersCountByBuilding(0) + "</H3></p>" +
-                "<BR>" + getStat() +
-                "" +
-                "        </td>" +
-                "    </tr>\n" +
-                "</table>\n" +
-                "\n" +
-                "" +
-                "" +
-                "" +
-                "</html>\n" +
-                "");
-
-        return sb.toString();
     }
 
-    private static String getStat() {
+
+    public static String getStat() {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 1; i < INFRASTRUCTURE.length; i++ ) {
@@ -281,7 +176,7 @@ public class HTMLHelper {
      * @param sql
      * @return
      */
-    private static String getNeighboursHTML(User user, String sql) {
+    public static String getNeighboursHTML(User user, String sql) {
 
         if (!user.isValid()) {
             return "";
@@ -314,7 +209,7 @@ public class HTMLHelper {
      * HTML part - section neighbours
      * @return
      */
-    private static String getNeighboursSectionHTML(User user) {
+    public static String getNeighboursSectionHTML(User user) {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE" +
                 " building = '" + user.getBuilding() + "' AND" +
                 " section = '" + user.getSection() + "' AND" +
@@ -327,7 +222,7 @@ public class HTMLHelper {
      * HTML part - top floor neighbours
      * @return
      */
-    private static String getNeighboursTopHTML(User user) {
+    public static String getNeighboursTopHTML(User user) {
         String sql = "SELECT * FROM " +  TABLE_NAME + " WHERE" +
                 " building = '" + user.getBuilding() + "' AND" +
                 " section = '" + user.getSection() + "' AND" +
@@ -348,7 +243,7 @@ public class HTMLHelper {
      * HTML part - bottom floor neighbours
      * @return
      */
-    private static String getNeighboursBottomHTML(User user) {
+    public static String getNeighboursBottomHTML(User user) {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE" +
                 " building = '" + user.getBuilding() + "' AND" +
                 " section = '" + user.getSection() + "' AND" +
