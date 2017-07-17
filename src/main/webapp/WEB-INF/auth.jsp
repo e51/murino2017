@@ -13,8 +13,7 @@
 //    session.invalidate();
     session.removeAttribute("user");
 
-    String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - 3));
-//    logger.info(String.format("[auth.jsp] %s remote address: %s", sid, request.getRemoteAddr()));
+    String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
     String contextPath = VK_GET_AUTH_URL;
     String contextParams = "?client_id=" + VK_APP_ID +
@@ -25,17 +24,6 @@
             "&scope=" +
             "&v=5.65";
 
-    logger.info(String.format("[auth.jsp] %s Redirecting to VK for authorization, remote address: %s", sid, request.getRemoteAddr()));
+    logger.info(String.format("[auth] %s Redirecting to VK for authentication, remote address: %s", sid, request.getRemoteAddr()));
     response.sendRedirect(response.encodeRedirectURL(contextPath + contextParams));
-
 %>
-
-<!--%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html-->

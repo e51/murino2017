@@ -1,6 +1,3 @@
-<%@ page import="static local.tcltk.Constants.SITE_TITLE" %>
-<%@ page import="static local.tcltk.Constants.STYLES_URL" %>
-<%@ page import="static local.tcltk.Constants.SITE_URL" %>
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="local.tcltk.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
@@ -21,22 +18,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title><%=SITE_TITLE%></title>
-
-    <!--link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>reset.css"-->
-    <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css?v=1.0">
-
-    <!-- favicon part -->
-    <link rel="apple-touch-icon" sizes="180x180" href="<%=SITE_URL%>/apple-touch-icon.png?v=GvJ4ke7akz">
-    <link rel="icon" type="image/png" sizes="32x32" href="<%=SITE_URL%>/favicon-32x32.png?v=GvJ4ke7akz">
-    <link rel="icon" type="image/png" sizes="16x16" href="<%=SITE_URL%>/favicon-16x16.png?v=GvJ4ke7akz">
-    <link rel="manifest" href="<%=SITE_URL%>/manifest.json?v=GvJ4ke7akz">
-    <link rel="mask-icon" href="<%=SITE_URL%>/safari-pinned-tab.svg?v=GvJ4ke7akz" color="#5bbad5">
-    <link rel="shortcut icon" href="<%=SITE_URL%>/favicon.ico?v=GvJ4ke7akz">
-    <meta name="theme-color" content="#ffffff">
-    <!-- end of favicon part -->
-
+    <%@include file = "/WEB-INF/includes/head_part.jspf"%>
 </head>
 <body>
 

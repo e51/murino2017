@@ -40,12 +40,12 @@ public class HTMLHelper {
     public static void notify(String message) {
         String contextParams = null;
         try {
-            contextParams = "messages.send?user_id=" + MY_VK_ID +
+            contextParams = "messages.send?user_id=" + ADMIN_VK_ID +
                     "&message=" + URLEncoder.encode(message, "UTF-8") +
-                    "&access_token=" + MSG_PERM_TOKEN_MR_GREEN +
+                    "&access_token=" + NOTIFY_ACC_PERM_TOKEN +
                     "&v=5.65";
         } catch (UnsupportedEncodingException e) {
-            logger.error("[HTMLHelper.notify] Error notify admin - UnsupportedEncodingException");
+            logger.error("[notify] Error notify admin - UnsupportedEncodingException");
         }
 
         getVKResponse(VK_QUERY_URL + contextParams);
@@ -148,9 +148,9 @@ public class HTMLHelper {
             user.setVkPhoto(String.valueOf(elementMap.get("photo_200")));
 
         } catch (NullPointerException e) {
-            logger.error("[HTMLHelper.fillUserInfo] Got NULL answer from vk, json = null");
+            logger.error("[fillUserInfo] Got NULL answer from vk, json = null");
         } catch (ParseException e) {
-            logger.error("[HTMLHelper.fillUserInfo] user id request error - ParseException");
+            logger.error("[fillUserInfo] user id request error - ParseException");
         }
     }
 
