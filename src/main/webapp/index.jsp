@@ -29,6 +29,11 @@
     session.invalidate();
 //    session.removeAttribute("user");
 
+    String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - 3));
+    logger.info(String.format("[index.jsp] %s remote address: %s", sid, request.getRemoteAddr()));
+
+
+/*
     String contextPath = VK_GET_AUTH_URL;
     String contextParams = "?client_id=" + VK_APP_ID +
             "&redirect_uri=" + VK_REDIRECT_URI +
@@ -37,13 +42,8 @@
 //            "&scope=notify" +
             "&scope=" +
             "&v=5.65";
+*/
 
-    String sid = request.getSession().getId().substring(request.getSession().getId().length() - 3);
-    logger.info("[index] {" + sid + "}, remote address: " + request.getRemoteAddr());
-
-%>
-
-<%
     int count = DatabaseManager.getUsersCountByBuilding(0);
 %>
 
@@ -51,9 +51,8 @@
     <div class="index-middle">
         <div class="index-inner">
             <H1>Войти:</H1><BR><BR>
-            <a href="<%=(contextPath + contextParams)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
+            <a href="<%=AUTH_URL%>"><img src="img/vk_logo.jpg" sizes="150"></a>
             <BR><BR><BR><BR>
-            <!--H1>Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%></H1><BR-->
             <div id="countdown" class="countdownHolder">
                 <span class="counterText" style="top: 0px;">Нас уже: </span>
                 <span class="countDigits">
