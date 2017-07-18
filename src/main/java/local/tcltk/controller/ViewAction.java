@@ -16,7 +16,7 @@ public class ViewAction implements Action {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = null;
         String result = null;
-        String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - 3));
+        String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
         // get current session
         HttpSession session = request.getSession();
