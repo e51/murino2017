@@ -28,7 +28,7 @@ public class VerifyAction implements Action {
         User user = null;               // user object - create user after successful authentication
         String result = null;           // return to index by default
 
-        String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - 3));
+        String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
         logger.info(String.format("[verify] %s Start checking", sid));
 
         // get current session
