@@ -12,7 +12,7 @@
     Logger logger = Logger.getLogger("profile.jsp");
     User user = (User) session.getAttribute("user");
 
-    logger.info("[profile.jsp] show page");
+//    logger.info("[profile.jsp] show page");
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -31,7 +31,7 @@
                 <p>Данные для заполнения брать из договора, где прописан строительный адрес квартиры в формате 1.2.3.4<BR>
                     Где: 1 - корпус, 2 - секция, 3 - этаж, 4 - квартира<BR>
                     Если где-то фигурирует дробная секция, например: 1.5, то это означает: корпус 1, секция 5.<BR>
-                    Номер квартиры нужен именно <strong>строительный</strong> (короткий номер от 1 до 15)<BR>
+                    Номер квартиры нужен именно <strong>строительный</strong> (короткий номер от 1 до <%=MAX_FLAT_NUMBER_PER_SECTION%>)<BR>
                 </p>
                 <form action='<%=PROFILE_URL%>' method='post' align=center>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

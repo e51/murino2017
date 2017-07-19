@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.sql.SQLException;
+
 import static local.tcltk.Constants.*;
 
 public class ProfileAction implements Action {
@@ -103,14 +105,32 @@ public class ProfileAction implements Action {
                 // good data, let's update
                 user.setUpdates(user.getUpdates() + 1);
 
-                if (insert) {   // new user
-                    DatabaseManager.createNewUserDB(user);
 
-                    // send a message to make admin happy
-                    HTMLHelper.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
-                } else {        // update old user record
-                    DatabaseManager.updateUserInDB(user);
+                try {
+                    if (insert) {   // new user
+                        DatabaseManager.createNewUserDB(user);
+
+                        // send a message to make admin happy
+                        HTMLHelper.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
+                    } else {        // update old user record
+                        DatabaseManager.updateUserInDB(user);
+                    }
+                } catch (SQLException | ClassNotFoundException e) {
+                    // error updating - return old values
+                    logger.error(String.format("[profile] %s Modify Database FAILED - %s, %s (building=%d, section=%d, floor=%d, flat=%d)",
+                            sid, e.getClass().getSimpleName(), e.getMessage(), building, section, floor, flat));
+
+                    // return old values
+                    user.setBuilding(oldBuilding);
+                    user.setSection(oldSection);
+                    user.setFloor(oldFloor);
+                    user.setFlat(oldFlat);
+                    user.setUpdates(user.getUpdates() - 1);
+
+                    result = "view";
+                    return result;
                 }
+
 
                 logger.info(String.format("[profile] %s Updating is SUCCESS", sid));
 

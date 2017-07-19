@@ -1,10 +1,16 @@
 package local.tcltk;
 
+import local.tcltk.controller.FrontController;
+import org.apache.log4j.Logger;
+
 /**
  * Created by user on 24.06.2017.
  */
 
 public class User {
+    private static final Logger logger = Logger.getLogger(User.class);
+
+    // DB stored fields
     private long vk_id;
     private int building;
     private int section;
@@ -12,6 +18,7 @@ public class User {
     private int flat;
     private int updates;
 
+    // other fields
     private String vkFirstName;
     private String vkLastName;
     private String vkPhoto;
@@ -147,16 +154,29 @@ public class User {
     public boolean isValid() {
         boolean result = true;
 
-        if (building <= 0 || building > 2) {
-            result = false;
+        if (!FrontController.structure.keySet().contains(new Integer(building))) {
+            logger.error(String.format("[isValid] INVALID building. No such building (building=%d)", building));
+            return false;
         }
 
-        if (section <= 0) {
-            result = false;
+        if (section < 1 || section > FrontController.structure.get(new Integer(building)).getSectionsCount()) {
+            logger.error(String.format("[isValid] INVALID section. No such section (building=%d, section=%d)", building, section));
+            return false;
+//            result = false;
         }
 
-        if (floor <= 0 || floor > 12) {
-            result = false;
+        try {
+            if (floor < 1 || floor > FrontController.structure.get(new Integer(building)).getFloorsCountBySection()[section - 1]) {
+                logger.error(String.format("[isValid] INVALID floor. No such floor (building=%d, section=%d, floor=%d)", building, section, floor));
+                return false;
+//                result = false;
+            }
+        } catch (Exception e) {
+            // In case of ArrayIndexOutOfBounds exception
+//            e.printStackTrace();
+            logger.error(String.format("[isValid] INVALID floor. Got %s for: (building=%d, section=%d, floor=%d)", e.getClass().getSimpleName(), building, section, floor));
+            return false;
+//            result = false;
         }
 
         return result;
