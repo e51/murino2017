@@ -58,8 +58,8 @@ public class VerifyAction implements Action {
         // VK token request part - - - - - - - - -
         // Variant 2 - use web + json
         // use code for token request
-        String contextParams = "?client_id=" + VK_APP_ID +
-                "&client_secret=" + VK_CLIENT_SECRET +
+        String contextParams = "?client_id=" + VK_WEB_APP_ID +
+                "&client_secret=" + VK_WEB_APP_SECRET +
                 "&redirect_uri=" + VK_REDIRECT_URI +
                 "&code=" + code;
 
