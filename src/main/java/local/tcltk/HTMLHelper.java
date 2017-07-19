@@ -1,5 +1,6 @@
 package local.tcltk;
 
+import local.tcltk.controller.FrontController;
 import local.tcltk.model.DatabaseManager;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -110,8 +111,8 @@ public class HTMLHelper {
         } catch (NullPointerException e) {
             logger.error("[fillNeighboursVKData] Got NULL answer from vk, json = null");
         } catch (ParseException e) {
-            e.printStackTrace();
-            logger.error("[fillNeighboursVKData] error - ParseException");
+//            e.printStackTrace();
+            logger.error(String.format("[fillNeighboursVKData] Parse error: %s, %s", e.getClass().getSimpleName(), e.getMessage()));
         }
     }
 
@@ -150,7 +151,7 @@ public class HTMLHelper {
         } catch (NullPointerException e) {
             logger.error("[fillUserInfo] Got NULL answer from vk, json = null");
         } catch (ParseException e) {
-            logger.error("[fillUserInfo] user id request error - ParseException");
+            logger.error(String.format("[fillUserInfo] user id request error: %s, %s", e.getClass().getSimpleName(), e.getMessage()));
         }
     }
 
@@ -158,13 +159,14 @@ public class HTMLHelper {
     public static String getStat() {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 1; i < INFRASTRUCTURE.length; i++ ) {
-            sb.append("<B>Корпус " + i + ": ").append(DatabaseManager.getUsersCountByBuilding(i)).append("</B><BR>");
-            for (int j = INFRASTRUCTURE[i]; j > 0 ; j--) {
-                sb.append("&nbsp;&nbsp;&nbsp;&nbsp;Этаж " + j + ": ").append(DatabaseManager.getUsersCountByBuildingAndFloor(i, j)).append("<BR>");
+        for (Building building : FrontController.structure.values()) {
+            sb.append("<B>Корпус " + building.getValue() + ": ").append(DatabaseManager.getUsersCountByBuilding(building.getValue())).append("</B><BR>");
+            for (int i = building.getMaxFloor(); i > 0 ; i--) {
+                sb.append("&nbsp;&nbsp;&nbsp;&nbsp;Этаж " + i + ": ").append(DatabaseManager.getUsersCountByBuildingAndFloor(building.getValue(), i)).append("<BR>");
             }
             sb.append("<BR>");
         }
+
         sb.append("<BR><BR><BR><BR>");
 
         return sb.toString();

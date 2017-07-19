@@ -19,7 +19,7 @@
 
     String flatCheckbox = user.isUseFlat() ? "checked" : "";
 
-    String strFlat = (user.getFlat() > MAX_FLAT_NUMBER_PER_SECTION) ? "<font color=RED>" + user.getFlat() + " (ошибка)</font>" : "" + user.getFlat();
+    String strFlat = (user.getFlat() > MAX_FLAT_NUMBER_PER_SECTION) ? "<font color=RED>" + user.getFlat() + "</font>" : "" + user.getFlat();
 
     String buttonText = "Ввести данные";
     String strProfileButton = "";
@@ -101,7 +101,7 @@
                 </table>
             </td>
             <td width=20% valign='top' align='left'>
-                <BR><BR><p class='text-total'><H3>Нас уже:<%=DatabaseManager.getUsersCountByBuilding(0)%></H3></p>
+                <BR><BR><p class='text-total'><H3>Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%></H3></p>
                 <BR><%=HTMLHelper.getStat()%>
             </td>
         </tr>
