@@ -1,19 +1,20 @@
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
-
+<%@ page import="local.tcltk.User" %>
 <%
     Logger logger = Logger.getLogger("index.jsp");
 
     session.invalidate();
 //    session.removeAttribute("user");
 
+    User user = null;
+
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
     logger.info(String.format("[index] %s remote address: %s", sid, request.getRemoteAddr()));
 
     int count = DatabaseManager.getUsersCountByBuilding(0);
 %>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -26,7 +27,7 @@
         <div class="index-middle">
             <div class="index-inner">
                 <H1>Войти:</H1><BR><BR>
-                <a href="<%=AUTH_URL%>"><img src="img/vk_logo.jpg" sizes="150"></a>
+                <a href="<%=WEB_APP_AUTH_URL%>"><img src="img/vk_logo.jpg" sizes="150"></a>
                 <BR><BR><BR><BR>
                 <div id="countdown" class="countdownHolder">
                     <span class="counterText" style="top: 0px;">Нас уже: </span>

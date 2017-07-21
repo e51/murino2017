@@ -3,6 +3,8 @@ package local.tcltk;
 import local.tcltk.controller.FrontController;
 import org.apache.log4j.Logger;
 
+import static local.tcltk.Constants.STRUCTURE;
+
 /**
  * Created by user on 24.06.2017.
  */
@@ -22,9 +24,54 @@ public class User {
     private String vkFirstName;
     private String vkLastName;
     private String vkPhoto;
+    private String vkPhoto200;
+    private String vkPhoto100;
+    private String vkPhoto50;
     private String token;
+//    private boolean mobileUser;
+    private int appVersion;
 
     private boolean useFlat;
+
+    public int getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(int appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    public String getVkPhoto200() {
+        return vkPhoto200;
+    }
+
+    public void setVkPhoto200(String vkPhoto200) {
+        this.vkPhoto200 = vkPhoto200;
+    }
+
+    public String getVkPhoto100() {
+        return vkPhoto100;
+    }
+
+    public void setVkPhoto100(String vkPhoto100) {
+        this.vkPhoto100 = vkPhoto100;
+    }
+
+    public String getVkPhoto50() {
+        return vkPhoto50;
+    }
+
+    public void setVkPhoto50(String vkPhoto50) {
+        this.vkPhoto50 = vkPhoto50;
+    }
+
+//    public boolean isMobileUser() {
+//        return mobileUser;
+//    }
+
+//    public void setMobileUser(boolean mobileUser) {
+//        this.mobileUser = mobileUser;
+//    }
 
     public boolean isUseFlat() {
         return useFlat;
@@ -154,19 +201,19 @@ public class User {
     public boolean isValid() {
         boolean result = true;
 
-        if (!FrontController.structure.keySet().contains(new Integer(building))) {
+        if (!STRUCTURE.keySet().contains(new Integer(building))) {
             logger.error(String.format("[isValid] INVALID building. No such building (building=%d)", building));
             return false;
         }
 
-        if (section < 1 || section > FrontController.structure.get(new Integer(building)).getSectionsCount()) {
+        if (section < 1 || section > STRUCTURE.get(new Integer(building)).getSectionsCount()) {
             logger.error(String.format("[isValid] INVALID section. No such section (building=%d, section=%d)", building, section));
             return false;
 //            result = false;
         }
 
         try {
-            if (floor < 1 || floor > FrontController.structure.get(new Integer(building)).getFloorsCountBySection()[section - 1]) {
+            if (floor < 1 || floor > STRUCTURE.get(new Integer(building)).getFloorsCountBySection()[section - 1]) {
                 logger.error(String.format("[isValid] INVALID floor. No such floor (building=%d, section=%d, floor=%d)", building, section, floor));
                 return false;
 //                result = false;

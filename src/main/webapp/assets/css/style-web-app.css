@@ -1,0 +1,105 @@
+.center-div {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /*background-color: #ccc;*/
+    border-radius: 3px;
+}
+body { margin: 0; }
+#neighbour {
+    position: relative;
+    overflow: auto;
+    padding: 10px;
+    width: 150px;
+    height: 90px;
+}
+
+.round-neighbour-photo {
+    border-radius: 50px; /* Радиус скругления */
+    /*border: 0px solid black; /* Параметры рамки */
+    /* box-shadow: 0 0 7px #666; /* Параметры тени */
+}
+
+.index-outer {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.index-middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.index-inner {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 100%;
+}
+
+.profile-container {
+    /*
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    border-radius: 3px;
+    */
+    font-size: 20px;
+}
+.text-normal {
+    font-size: 20px;
+}
+
+.text-notes {
+    font-size: 12px;
+}
+
+.input-style {
+    text-align: center;
+    font-size: 20px;
+}
+
+input[type=checkbox] {
+    transform: scale(2.0);
+}
+
+input.submit {
+    width: 250px;
+    height: 70px;
+    font-size: 20px;
+}
+
+input.checkbox {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+}
+
+input.submit-profile {
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+}
+
+
+#top-container { height: 33%; width:100%; /*font-size: 0;*/ }
+#mid-container { height: 33%; width:100%; /*font-size: 0;*/ }
+#btm-container { height: 33%; width:100%; /*font-size: 0;*/ }
+
+#container { height: 100%; width:100%; /*font-size: 0;*/ }
+
+#block-neighbour { display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/ }
+#block-neighbour { width: 150px; height: 150px; }
