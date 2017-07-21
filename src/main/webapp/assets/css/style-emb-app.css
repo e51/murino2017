@@ -18,8 +18,9 @@ body { margin: 0; }
     width: 150px;
     height: 90px;
 }
-.round-you {
-    border-radius: 50px; /* Радиус скругления */
+
+.round-neighbour-photo {
+    border-radius: 25px; /* Радиус скругления */
     /*border: 0px solid black; /* Параметры рамки */
     /* box-shadow: 0 0 7px #666; /* Параметры тени */
 }
@@ -43,7 +44,7 @@ body { margin: 0; }
     width: 100%;
 }
 
-.profile-container {
+.div-help-page {
     /*
     position: absolute;
     margin: auto;
@@ -99,5 +100,6 @@ input.submit-profile {
 #btm-container { height: 33%; width:100%; /*font-size: 0;*/ }
 
 #container { height: 100%; width:100%; /*font-size: 0;*/ }
-#block { display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/ }
-#block { width: 150px; height: 150px; }
+
+#block-neighbour { display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/ }
+#block-neighbour { width: 100px; height: 100px; }

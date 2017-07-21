@@ -44,7 +44,7 @@ public class VerifyAction implements Action {
 //            logger.error("[verify] {" + sid + "} auth error: " + request.getParameter("error_reason") + ", " + request.getParameter("error_description") + " - Redirecting to index");
 //            logger.error(request.getQueryString());
 //            result = "";
-//            response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+//            response.sendRedirect(response.encodeRedirectURL(WEB_APP_SITE_URL));
 //            return;
         }
 
@@ -60,10 +60,10 @@ public class VerifyAction implements Action {
         // use code for token request
         String contextParams = "?client_id=" + VK_WEB_APP_ID +
                 "&client_secret=" + VK_WEB_APP_SECRET +
-                "&redirect_uri=" + VK_REDIRECT_URI +
+                "&redirect_uri=" + WEB_APP_VK_REDIRECT_URI +
                 "&code=" + code;
 
-        String json = HTMLHelper.getVKResponse(VK_GET_TOKEN_URL + contextParams);
+        String json = HTMLHelper.getVKResponse(VK_WEB_APP_GET_TOKEN_URL + contextParams);
 
 //        logger.info("[verify] " + sid + " VK response json: " + json);
         logger.info(String.format("[verify] %s VK response json: %s", sid, json));
@@ -76,7 +76,7 @@ public class VerifyAction implements Action {
 //            throw new VerifyException("[verify] {" + sid + "} Got NULL answer from vk - redirecting to index" + ", IP: " + request.getRemoteAddr());
             throw new VerifyException(String.format("[verify] %s Got NULL answer from vk, remote address: %s", sid, request.getRemoteAddr()));
 //            logger.error("[verify] {" + sid + "} Got NULL answer from vk - redirecting to index" + ", IP: " + request.getRemoteAddr());
-//                response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+//                response.sendRedirect(response.encodeRedirectURL(WEB_APP_SITE_URL));
 //                return;
         }
 
@@ -93,7 +93,7 @@ public class VerifyAction implements Action {
 //            throw new VerifyException("[verify] {" + sid + "} Parse json Exception - redirecting to index");
             throw new VerifyException(String.format("[verify] %s Parse json Exception", sid));
 //            logger.error("[verify] {" + sid + "} Parse json Exception - redirecting to index");
-//                    response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+//                    response.sendRedirect(response.encodeRedirectURL(WEB_APP_SITE_URL));
 //                    return;
         }
 
@@ -105,7 +105,7 @@ public class VerifyAction implements Action {
 //            throw new VerifyException("[verify] {" + sid + "} Token request error - redirecting to index. Error: " + vkResponse.get("error") + ", description: " + vkResponse.get("error_description"));
             throw new VerifyException(String.format("[verify] %s Token request error. Error: %s, description: %s" + sid, vkResponse.get("error"), vkResponse.get("error_description")));
 //            logger.error("[verify] {" + sid + "} Token request error - redirecting to index. Error: " + vkResponse.get("error") + ", description: " + vkResponse.get("error_description"));
-//            response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+//            response.sendRedirect(response.encodeRedirectURL(WEB_APP_SITE_URL));
 //            return;
         }
 
@@ -117,7 +117,7 @@ public class VerifyAction implements Action {
 //            throw new VerifyException("[verify] {" + sid + "} Incorrect value of vk_id == " + vk_id + ". Redirecting to index");
             throw new VerifyException(String.format("[verify] %s Incorrect value of vk_id: %d", sid, vk_id));
 //            logger.error("[verify] {" + sid + "} Incorrect value of vk_id == " + vk_id + ". Redirecting to index");
-//            response.sendRedirect(response.encodeRedirectURL(SITE_URL));
+//            response.sendRedirect(response.encodeRedirectURL(WEB_APP_SITE_URL));
 //            return;
         }
 
@@ -140,10 +140,11 @@ public class VerifyAction implements Action {
         }
 
         user.setToken(accessToken);
+        user.setAppVersion(WEB_SITE_USER);
         session.setAttribute("user", user);
 
         logger.info("[verify] " + sid + " verification PASSED.");
-//        response.sendRedirect(response.encodeRedirectURL(VIEW_URL));
+//        response.sendRedirect(response.encodeRedirectURL(WEB_APP_VIEW_URL));
 
         HTMLHelper.fillUserInfo(user);
 

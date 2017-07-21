@@ -15,9 +15,9 @@
 
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-    String contextPath = VK_GET_AUTH_URL;
+    String contextPath = VK_WEB_APP_GET_AUTH_URL;
     String contextParams = "?client_id=" + VK_WEB_APP_ID +
-            "&redirect_uri=" + VK_REDIRECT_URI +
+            "&redirect_uri=" + WEB_APP_VK_REDIRECT_URI +
             "&display=page" +
             "&response_type=code" +
 //            "&scope=notify" +

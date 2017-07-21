@@ -1,6 +1,5 @@
 package local.tcltk;
 
-import local.tcltk.controller.FrontController;
 import local.tcltk.model.DatabaseManager;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -49,7 +48,7 @@ public class HTMLHelper {
             logger.error("[notify] Error notify admin - UnsupportedEncodingException");
         }
 
-        getVKResponse(VK_QUERY_URL + contextParams);
+        getVKResponse(VK_API_CLASSIC_QUERY_URL + contextParams);
     }
 
     /**
@@ -69,11 +68,11 @@ public class HTMLHelper {
 
         logger.info("[fillNeighboursVKData] queryParams: " + queryParams.toString());
 
-        queryParams.append("&fields=photo_100").append("&v=5.52");
+        queryParams.append("&fields=photo_200,photo_100,photo_50").append("&v=5.52");
 
-        String json = getVKResponse(VK_QUERY_URL + queryParams);
+        String json = getVKResponse(VK_API_CLASSIC_QUERY_URL + queryParams);
 
-//        logger.info("[fillNeighboursVKData] total url: " + VK_QUERY_URL + queryParams);
+//        logger.info("[fillNeighboursVKData] total url: " + VK_API_CLASSIC_QUERY_URL + queryParams);
         logger.info("[fillNeighboursVKData] got json: " + json);
 
         // for example
@@ -104,6 +103,9 @@ public class HTMLHelper {
                         user.setVkPhoto(String.valueOf(elementMap.get("photo_100")));
                         user.setVkFirstName(String.valueOf(elementMap.get("first_name")));
                         user.setVkLastName(String.valueOf(elementMap.get("last_name")));
+                        user.setVkPhoto200(String.valueOf(elementMap.get("photo_200")));
+                        user.setVkPhoto100(String.valueOf(elementMap.get("photo_100")));
+                        user.setVkPhoto50(String.valueOf(elementMap.get("photo_50")));
                         break;
                     }
                 }
@@ -122,11 +124,11 @@ public class HTMLHelper {
      */
     public static void fillUserInfo(User user) {
         String queryParams = "users.get?user_id=" + user.getVk_id() +
-                "&fields=photo_200" +
+                "&fields=photo_200,photo_100,photo_50" +
                 "&v=5.52";
 //        String queryParams = String.format("users.get?user_id=%d&fields=photo_200&v=5.52", user.getVk_id());
 
-        String json = getVKResponse(VK_QUERY_URL + queryParams);
+        String json = getVKResponse(VK_API_CLASSIC_QUERY_URL + queryParams);
         // {"response":[{"id":210700286,"first_name":"Lindsey","last_name":"Stirling","photo_50":"https:\/\/pp.userapi.com\/c636821\/v636821286\/38a75\/Ay-bEZoJZw8.jpg"}]}
 
         JSONParser parser = new JSONParser();
@@ -147,6 +149,9 @@ public class HTMLHelper {
             user.setVkFirstName(String.valueOf(elementMap.get("first_name")));
             user.setVkLastName(String.valueOf(elementMap.get("last_name")));
             user.setVkPhoto(String.valueOf(elementMap.get("photo_200")));
+            user.setVkPhoto200(String.valueOf(elementMap.get("photo_200")));
+            user.setVkPhoto100(String.valueOf(elementMap.get("photo_100")));
+            user.setVkPhoto50(String.valueOf(elementMap.get("photo_50")));
 
         } catch (NullPointerException e) {
             logger.error("[fillUserInfo] Got NULL answer from vk, json = null");
@@ -159,7 +164,7 @@ public class HTMLHelper {
     public static String getStat() {
         StringBuilder sb = new StringBuilder();
 
-        for (Building building : FrontController.structure.values()) {
+        for (Building building : STRUCTURE.values()) {
             sb.append("<B>Корпус " + building.getValue() + ": ").append(DatabaseManager.getUsersCountByBuilding(building.getValue())).append("</B><BR>");
             for (int i = building.getMaxFloor(); i > 0 ; i--) {
                 sb.append("&nbsp;&nbsp;&nbsp;&nbsp;Этаж " + i + ": ").append(DatabaseManager.getUsersCountByBuildingAndFloor(building.getValue(), i)).append("<BR>");
@@ -193,10 +198,14 @@ public class HTMLHelper {
         // 3 - show users
         StringBuilder sb = new StringBuilder();
 
+
         for (User usr : neighbours) {
-            sb.append("<div id='block'><a href='https://vk.com/id" + usr.getVk_id() + "' target='_blank'> <img src='" + usr.getVkPhoto() + "' class='round-you'><BR>" +
+            sb.append("<div id='block-neighbour'><a href='https://vk.com/id" + usr.getVk_id() + "' target='_blank'> <img src='" +
+                    (user.getAppVersion() == WEB_SITE_USER ? usr.getVkPhoto100() : (user.getAppVersion() == EMBEDDED_APP_USER ? usr.getVkPhoto50() : usr.getVkPhoto50())) +
+                    "' class='round-neighbour-photo'><BR>" +
                     "" + usr.getVkFirstName() + "<BR>" +
                     "" + usr.getVkLastName() + "</a><BR></div>");
+
         }
 
         if (neighbours.isEmpty()) {

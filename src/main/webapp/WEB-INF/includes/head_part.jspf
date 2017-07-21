@@ -1,6 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <!--link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>reset.css"-->
-<link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>style.css?v=1.0">
+<link rel="stylesheet" type="text/css" href="<%=STYLES_URL%><%=(user != null && user.getAppVersion() == WEB_SITE_USER ? "style-web-app.css" :
+                                                    (user != null && user.getAppVersion() == EMBEDDED_APP_USER ? "style-emb-app.css" : "style-mobile-app.css"))%>?v=1.1">
 <title><%=SITE_TITLE%></title>
 
 <!-- favicon part -->

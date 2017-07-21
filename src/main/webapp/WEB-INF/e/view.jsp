@@ -26,7 +26,7 @@
 
     if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
         strProfileButton =
-                "            <form action='" + WEB_APP_PROFILE_URL + "' method='post' align=center>\n" +
+                "            <form action='" + EMBEDDED_APP_PROFILE_URL + "' method='post' align=center>\n" +
                 "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
                 "            </form>";
     }
@@ -50,10 +50,10 @@
     <script>
         function use_flat_func(){
             if(document.getElementById('use_flat').checked){
-                window.location='<%=WEB_APP_VIEW_URL%>?f=1';
+                window.location='<%=EMBEDDED_APP_VIEW_URL%>?f=1';
                 return false;
             } else {
-                window.location='<%=WEB_APP_VIEW_URL%>';
+                window.location='<%=EMBEDDED_APP_VIEW_URL%>';
                 return false;
             }
             return true;

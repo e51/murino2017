@@ -12,19 +12,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
 
 import static local.tcltk.Constants.*;
 
-@WebServlet(name = "FrontController", urlPatterns = {"/verify", "/profile", "/view", "/auth", "/profile/", "/view/", "/auth/"})
-public class FrontController extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(FrontController.class);
-
-//    public static final Map<Integer, Building> structure = new TreeMap<>();
+@WebServlet(name = "FrontControllerEmbeddedApp", urlPatterns = {"/e/*", "/m/*"})
+public class FrontControllerEmbeddedApp extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(FrontControllerEmbeddedApp.class);
 
     static {
-//        structure.put(new Integer(1), new Building(1, 7, new Integer[] {12, 12, 12, 12, 12, 12, 12}, 15));
-//        structure.put(new Integer(2), new Building(2, 8, new Integer[] {12, 12, 12, 12, 12, 12, 12, 12}, 15));
         if (STRUCTURE.isEmpty()) {
             STRUCTURE.put(new Integer(1), new Building(1, 7, new Integer[]{12, 12, 12, 12, 12, 12, 12}, 15));
             STRUCTURE.put(new Integer(2), new Building(2, 8, new Integer[]{12, 12, 12, 12, 12, 12, 12, 12}, 15));
@@ -44,22 +39,20 @@ public class FrontController extends HttpServlet {
             action = ActionFactory.getAction(request);
             view = action.execute(request, response);
 
-//            if (view.equals(request.getRequestURI().substring(SITE_ROOT.length()))) {
-//            if (view.equals(request.getRequestURI().substring(SITE_ROOT.length()).replace('/', ' ').trim())) {
             if (view.equals(ActionFactory.getActionPart(request))) {
-                request.getRequestDispatcher("/WEB-INF/" + view + ".jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/e/" + view + ".jsp").forward(request, response);
             } else {
                 logger.info(String.format("[fc] %s Redirecting to %s", sid, view));
-                response.sendRedirect(SITE_ROOT + view + "/"); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
+                response.sendRedirect(EMBEDDED_APP_SITE_ROOT + view + "/"); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
         } catch (VerifyException | ProfileException | ViewException e) {
-            logger.error(e.getMessage());
-            logger.info(String.format("[fc] %s Redirecting to index", sid));
-            response.sendRedirect(response.encodeRedirectURL(SITE_ROOT));
+            logger.error(String.format("[fc] %s Error: %s, %s", sid, e.getClass().getSimpleName(), e.getMessage()));
+            logger.info(String.format("[fc] %s Redirecting to the error page", sid));
+            response.sendRedirect(response.encodeRedirectURL(EMBEDDED_APP_SITE_ROOT + "error"));
         } catch (Exception e) {
-            logger.error(String.format("[fc] %s Execution action failed. %s, remote address: %s, requestURI: %s, action: %s, view: %s", sid, e, request.getRemoteAddr(), request.getRequestURI(), action, view));
-            logger.info(String.format("[fc] %s Redirecting to index", sid));
-            response.sendRedirect(response.encodeRedirectURL(SITE_ROOT));
+            logger.error(String.format("[fc] %s Execution action failed: %s, %s, remote address: %s, requestURI: %s, action: %s, view: %s", sid, e.getClass().getSimpleName(), e.getMessage(), request.getRemoteAddr(), request.getRequestURI(), action, view));
+            logger.info(String.format("[fc] %s Redirecting to the error page", sid));
+            response.sendRedirect(response.encodeRedirectURL(EMBEDDED_APP_SITE_ROOT + "error"));
         }
     }
 }
