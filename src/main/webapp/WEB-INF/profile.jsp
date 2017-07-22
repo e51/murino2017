@@ -12,6 +12,14 @@
     Logger logger = Logger.getLogger("profile.jsp");
     User user = (User) session.getAttribute("user");
 
+    logger.info("Request URI: " + request.getRequestURI());
+    logger.info("Query string: " + request.getQueryString());
+    logger.info("SID: " + session.getId());
+    logger.info("Plane URL: " );
+    logger.info("encodeURL: " + response.encodeURL("page4"));
+    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("page4"));
+    logger.info("- - - - - profile.jsp end - - - - - -");
+
 //    logger.info("[profile.jsp] show page");
 %>
 
@@ -33,7 +41,7 @@
                     Если где-то фигурирует дробная секция, например: 1.5, то это означает: корпус 1, секция 5.<BR>
                     Номер квартиры нужен именно <strong>строительный</strong> (короткий номер от 1 до <%=MAX_FLAT_NUMBER_PER_SECTION%>)<BR>
                 </p>
-                <form action='<%=WEB_APP_PROFILE_URL%>' method='post' align=center>
+                <form action='<%=response.encodeRedirectURL(WEB_APP_PROFILE_URL)%>' method='post' align=center>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Например:
                     <p>&nbsp;Корпус<font color="red"><b>*</b></font>: <input type='text' name='building' value='<%=user.getBuilding()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1</p>

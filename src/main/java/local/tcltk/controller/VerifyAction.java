@@ -27,8 +27,15 @@ public class VerifyAction implements Action {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = null;               // user object - create user after successful authentication
         String result = null;           // return to index by default
-
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
+
+        logger.info("Request URI: " + request.getRequestURI());
+        logger.info("Query string: " + request.getQueryString());
+        logger.info("SID: " + request.getSession().getId());
+        logger.info("Plane URL: " );
+        logger.info("encodeURL: " + response.encodeURL("any"));
+        logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+
         logger.info(String.format("[verify] %s Start checking", sid));
 
         // get current session

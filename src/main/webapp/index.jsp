@@ -5,6 +5,14 @@
 <%
     Logger logger = Logger.getLogger("index.jsp");
 
+    logger.info("Request URI: " + request.getRequestURI());
+    logger.info("Query string: " + request.getQueryString());
+    logger.info("SID: " + session.getId());
+    logger.info("Plane URL: " );
+    logger.info("encodeURL: " + response.encodeURL("any"));
+    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+    logger.info("- - - - - index.jsp end - - - - - -");
+
 //    session.invalidate();
     session.removeAttribute("user");
 
@@ -14,8 +22,6 @@
     logger.info(String.format("[index] %s remote address: %s", sid, request.getRemoteAddr()));
 
     int count = DatabaseManager.getUsersCountByBuilding(0);
-    logger.info("encodeURL: " + response.encodeURL("sex"));
-
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -29,7 +35,7 @@
         <div class="index-middle">
             <div class="index-inner">
                 <H1>Войти:</H1><BR><BR>
-                <a href="<%=response.encodeURL(WEB_APP_AUTH_URL)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
+                <a href="<%=response.encodeRedirectURL(WEB_APP_AUTH_URL)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
                 <BR><BR><BR><BR>
                 <div id="countdown" class="countdownHolder">
                     <span class="counterText" style="top: 0px;">Нас уже: </span>

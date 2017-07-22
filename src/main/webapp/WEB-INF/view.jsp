@@ -15,6 +15,14 @@
     User user = (User) session.getAttribute("user");
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
+    logger.info("Request URI: " + request.getRequestURI());
+    logger.info("Query string: " + request.getQueryString());
+    logger.info("SID: " + session.getId());
+    logger.info("Plane URL: " );
+    logger.info("encodeURL: " + response.encodeURL("any"));
+    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+    logger.info("- - - - - view.jsp end - - - - - -");
+
 //    logger.info(String.format("[view.jsp] %s show page, user: %s", sid, user));
 
     String flatCheckbox = user.isUseFlat() ? "checked" : "";
@@ -26,7 +34,7 @@
 
     if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
         strProfileButton =
-                "            <form action='" + response.encodeURL(WEB_APP_PROFILE_URL) + "' method='post' align=center>\n" +
+                "            <form action='" + response.encodeRedirectURL(WEB_APP_PROFILE_URL) + "' method='post' align=center>\n" +
                 "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
                 "            </form>";
     }
@@ -66,8 +74,7 @@
     <table width=100% height=100%>
         <tr>
             <td align=center valign=top width=30%>
-                <BR><a href='https://vk.com/id<%=user.getVk_id()%>'>
-                <img src='<%=(user.getAppVersion() == WEB_SITE_USER ? user.getVkPhoto200() : (user.getAppVersion() == EMBEDDED_APP_USER ? user.getVkPhoto100() : user.getVkPhoto100()))%>'><BR>
+                <BR><a href='https://vk.com/id<%=user.getVk_id()%>'><img src='<%=user.getVkPhoto200()%>'><BR>
                 <%=user.getVkFirstName()%><BR>
                 <%=user.getVkLastName()%></a><BR>
                 <H1>Я здесь:</H1>
@@ -78,7 +85,7 @@
                 <BR>
                 <p class='text-normal'>
                     <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/>
-                    <a href="<%=response.encodeURL("some")%>">Учитывать номер квартиры</a> при<BR> поиске соседей сверху/снизу
+                    <a href="<%=response.encodeRedirectURL("some")%>">Учитывать номер квартиры</a> при<BR> поиске соседей сверху/снизу
                 </p>
                 <%=strProfileButton%>
                 <BR><BR>

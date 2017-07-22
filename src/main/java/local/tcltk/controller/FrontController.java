@@ -43,38 +43,37 @@ public class FrontController extends HttpServlet {
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
         try {
-            logger.info("fc sid: " + sid);
-            logger.info("encodeURL: " + response.encodeURL("sex"));
-            logger.info("encodeRedirectURL: " + response.encodeRedirectURL("sex"));
-            logger.info("URI: " + request.getRequestURI());
-            logger.info("QS: " + request.getQueryString());
+            logger.info("Request URI: " + request.getRequestURI());
+            logger.info("Query string: " + request.getQueryString());
+            logger.info("SID: " + request.getSession().getId());
+            logger.info("Plane URL: " );
+            logger.info("encodeURL: " + response.encodeURL("any.jsp"));
+            logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any.jsp"));
 
             action = ActionFactory.getAction(request);
             view = action.execute(request, response);
 
-
-//            if (view.equals(request.getRequestURI().substring(SITE_ROOT.length()))) {
-//            if (view.equals(request.getRequestURI().substring(SITE_ROOT.length()).replace('/', ' ').trim())) {
             if (view.equals(ActionFactory.getActionPart(request))) {
-                logger.info("forward to " + view + ".jsp");
+                logger.info(String.format("[fc] %s Forwarding to %s.jsp", sid, view));
                 request.getRequestDispatcher("/WEB-INF/" + view + ".jsp").forward(request, response);
             } else {
-                logger.info(String.format("[fc] %s Redirecting to %s", sid, view));
+                logger.info(String.format("[fc] %s Redirecting to %s", sid, response.encodeRedirectURL(view)));
 //                response.sendRedirect(SITE_ROOT + view + "/"); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
-                response.sendRedirect(response.encodeRedirectURL(SITE_ROOT + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
+//                response.sendRedirect(response.encodeRedirectURL(SITE_ROOT + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
+                response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL + view + "")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
         } catch (VerifyException | ProfileException | ViewException e) {
             logger.error(e.getMessage());
-            logger.info(String.format("[fc] %s Redirecting to index", sid));
-            response.sendRedirect(response.encodeRedirectURL(SITE_ROOT));
+            logger.info(String.format("[fc] %s Redirecting to index: %s", sid, response.encodeRedirectURL(WEB_APP_ROOT_URL)));
+            response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL));
         } catch (AuthException e) {
             logger.error(e.getMessage());
-            logger.info(String.format("[fc] %s Redirecting to auth", sid));
+            logger.info(String.format("[fc] %s Redirecting to auth: %s", sid, response.encodeRedirectURL(WEB_APP_AUTH_URL)));
             response.sendRedirect(response.encodeRedirectURL(WEB_APP_AUTH_URL));
         } catch (Exception e) {
             logger.error(String.format("[fc] %s Execution action failed. %s, remote address: %s, requestURI: %s, action: %s, view: %s", sid, e, request.getRemoteAddr(), request.getRequestURI(), action, view));
-            logger.info(String.format("[fc] %s Redirecting to index", sid));
-            response.sendRedirect(response.encodeRedirectURL(SITE_ROOT));
+            logger.info(String.format("[fc] %s Redirecting to index: %s", sid, response.encodeRedirectURL(WEB_APP_ROOT_URL)));
+            response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL));
         }
     }
 }
