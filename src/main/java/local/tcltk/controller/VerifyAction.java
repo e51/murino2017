@@ -155,7 +155,7 @@ public class VerifyAction implements Action {
         HTMLHelper.fillUserInfo(user);
 
 //        response.sendRedirect(response.encodeRedirectURL(WEB_APP_VIEW_URL));
-        result = "view";
+        result = "verify";
         return result;
     }
 }

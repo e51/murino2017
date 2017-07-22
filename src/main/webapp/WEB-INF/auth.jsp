@@ -32,6 +32,7 @@
 //            "&scope=notify" +
             "&scope=" +
             "&v=5.65";
+//    response.encodeURL("state=");
 
     logger.info(String.format("[auth] %s Redirecting to VK for authentication, remote address: %s", sid, request.getRemoteAddr()));
     response.sendRedirect(response.encodeRedirectURL(contextPath + contextParams));
