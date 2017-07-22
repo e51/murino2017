@@ -11,8 +11,9 @@
 <%
     Logger logger = Logger.getLogger("help.jsp");
     User user = (User) session.getAttribute("user");
+    String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-    logger.info("[help] show help page");
+    logger.info(String.format("[e/help] %s show help page", sid));
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -40,7 +41,7 @@
                     <p>Повторно изменить данные в будущем можно будет обратившись по контактам на сайте.</p>
                 <BR>
 
-                <form action='<%=EMBEDDED_APP_PROFILE_URL%>' method='post' align=center>
+                <form action='<%=response.encodeURL(EMBEDDED_APP_PROFILE_URL)%>' method='post' align=center>
                     <p><input type='submit' value='Назад' class='submit'></p>
                 </form>
 

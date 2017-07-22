@@ -1,5 +1,6 @@
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="local.tcltk.User" %>
+<%@ page import="org.apache.log4j.Logger" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -8,7 +9,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%
+    Logger logger = Logger.getLogger("error.jsp");
     User user = null;
+    String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
+
+    logger.info(String.format("[m/error] %s show error page", sid));
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>

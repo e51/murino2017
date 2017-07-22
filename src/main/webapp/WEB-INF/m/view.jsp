@@ -12,20 +12,8 @@
 --%>
 <%
     Logger logger = Logger.getLogger("view.jsp");
-
-    logger.info("Request URI: " + request.getRequestURI());
-    logger.info("Query string: " + request.getQueryString());
-    logger.info("SID: " + session.getId());
-    logger.info("Plane URL: " );
-    logger.info("encodeURL: " + response.encodeURL(SITE_ROOT + "z/page4"));
-    logger.info("encodeRedirectURL: " + response.encodeRedirectURL(SITE_ROOT + "z/page4"));
-    logger.info("sendRedirect to: " + response.encodeRedirectURL(SITE_ROOT + "z/page4"));
-    logger.info("- - - - view.jsp ended - - -  - -");
-
     User user = (User) session.getAttribute("user");
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
-
-//    logger.info(String.format("[view.jsp] %s show page, user: %s", sid, user));
 
     String flatCheckbox = user.isUseFlat() ? "checked" : "";
 
@@ -36,7 +24,7 @@
 
     if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
         strProfileButton =
-                "            <form action='" + MOBILE_APP_PROFILE_URL + "' method='post' align=center>\n" +
+                "            <form action='" + response.encodeURL(MOBILE_APP_PROFILE_URL) + "' method='post' align=center>\n" +
                 "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
                 "            </form>";
     }
@@ -49,6 +37,8 @@
         topNeighboursTitle = "Соседи над вами:";
         bottomNeighboursTitle = "Соседи под вами:";
     }
+
+    logger.info(String.format("[m/view.jsp] %s show page", sid));
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -59,10 +49,10 @@
     <script>
         function use_flat_func(){
             if(document.getElementById('use_flat').checked){
-                window.location='<%=MOBILE_APP_VIEW_URL%>?f=1';
+                window.location='<%=response.encodeURL(MOBILE_APP_VIEW_URL)%>?f=1';
                 return false;
             } else {
-                window.location='<%=MOBILE_APP_VIEW_URL%>';
+                window.location='<%=response.encodeURL(MOBILE_APP_VIEW_URL)%>';
                 return false;
             }
             return true;

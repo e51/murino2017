@@ -2,16 +2,30 @@
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
 <%@ page import="local.tcltk.User" %>
+<%@ page import="java.util.Enumeration" %>
 <%
     Logger logger = Logger.getLogger("index.jsp");
 
-    logger.info("Request URI: " + request.getRequestURI());
-    logger.info("Query string: " + request.getQueryString());
-    logger.info("SID: " + session.getId());
-    logger.info("Plane URL: " );
-    logger.info("encodeURL: " + response.encodeURL("any"));
-    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
-    logger.info("- - - - - index.jsp end - - - - - -");
+//    logger.info("Request URI: " + request.getRequestURI());
+//    logger.info("Query string: " + request.getQueryString());
+//    logger.info("SID: " + session.getId());
+//    logger.info("Plane URL: " );
+//    logger.info("encodeURL: " + response.encodeURL("any"));
+//    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+//
+//    Enumeration<String> names = request.getHeaderNames();
+//    logger.info("");
+//    while (names.hasMoreElements()) {
+//        String name = names.nextElement();
+//        logger.info(name + ": " + request.getHeader(name));
+//    }
+//    logger.info("");
+//    for (String name : response.getHeaderNames()) {
+//        logger.info(name + ": " + response.getHeader(name));
+//    }
+//    logger.info("");
+//
+//    logger.info("- - - - - index.jsp end - - - - - -");
 
 //    session.invalidate();
     session.removeAttribute("user");
@@ -35,7 +49,7 @@
         <div class="index-middle">
             <div class="index-inner">
                 <H1>Войти:</H1><BR><BR>
-                <a href="<%=response.encodeRedirectURL(WEB_APP_AUTH_URL)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
+                <a href="<%=response.encodeURL(WEB_APP_AUTH_URL)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
                 <BR><BR><BR><BR>
                 <div id="countdown" class="countdownHolder">
                     <span class="counterText" style="top: 0px;">Нас уже: </span>

@@ -11,7 +11,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%
-    Logger logger = Logger.getLogger("verify.jsp");
+    Logger logger = Logger.getLogger("m-verify.jsp");
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
 //    Enumeration<String> names = request.getHeaderNames();
@@ -28,13 +28,13 @@
 //
 //    logger.info("- - - - - verify.jsp end - - - - - -");
 
-    logger.info(String.format("[verify.jsp] %s show page", sid));
+    logger.info(String.format("[m-verify.jsp] %s show page", sid));
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title><%=SITE_TITLE%></title>
-    <meta http-equiv="refresh" content="1; url=<%=response.encodeRedirectURL(WEB_APP_VIEW_URL)%>"/>
+    <meta http-equiv="refresh" content="1; url=<%=response.encodeRedirectURL(MOBILE_APP_VIEW_URL)%>"/>
 </head>
 <body>
 <div class="index-outer">

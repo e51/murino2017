@@ -21,11 +21,7 @@ import static local.tcltk.Constants.*;
 public class FrontController extends HttpServlet {
     private static final Logger logger = Logger.getLogger(FrontController.class);
 
-//    public static final Map<Integer, Building> structure = new TreeMap<>();
-
     static {
-//        structure.put(new Integer(1), new Building(1, 7, new Integer[] {12, 12, 12, 12, 12, 12, 12}, 15));
-//        structure.put(new Integer(2), new Building(2, 8, new Integer[] {12, 12, 12, 12, 12, 12, 12, 12}, 15));
         if (STRUCTURE.isEmpty()) {
             STRUCTURE.put(new Integer(1), new Building(1, 7, new Integer[]{12, 12, 12, 12, 12, 12, 12}, 15));
             STRUCTURE.put(new Integer(2), new Building(2, 8, new Integer[]{12, 12, 12, 12, 12, 12, 12, 12}, 15));
@@ -33,7 +29,6 @@ public class FrontController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("doGET call");
         doGet(request, response);
     }
 
@@ -43,12 +38,31 @@ public class FrontController extends HttpServlet {
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
         try {
-            logger.info("Request URI: " + request.getRequestURI());
-            logger.info("Query string: " + request.getQueryString());
-            logger.info("SID: " + request.getSession().getId());
-            logger.info("Plane URL: " );
-            logger.info("encodeURL: " + response.encodeURL("any.jsp"));
-            logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any.jsp"));
+//            logger.info("Request URI: " + request.getRequestURI());
+//            logger.info("Query string: " + request.getQueryString());
+//            logger.info("SID: " + request.getSession().getId());
+//            logger.info("encodeURL: " + response.encodeURL("any.jsp"));
+//            logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any.jsp"));
+//
+//            Enumeration<String> names = request.getHeaderNames();
+//            logger.info("");
+//            while (names.hasMoreElements()) {
+//                String name = names.nextElement();
+//                logger.info(name + ": " + request.getHeader(name));
+//            }
+//            logger.info("");
+//            for (String name : response.getHeaderNames()) {
+//                logger.info(name + ": " + response.getHeader(name));
+//            }
+//            logger.info("");
+
+//            int status = response.getStatus();
+//            response.reset();
+//            response.setStatus(status);
+//
+//            for (String name : response.getHeaderNames()) {
+//                logger.info(name + ": " + response.getHeader(name));
+//            }
 
             action = ActionFactory.getAction(request);
             view = action.execute(request, response);
@@ -60,7 +74,7 @@ public class FrontController extends HttpServlet {
                 logger.info(String.format("[fc] %s Redirecting to %s", sid, response.encodeRedirectURL(view)));
 //                response.sendRedirect(SITE_ROOT + view + "/"); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
 //                response.sendRedirect(response.encodeRedirectURL(SITE_ROOT + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
-                response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL + view + "")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
+                response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
         } catch (VerifyException | ProfileException | ViewException e) {
             logger.error(e.getMessage());

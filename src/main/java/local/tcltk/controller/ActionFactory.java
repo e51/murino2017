@@ -1,5 +1,10 @@
 package local.tcltk.controller;
 
+import local.tcltk.controller.emb.ErrorActionEmbeddedApp;
+import local.tcltk.controller.emb.VerifyActionEmbeddedApp;
+import local.tcltk.controller.emb.HelpActionEmbeddedApp;
+import local.tcltk.controller.mobile.VerifyActionMobileApp;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,14 +14,17 @@ public class ActionFactory {
     private static Map<String, Action> actions = new HashMap<>();
 
     static {
-        actions.put("verify", new VerifyAction());
-        actions.put("profile", new ProfileAction());
-        actions.put("view", new ViewAction());
-        actions.put("auth", new AuthAction());
-        actions.put("e-verify", new VerifyActionEmbeddedApp());
-        actions.put("error", new ErrorActionEmbeddedApp());
-        actions.put("help", new HelpActionEmbeddedApp());
-        actions.put("m-verify", new VerifyActionMobileApp());
+        actions.put("auth", new AuthAction());                  // Web app
+        actions.put("verify", new VerifyAction());              // Web app
+        actions.put("view", new ViewAction());                  // Web, Embedded and Mobile app
+        actions.put("profile", new ProfileAction());            // Web, Embedded and Mobile app
+
+        actions.put("e-verify", new VerifyActionEmbeddedApp()); // Embedded app
+        actions.put("error", new ErrorActionEmbeddedApp());     // Embedded and Mobile app
+        actions.put("help", new HelpActionEmbeddedApp());       // Embedded and Mobile app
+
+        actions.put("m-verify", new VerifyActionMobileApp());   // Mobile app
+
     }
 
 
@@ -29,8 +37,9 @@ public class ActionFactory {
 //        System.out.println(request.getRequestURI().substring(11));
 //        return actions.get(request.getRequestURI().substring(PROJECT_NAME.length() + 2));
 
+        // remove jsessionid from URL if present
+        // remove ";jsessionid=63565260D45BEA8264B98295D8201DBC"
         if (result.lastIndexOf(";") != -1) {
-            //remove ";jsessionid=63565260D45BEA8264B98295D8201DBC"
             result = result.substring(0, result.lastIndexOf(";"));
         }
 
@@ -39,12 +48,8 @@ public class ActionFactory {
             result = result.substring(0, result.length() - 1);
         }
 
-//        System.out.println(result);
-
         // get string after last "/"
         result = result.substring(result.lastIndexOf("/") + 1);
-
-//        System.out.println(result);
 
         return result;
     }

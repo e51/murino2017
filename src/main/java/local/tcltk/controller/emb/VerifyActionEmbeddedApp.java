@@ -1,7 +1,8 @@
-package local.tcltk.controller;
+package local.tcltk.controller.emb;
 
 import local.tcltk.HTMLHelper;
 import local.tcltk.User;
+import local.tcltk.controller.Action;
 import local.tcltk.exceptions.VerifyException;
 import local.tcltk.model.DatabaseManager;
 import org.apache.commons.codec.binary.Hex;
@@ -19,8 +20,8 @@ import java.util.Enumeration;
 
 import static local.tcltk.Constants.*;
 
-public class VerifyActionMobileApp implements Action {
-    private static final Logger logger = Logger.getLogger(VerifyActionMobileApp.class);
+public class VerifyActionEmbeddedApp implements Action {
+    private static final Logger logger = Logger.getLogger(VerifyActionEmbeddedApp.class);
 
     private boolean isAuthPassed(HttpServletRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
         StringBuilder data = new StringBuilder();
@@ -37,6 +38,18 @@ public class VerifyActionMobileApp implements Action {
             }
         }
 
+/*
+        // version 2
+        for (String param : request.getQueryString().split("&")) {
+            String[] pair = param.split("=");
+            if (pair.length == 2) {
+                if (!"sign".equals(pair[0]) && !"hash".equals(pair[0]) && !"api_result".equals(pair[0])) {
+                    data.append(pair[1]);
+                }
+//                System.out.println(pair[0] + " = " + pair[1]);
+            }
+        }
+*/
         // compute hash from query parameters and app's secret key
         SecretKeySpec keySpec = new SecretKeySpec(VK_EMBED_COMMUNITY_APP_SECRET.getBytes(), "HmacSHA256");
         Mac mac = Mac.getInstance("HmacSHA256");
@@ -51,17 +64,28 @@ public class VerifyActionMobileApp implements Action {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = null;               // user object - create user after successful authentication
         String result = null;           // return to index by default
-
-        logger.info("Request URI: " + request.getRequestURI());
-        logger.info("Query string: " + request.getQueryString());
-        logger.info("SID: " + request.getSession().getId());
-        logger.info("Plane URL: " );
-        logger.info("encodeURL: " + response.encodeURL(SITE_ROOT + "z/page4"));
-        logger.info("encodeRedirectURL: " + response.encodeRedirectURL(SITE_ROOT + "z/page4"));
-
-
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
-        logger.info(String.format("[verify] %s Start checking", sid));
+
+//        logger.info("Request URI: " + request.getRequestURI());
+//        logger.info("Query string: " + request.getQueryString());
+//        logger.info("SID: " + request.getSession().getId());
+//        logger.info("Plane URL: " );
+//        logger.info("encodeURL: " + response.encodeURL("any"));
+//        logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+//
+//        Enumeration<String> names = request.getHeaderNames();
+//        logger.info("");
+//        while (names.hasMoreElements()) {
+//            String name = names.nextElement();
+//            logger.info(name + ": " + request.getHeader(name));
+//        }
+//        logger.info("");
+//        for (String name : response.getHeaderNames()) {
+//            logger.info(name + ": " + response.getHeader(name));
+//        }
+//        logger.info("");
+
+        logger.info(String.format("[verify] %s Start checking. Remote address: %s", sid, request.getRemoteAddr()));
 
         // get current session
         HttpSession session = request.getSession();
@@ -133,14 +157,14 @@ public class VerifyActionMobileApp implements Action {
         }
 
         user.setToken(access_token);
-        user.setAppVersion(MOBILE_APP_USER);
+        user.setAppVersion(EMBEDDED_APP_USER);
         session.setAttribute("user", user);
 
         logger.info(String.format("[verify] %s verification PASSED.", sid));
 
         HTMLHelper.fillUserInfo(user);
 
-        result = "view";
+        result = "e-verify";
         return result;
     }
 }

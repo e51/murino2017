@@ -15,8 +15,6 @@
     User user = (User) session.getAttribute("user");
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-//    logger.info(String.format("[view.jsp] %s show page, user: %s", sid, user));
-
     String flatCheckbox = user.isUseFlat() ? "checked" : "";
 
     String strFlat = (user.getFlat() > MAX_FLAT_NUMBER_PER_SECTION) ? "<font color=RED>" + user.getFlat() + "</font>" : "" + user.getFlat();
@@ -26,7 +24,7 @@
 
     if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
         strProfileButton =
-                "            <form action='" + EMBEDDED_APP_PROFILE_URL + "' method='post' align=center>\n" +
+                "            <form action='" + response.encodeURL(EMBEDDED_APP_PROFILE_URL) + "' method='post' align=center>\n" +
                 "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
                 "            </form>";
     }
@@ -40,6 +38,7 @@
         bottomNeighboursTitle = "Соседи под вами:";
     }
 
+    logger.info(String.format("[e/view.jsp] %s show page", sid));
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -50,10 +49,10 @@
     <script>
         function use_flat_func(){
             if(document.getElementById('use_flat').checked){
-                window.location='<%=EMBEDDED_APP_VIEW_URL%>?f=1';
+                window.location='<%=response.encodeURL(EMBEDDED_APP_VIEW_URL)%>?f=1';
                 return false;
             } else {
-                window.location='<%=EMBEDDED_APP_VIEW_URL%>';
+                window.location='<%=response.encodeURL(EMBEDDED_APP_VIEW_URL)%>';
                 return false;
             }
             return true;
@@ -65,7 +64,7 @@
         <tr>
             <td align=center valign=top width=30%>
                 <BR><a href='https://vk.com/id<%=user.getVk_id()%>'>
-                <img src='<%=(user.getAppVersion() == WEB_SITE_USER ? user.getVkPhoto200() : (user.getAppVersion() == EMBEDDED_APP_USER ? user.getVkPhoto100() : user.getVkPhoto100()))%>'><BR>
+                <img src='<%=user.getVkPhoto100()%>'><BR>
                 <%=user.getVkFirstName()%><BR>
                 <%=user.getVkLastName()%></a><BR>
                 <H1>Я здесь:</H1>

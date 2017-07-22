@@ -3,6 +3,7 @@
 <%@ page import="local.tcltk.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
+<%@ page import="java.util.Enumeration" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -15,13 +16,26 @@
     User user = (User) session.getAttribute("user");
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-    logger.info("Request URI: " + request.getRequestURI());
-    logger.info("Query string: " + request.getQueryString());
-    logger.info("SID: " + session.getId());
-    logger.info("Plane URL: " );
-    logger.info("encodeURL: " + response.encodeURL("any"));
-    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
-    logger.info("- - - - - view.jsp end - - - - - -");
+//    logger.info("Request URI: " + request.getRequestURI());
+//    logger.info("Query string: " + request.getQueryString());
+//    logger.info("SID: " + session.getId());
+//    logger.info("Plane URL: " );
+//    logger.info("encodeURL: " + response.encodeURL("any"));
+//    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+//
+//    Enumeration<String> names = request.getHeaderNames();
+//    logger.info("");
+//    while (names.hasMoreElements()) {
+//        String name = names.nextElement();
+//        logger.info(name + ": " + request.getHeader(name));
+//    }
+//    logger.info("");
+//    for (String name : response.getHeaderNames()) {
+//        logger.info(name + ": " + response.getHeader(name));
+//    }
+//    logger.info("");
+//
+//    logger.info("- - - - - view.jsp end - - - - - -");
 
 //    logger.info(String.format("[view.jsp] %s show page, user: %s", sid, user));
 
@@ -34,7 +48,7 @@
 
     if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
         strProfileButton =
-                "            <form action='" + response.encodeRedirectURL(WEB_APP_PROFILE_URL) + "' method='post' align=center>\n" +
+                "            <form action='" + response.encodeURL(WEB_APP_PROFILE_URL) + "' method='post' align=center>\n" +
                 "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
                 "            </form>";
     }
@@ -48,8 +62,7 @@
         bottomNeighboursTitle = "Соседи под вами:";
     }
 
-    System.out.println("jsp: " + session.getId());
-    System.out.println("encode: " + response.encodeURL("http://sosed.spb.ru/some"));
+    logger.info(String.format("[view.jsp] %s show page", sid));
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -60,10 +73,10 @@
     <script>
         function use_flat_func(){
             if(document.getElementById('use_flat').checked){
-                window.location='<%=WEB_APP_VIEW_URL%>?f=1';
+                window.location='<%=response.encodeURL(WEB_APP_VIEW_URL)%>?f=1';
                 return false;
             } else {
-                window.location='<%=WEB_APP_VIEW_URL%>';
+                window.location='<%=response.encodeURL(WEB_APP_VIEW_URL)%>';
                 return false;
             }
             return true;
@@ -85,7 +98,7 @@
                 <BR>
                 <p class='text-normal'>
                     <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/>
-                    <a href="<%=response.encodeRedirectURL("some")%>">Учитывать номер квартиры</a> при<BR> поиске соседей сверху/снизу
+                    Учитывать номер квартиры при<BR> поиске соседей сверху/снизу
                 </p>
                 <%=strProfileButton%>
                 <BR><BR>

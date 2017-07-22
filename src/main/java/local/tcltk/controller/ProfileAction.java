@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 import static local.tcltk.Constants.*;
 
@@ -24,12 +25,23 @@ public class ProfileAction implements Action {
         String result = null;
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-        logger.info("Request URI: " + request.getRequestURI());
-        logger.info("Query string: " + request.getQueryString());
-        logger.info("SID: " + request.getSession().getId());
-        logger.info("Plane URL: " );
-        logger.info("encodeURL: " + response.encodeURL("any"));
-        logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+//        logger.info("Request URI: " + request.getRequestURI());
+//        logger.info("Query string: " + request.getQueryString());
+//        logger.info("SID: " + request.getSession().getId());
+//        logger.info("encodeURL: " + response.encodeURL("any"));
+//        logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+//
+//        Enumeration<String> names = request.getHeaderNames();
+//        logger.info("");
+//        while (names.hasMoreElements()) {
+//            String name = names.nextElement();
+//            logger.info(name + ": " + request.getHeader(name));
+//        }
+//        logger.info("");
+//        for (String name : response.getHeaderNames()) {
+//            logger.info(name + ": " + response.getHeader(name));
+//        }
+//        logger.info("");
 
         // get current session
         HttpSession session = request.getSession();
