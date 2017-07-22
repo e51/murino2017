@@ -5,8 +5,8 @@
 <%
     Logger logger = Logger.getLogger("index.jsp");
 
-    session.invalidate();
-//    session.removeAttribute("user");
+//    session.invalidate();
+    session.removeAttribute("user");
 
     User user = null;
 
@@ -14,6 +14,8 @@
     logger.info(String.format("[index] %s remote address: %s", sid, request.getRemoteAddr()));
 
     int count = DatabaseManager.getUsersCountByBuilding(0);
+    logger.info("encodeURL: " + response.encodeURL("sex"));
+
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -27,7 +29,7 @@
         <div class="index-middle">
             <div class="index-inner">
                 <H1>Войти:</H1><BR><BR>
-                <a href="<%=WEB_APP_AUTH_URL%>"><img src="img/vk_logo.jpg" sizes="150"></a>
+                <a href="<%=response.encodeURL(WEB_APP_AUTH_URL)%>"><img src="img/vk_logo.jpg" sizes="150"></a>
                 <BR><BR><BR><BR>
                 <div id="countdown" class="countdownHolder">
                     <span class="counterText" style="top: 0px;">Нас уже: </span>

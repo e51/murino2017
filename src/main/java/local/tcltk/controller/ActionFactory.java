@@ -16,6 +16,7 @@ public class ActionFactory {
         actions.put("e-verify", new VerifyActionEmbeddedApp());
         actions.put("error", new ErrorActionEmbeddedApp());
         actions.put("help", new HelpActionEmbeddedApp());
+        actions.put("m-verify", new VerifyActionMobileApp());
     }
 
 
@@ -28,13 +29,22 @@ public class ActionFactory {
 //        System.out.println(request.getRequestURI().substring(11));
 //        return actions.get(request.getRequestURI().substring(PROJECT_NAME.length() + 2));
 
+        if (result.lastIndexOf(";") != -1) {
+            //remove ";jsessionid=63565260D45BEA8264B98295D8201DBC"
+            result = result.substring(0, result.lastIndexOf(";"));
+        }
+
         // remove last "/"
         if (result.endsWith("/")) {
             result = result.substring(0, result.length() - 1);
         }
 
+//        System.out.println(result);
+
         // get string after last "/"
         result = result.substring(result.lastIndexOf("/") + 1);
+
+//        System.out.println(result);
 
         return result;
     }

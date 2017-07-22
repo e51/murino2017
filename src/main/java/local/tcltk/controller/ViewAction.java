@@ -1,6 +1,7 @@
 package local.tcltk.controller;
 
 import local.tcltk.User;
+import local.tcltk.exceptions.AuthException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,18 +19,23 @@ public class ViewAction implements Action {
         String result = null;
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
+        System.out.println("request: " + request.getRequestURI() + " / sess: " + request.getRequestedSessionId());
+
         // get current session
         HttpSession session = request.getSession();
         user = (User) session.getAttribute("user");
+
+        System.out.println("session.getId(): " + session.getId());
+
 
         if (user == null) {
             // Mustn't be here without user object in the session. Have to login again - redirect to /auth/
 
 //            throw new ViewException(String.format("[view] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
-//            throw new AuthException(String.format("[view] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
             logger.error(String.format("[view] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
-            result = "auth";
-            return result;
+            throw new AuthException("No user object");
+//            result = "auth";
+//            return result;
         }
 
         String use_flat = request.getParameter("f");

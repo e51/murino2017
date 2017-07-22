@@ -26,7 +26,7 @@
 
     if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
         strProfileButton =
-                "            <form action='" + response.encodeURL(WEB_APP_PROFILE_URL) + "' method='post' align=center>\n" +
+                "            <form action='" + MOBILE_APP_PROFILE_URL + "' method='post' align=center>\n" +
                 "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
                 "            </form>";
     }
@@ -39,9 +39,6 @@
         topNeighboursTitle = "Соседи над вами:";
         bottomNeighboursTitle = "Соседи под вами:";
     }
-
-    System.out.println("jsp: " + session.getId());
-    System.out.println("encode: " + response.encodeURL("http://sosed.spb.ru/some"));
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -52,10 +49,10 @@
     <script>
         function use_flat_func(){
             if(document.getElementById('use_flat').checked){
-                window.location='<%=WEB_APP_VIEW_URL%>?f=1';
+                window.location='<%=MOBILE_APP_VIEW_URL%>?f=1';
                 return false;
             } else {
-                window.location='<%=WEB_APP_VIEW_URL%>';
+                window.location='<%=MOBILE_APP_VIEW_URL%>';
                 return false;
             }
             return true;
@@ -67,10 +64,10 @@
         <tr>
             <td align=center valign=top width=30%>
                 <BR><a href='https://vk.com/id<%=user.getVk_id()%>'>
-                <img src='<%=(user.getAppVersion() == WEB_SITE_USER ? user.getVkPhoto200() : (user.getAppVersion() == EMBEDDED_APP_USER ? user.getVkPhoto100() : user.getVkPhoto100()))%>'><BR>
+                <img src='<%=user.getVkPhoto50()%>'><BR>
                 <%=user.getVkFirstName()%><BR>
                 <%=user.getVkLastName()%></a><BR>
-                <H1>Я здесь:</H1>
+                <H2>Я здесь:</H2>
                 <p class='text-normal'>Корпус: <%=user.getBuilding()%></p>
                 <p class='text-normal'>Секция: <%=user.getSection()%></p>
                 <p class='text-normal'>Этаж: <%=user.getFloor()%></p>
@@ -78,7 +75,7 @@
                 <BR>
                 <p class='text-normal'>
                     <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/>
-                    <a href="<%=response.encodeURL("some")%>">Учитывать номер квартиры</a> при<BR> поиске соседей сверху/снизу
+                    Учитывать номер квартиры
                 </p>
                 <%=strProfileButton%>
                 <BR><BR>
@@ -88,17 +85,17 @@
                 <table width=100% height=100%>
                     <tr>
                         <td valign='top'>
-                            <H1><%=topNeighboursTitle%></H1><BR><%=HTMLHelper.getNeighboursTopHTML(user)%>
+                            <H3><%=topNeighboursTitle%></H3><BR><%=HTMLHelper.getNeighboursTopHTML(user)%>
                         </td>
                     </tr>
                     <tr>
                         <td valign='top'>
-                            <H1><%=floorNeighboursTitle%></H1><BR><div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%>
+                            <H3><%=floorNeighboursTitle%></H3><BR><div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%>
                         </div></td>
                     </tr>
                     <tr>
                         <td valign='top'>
-                            <H1><%=bottomNeighboursTitle%></H1><BR><%=HTMLHelper.getNeighboursBottomHTML(user)%>
+                            <H3><%=bottomNeighboursTitle%></H3><BR><%=HTMLHelper.getNeighboursBottomHTML(user)%>
                         </td>
                     </tr>
                 </table>

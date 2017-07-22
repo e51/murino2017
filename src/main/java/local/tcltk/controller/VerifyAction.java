@@ -144,10 +144,10 @@ public class VerifyAction implements Action {
         session.setAttribute("user", user);
 
         logger.info("[verify] " + sid + " verification PASSED.");
-//        response.sendRedirect(response.encodeRedirectURL(WEB_APP_VIEW_URL));
 
         HTMLHelper.fillUserInfo(user);
 
+//        response.sendRedirect(response.encodeRedirectURL(WEB_APP_VIEW_URL));
         result = "view";
         return result;
     }
