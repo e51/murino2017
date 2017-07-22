@@ -38,15 +38,21 @@ public class FrontControllerMobileApp extends HttpServlet {
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
         try {
+            logger.info("Request URI: " + request.getRequestURI());
+            logger.info("Query string: " + request.getQueryString());
+            logger.info("SID: " + request.getSession().getId());
+            logger.info("Plane URL: " );
+            logger.info("encodeURL: " + response.encodeURL("any.jsp"));
+            logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any.jsp"));
+
             action = ActionFactory.getAction(request);
-            System.out.println(action);
             view = action.execute(request, response);
-            System.out.println(view);
 
             if (view.equals(ActionFactory.getActionPart(request))) {
+                logger.info(String.format("[fc] %s Forwarding to %s", sid, view));
                 request.getRequestDispatcher("/WEB-INF/m/" + view + ".jsp").forward(request, response);
             } else {
-                logger.info(String.format("[fc] %s Redirecting to %s", sid, view));
+                logger.info(String.format("[fc] %s Redirecting to %s", sid, response.encodeRedirectURL(view)));
                 response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_SITE_ROOT + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
         } catch (VerifyException | ProfileException | ViewException | AuthException e) {
