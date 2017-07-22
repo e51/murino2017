@@ -19,7 +19,12 @@ public class ViewAction implements Action {
         String result = null;
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-        System.out.println("request: " + request.getRequestURI() + " / sess: " + request.getRequestedSessionId());
+        logger.info("Request URI: " + request.getRequestURI());
+        logger.info("Query string: " + request.getQueryString());
+        logger.info("SID: " + request.getSession().getId());
+        logger.info("Plane URL: " );
+        logger.info("encodeURL: " + response.encodeURL(SITE_ROOT + "z/page4"));
+        logger.info("encodeRedirectURL: " + response.encodeRedirectURL(SITE_ROOT + "z/page4"));
 
         // get current session
         HttpSession session = request.getSession();

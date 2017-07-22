@@ -19,7 +19,7 @@ import static local.tcltk.Constants.EMBEDDED_APP_SITE_ROOT;
 
 @WebServlet(name = "FrontControllerMobileApp", urlPatterns = {"/m/*"})
 public class FrontControllerMobileApp extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(FrontControllerEmbeddedApp.class);
+    private static final Logger logger = Logger.getLogger(FrontControllerMobileApp.class);
 
     static {
         if (STRUCTURE.isEmpty()) {
@@ -53,7 +53,7 @@ public class FrontControllerMobileApp extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/m/" + view + ".jsp").forward(request, response);
             } else {
                 logger.info(String.format("[fc] %s Redirecting to %s", sid, response.encodeRedirectURL(view)));
-                response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_SITE_ROOT + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
+                response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_SITE_ROOT + view + "")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
         } catch (VerifyException | ProfileException | ViewException | AuthException e) {
             logger.error(String.format("[fc] %s Error: %s, %s", sid, e.getClass().getSimpleName(), e.getMessage()));

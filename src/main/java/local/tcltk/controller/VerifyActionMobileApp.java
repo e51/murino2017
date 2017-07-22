@@ -20,7 +20,7 @@ import java.util.Enumeration;
 import static local.tcltk.Constants.*;
 
 public class VerifyActionMobileApp implements Action {
-    private static final Logger logger = Logger.getLogger(VerifyActionEmbeddedApp.class);
+    private static final Logger logger = Logger.getLogger(VerifyActionMobileApp.class);
 
     private boolean isAuthPassed(HttpServletRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
         StringBuilder data = new StringBuilder();
@@ -51,6 +51,14 @@ public class VerifyActionMobileApp implements Action {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = null;               // user object - create user after successful authentication
         String result = null;           // return to index by default
+
+        logger.info("Request URI: " + request.getRequestURI());
+        logger.info("Query string: " + request.getQueryString());
+        logger.info("SID: " + request.getSession().getId());
+        logger.info("Plane URL: " );
+        logger.info("encodeURL: " + response.encodeURL(SITE_ROOT + "z/page4"));
+        logger.info("encodeRedirectURL: " + response.encodeRedirectURL(SITE_ROOT + "z/page4"));
+
 
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
         logger.info(String.format("[verify] %s Start checking", sid));

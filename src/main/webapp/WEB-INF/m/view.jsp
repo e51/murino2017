@@ -12,6 +12,16 @@
 --%>
 <%
     Logger logger = Logger.getLogger("view.jsp");
+
+    logger.info("Request URI: " + request.getRequestURI());
+    logger.info("Query string: " + request.getQueryString());
+    logger.info("SID: " + session.getId());
+    logger.info("Plane URL: " );
+    logger.info("encodeURL: " + response.encodeURL(SITE_ROOT + "z/page4"));
+    logger.info("encodeRedirectURL: " + response.encodeRedirectURL(SITE_ROOT + "z/page4"));
+    logger.info("sendRedirect to: " + response.encodeRedirectURL(SITE_ROOT + "z/page4"));
+    logger.info("- - - - view.jsp ended - - -  - -");
+
     User user = (User) session.getAttribute("user");
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
