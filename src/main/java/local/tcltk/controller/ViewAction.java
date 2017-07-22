@@ -44,9 +44,6 @@ public class ViewAction implements Action {
         HttpSession session = request.getSession();
         user = (User) session.getAttribute("user");
 
-        System.out.println("session.getId(): " + session.getId());
-
-
         if (user == null) {
             // Mustn't be here without user object in the session. Have to login again - redirect to /auth/
 
