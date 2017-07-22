@@ -3,6 +3,7 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
+
   <display-name>Archetype Created Web Application</display-name>
 
   <description>
@@ -14,6 +15,10 @@
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+
+    <!--session-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config-->
 
     <!-- Require HTTPS for everything except /img (favicon) and /css. -->
     <!--security-constraint>

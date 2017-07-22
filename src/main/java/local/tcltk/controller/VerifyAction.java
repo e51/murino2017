@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.Enumeration;
+
 import static local.tcltk.Constants.*;
 
 /**
@@ -27,9 +29,28 @@ public class VerifyAction implements Action {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = null;               // user object - create user after successful authentication
         String result = null;           // return to index by default
-
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
-        logger.info(String.format("[verify] %s Start checking", sid));
+
+//        logger.info("Request URI: " + request.getRequestURI());
+//        logger.info("Query string: " + request.getQueryString());
+//        logger.info("SID: " + request.getSession().getId());
+//        logger.info("Plane URL: " );
+//        logger.info("encodeURL: " + response.encodeURL("any"));
+//        logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+//
+//        Enumeration<String> names = request.getHeaderNames();
+//        logger.info("");
+//        while (names.hasMoreElements()) {
+//            String name = names.nextElement();
+//            logger.info(name + ": " + request.getHeader(name));
+//        }
+//        logger.info("");
+//        for (String name : response.getHeaderNames()) {
+//            logger.info(name + ": " + response.getHeader(name));
+//        }
+//        logger.info("");
+
+        logger.info(String.format("[verify] %s Start checking. Remote address: %s", sid, request.getRemoteAddr()));
 
         // get current session
         HttpSession session = request.getSession();
@@ -144,11 +165,11 @@ public class VerifyAction implements Action {
         session.setAttribute("user", user);
 
         logger.info("[verify] " + sid + " verification PASSED.");
-//        response.sendRedirect(response.encodeRedirectURL(WEB_APP_VIEW_URL));
 
         HTMLHelper.fillUserInfo(user);
 
-        result = "view";
+//        response.sendRedirect(response.encodeRedirectURL(WEB_APP_VIEW_URL));
+        result = "verify";
         return result;
     }
 }
