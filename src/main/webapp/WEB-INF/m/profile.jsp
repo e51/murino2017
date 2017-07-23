@@ -17,39 +17,74 @@
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
+    <!--meta charset="utf-8" /-->
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script><![endif]-->
+
     <%@include file = "/WEB-INF/includes/head_part.jspf"%>
 </head>
 <body>
 
-<table width=100% height=100% class="text-normal">
-    <tr>
-        <td align=center valign=center>
-            <div class="profile-container">
-                <p align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=response.encodeURL(MOBILE_APP_HELP_URL)%>">П О М О Щ Ь</a><BR></p>
-                <H2>Впервые у нас?</H2>
-                <!--BR-->
-                <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Например:
-                    <p>&nbsp;Корпус<font color="red"><b>*</b></font>: <input type='text' name='building' value='<%=user.getBuilding()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1</p>
-                    <p>&nbsp;Секция<font color="red"><b>*</b></font>: <input type='text' name='section' value='<%=user.getSection()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7</p>
-                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Этаж<font color="red"><b>*</b></font>: <input type='text' name='floor' value='<%=user.getFloor()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
-                    <p>Квартира: <input type='text' name='flat' value='<%=user.getFlat()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</p>
-                    <p><input type='hidden' name='action' value='update'></p>
-                    <p><input type='submit' value=' Сохранить ' class='submit-profile'></p>
+<div class="wrapper">
+
+    <header class="profile-header">
+        <BR>
+        <form action="<%=response.encodeURL(MOBILE_APP_HELP_URL)%>" method="post">
+            <input type='submit' value='П О М О Щ Ь' class="profile-help-btn">
+        </form>
+    </header><!-- .header-->
+
+    <div class="profile-middle">
+
+        <div class="container">
+            <main class="profile-content">
+                <div class="profile-body">
+                    <div style="font-size: 24px; float: right; width: 100%; text-align: center">
+                        Впервые у нас?
+                    </div>
                     <BR>
-                </form>
+                    <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
+                        <div style="width: 100%; text-align: right">
+                            Например:
+                        </div>
+                        <div class="profile-line">
+                            &nbsp;Корпус<font color="red"><b>*</b></font>: <input type='text' name='building' value='<%=user.getBuilding()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+                        </div>
+                        <div class="profile-line">
+                            <p>&nbsp;Секция<font color="red"><b>*</b></font>: <input type='text' name='section' value='<%=user.getSection()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7
+                        </div>
+                        <div class="profile-line">
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;Этаж<font color="red"><b>*</b></font>: <input type='text' name='floor' value='<%=user.getFloor()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2
+                        </div>
+                        <div class="profile-line">
+                            <p>Квартира: <input type='text' name='flat' value='<%=user.getFlat()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2
+                        </div>
+                        <div class="profile-line">
+                            <input type='hidden' name='action' value='update'>
+                            <input type='submit' value=' Сохранить ' class='submit-profile'>
+                        </div>
+                        <BR>
+                        <BR>
+                    </form>
+                    <BR>
+                </div>
+            </main><!-- .content -->
+        </div><!-- .container-->
 
-                <BR>
+        <!--aside class="right-sidebar">
+            <BR><BR>
+        </aside><!-- .right-sidebar -->
 
-            </div>
-        </td>
-    </tr>
-</table>
+    </div><!-- .middle-->
+
+</div><!-- .wrapper -->
+
+<!--footer class="footer">
+    Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a>
+</footer><!-- .footer -->
+
 
 </body>
 </html>

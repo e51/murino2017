@@ -201,7 +201,7 @@ public class HTMLHelper {
 
         for (User usr : neighbours) {
             sb.append("<div id='block-neighbour'><a href='https://vk.com/id" + usr.getVk_id() + "' target='_blank'> <img src='" +
-                    (user.getAppVersion() == WEB_SITE_USER ? usr.getVkPhoto100() : (user.getAppVersion() == EMBEDDED_APP_USER ? usr.getVkPhoto50() : usr.getVkPhoto50())) +
+                    (user.getAppVersion() == WEB_SITE_USER ? usr.getVkPhoto100() : (user.getAppVersion() == EMBEDDED_APP_USER ? usr.getVkPhoto100() : usr.getVkPhoto100())) +
                     "' class='round-neighbour-photo'><BR>" +
                     "" + usr.getVkFirstName() + "<BR>" +
                     "" + usr.getVkLastName() + "</a><BR></div>");

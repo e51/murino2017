@@ -27,7 +27,7 @@
     <tr>
         <td align=center valign=center>
             <div class="div-help-page">
-                <H2>Подсказка:</H2>
+                <!--H2>Помощь:</H2-->
                 <!--BR-->
                 <p>Данные для заполнения брать из договора, где прописан строительный адрес квартиры в формате 1.2.3.4<BR>
                     Где: 1 - корпус, 2 - секция, 3 - этаж, 4 - квартира<BR>
@@ -42,7 +42,7 @@
                 <BR>
 
                 <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
-                    <p><input type='submit' value='Назад' class='submit'></p>
+                    <p><input type='submit' value='Назад' class='profile-help-back-btn'></p>
                 </form>
 
             </div>
