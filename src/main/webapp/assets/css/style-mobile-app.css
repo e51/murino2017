@@ -1,51 +1,219 @@
-.center-div {
-    position: absolute;
-    margin: auto;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /*background-color: #ccc;*/
-    border-radius: 3px;
+/* Eric Meyer's CSS Reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
 }
-body { margin: 0; }
-#neighbour {
-    position: relative;
-    overflow: auto;
-    padding: 10px;
-    width: 150px;
-    height: 90px;
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* End of Eric Meyer's CSS Reset */
+
+html {
+	height: 100%;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+	display: block;
+}
+body {
+	font: 12px/18px Arial, sans-serif;
+	height: 100%;
+}
+.wrapper {
+	min-width: 320px;
+	max-width: 1000px;
+	margin: 0 auto;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+}
+
+
+/* Header
+-----------------------------------------------------------------------------*/
+.header {
+	height: 100px;
+	background: #ffffff; /*#a8d9f7;*/
+}
+
+.profile-header {
+	height: 40px;
+	background: #ffffff; /*#a8d9f7;*/
+	text-align: right;
+	margin: 10px;
+	font-size: 16px;
+}
+
+/* Middle
+-----------------------------------------------------------------------------*/
+.middle {
+	width: 100%;
+	padding: 0 0 100px;
+	position: relative;
+}
+.profile-middle {
+	width: 100%;
+	padding: 0 0 0;
+	position: relative;
+}
+.middle:after {
+	display: table;
+	clear: both;
+	content: '';
+}
+.container {
+	width: 100%;
+	float: left;
+	overflow: hidden;
+}
+.content {
+	padding: 0 90px 0 0;
+}
+.profile-content {
+	padding: 0 0 0 0;
+	margin: 10px;
+}
+
+
+/* Right Sidebar
+-----------------------------------------------------------------------------*/
+.right-sidebar {
+	float: left;
+	width: 90px;
+	margin-left: -90px;
+	position: relative;
+	background: #ffffff; /*#FFACAA;*/
+}
+
+
+/* Footer
+-----------------------------------------------------------------------------*/
+.footer {
+	margin: -100px auto 0;
+	min-width: 320px;
+	max-width: 1000px;
+	height: 100px;
+	background: #ffffff; /*#BFF08E;*/
+	position: relative;
+	text-align: center;
+}
+
+
+/*
+My styles -_-
+ */
+.header-user-data { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; height: 100px; width: 100%; }
+.photo-block { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; width: 100px; height: 100px; }
+.address-block { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; width: 35%; height: 100px; margin: 0px; margin-left: 0px; }
+.address-cell { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; width: 24%; height: 50px; }
+.address-cell-header { display: inline-block; *display: inline; zoom: 1; vertical-align: top; text-align: center; font-size: 16px; width: 42px; height: 20px; }
+.address-cell-body { display: inline-block; *display: inline; zoom: 1; vertical-align: middle; text-align: center; font-size: 20px; min-font-size: 14px; max-font-size: 22px; width: 42px; height: 30px; }
+.data-btn-block { display: inline-block; *display: inline; zoom: 1; vertical-align: middle; font-size: 0px; width: 100px; height: 100px; float: right; }
+
+.address-line { display: inline-block; *display: inline; zoom: 1; vertical-align: top; text-align: left; font-size: 16px; width: 100%; height: 20px; }
+
+
+
+.block-checkbox { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 16px; height: 30px; width: 100%; margin: 5px; }
+
+.block-section { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 14px; width: 100%; min-height: 70px; margin: 5px; }
+.block-section-title { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 18px; width: 100%; min-height: 30px; }
+
+.profile-body { display: inline-block; *display: inline; zoom: 1; vertical-align: middle; font-size: 16px; height: 100%; width: 100%; }
+.profile-line { display: inline-block; *display: inline; zoom: 1; vertical-align: middle; font-size: 16px; height: 40px; width: 100%; margin: 5px; }
+
+input.submit-data-btn {
+	width: 100px;
+	height: 100px;
+	font-size: 18px;
+	text-align: center;
+	white-space: normal;
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+	border-radius: 0;
 }
 
 .round-neighbour-photo {
-    border-radius: 25px; /* Радиус скругления */
-    /*border: 0px solid black; /* Параметры рамки */
-    /* box-shadow: 0 0 7px #666; /* Параметры тени */
+	border-radius: 50px; /* Радиус скругления */
+	/*border: 0px solid black; /* Параметры рамки */
+	/* box-shadow: 0 0 7px #666; /* Параметры тени */
 }
 
-.index-outer {
-    display: table;
-    position: absolute;
-    height: 100%;
-    width: 100%;
+#container { height: 100%; width:100%; /*font-size: 0;*/ }
+
+#block-neighbour { display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/ }
+#block-neighbour { width: 110px; height: 150px; }
+
+input[type=checkbox] {
+	transform: scale(2.0);
+    /*
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+    */
 }
 
-.index-middle {
-    display: table-cell;
-    vertical-align: middle;
+.input-style {
+	text-align: center;
+	font-size: 20px;
+	size: 15px;
 }
 
-.index-inner {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    width: 100%;
+input.submit-profile {
+	width: 200px;
+	height: 60px;
+	font-size: 20px;
+}
+
+input.profile-help-btn {
+	width: 120px;
+	height: 30px;
+	font-size: 14px;
+}
+
+input.profile-help-back-btn {
+	width: 120px;
+	height: 30px;
+	font-size: 14px;
 }
 
 .div-help-page {
-    /*
+	/*
     position: absolute;
     margin: auto;
     top: 0;
@@ -57,49 +225,8 @@ body { margin: 0; }
     background-color: #ccc;
     border-radius: 3px;
     */
-    font-size: 20px;
-}
-.text-normal {
-    font-size: 16px;
+	margin: 5px;
+	font-size: 14px;
 }
 
-.text-notes {
-    font-size: 12px;
-}
-
-.input-style {
-    text-align: center;
-    font-size: 20px;
-}
-
-input[type=checkbox] {
-    transform: scale(2.0);
-}
-
-input.submit {
-    width: 150px;
-    height: 50px;
-    font-size: 16px;
-}
-
-input.checkbox {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-}
-
-input.submit-profile {
-    width: 200px;
-    height: 60px;
-    font-size: 20px;
-}
-
-
-#top-container { height: 33%; width:100%; /*font-size: 0;*/ }
-#mid-container { height: 33%; width:100%; /*font-size: 0;*/ }
-#btm-container { height: 33%; width:100%; /*font-size: 0;*/ }
-
-#container { height: 100%; width:100%; /*font-size: 0;*/ }
-
-#block-neighbour { display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/ }
-#block-neighbour { width: 100px; height: 100px; }
+.footer-view {}

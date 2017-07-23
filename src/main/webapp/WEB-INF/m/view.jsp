@@ -24,8 +24,8 @@
 
     if (UPDATE_ATTEMPTS - user.getUpdates() > 0) {
         strProfileButton =
-                "            <form action='" + response.encodeURL(MOBILE_APP_PROFILE_URL) + "' method='post' align=center>\n" +
-                "                <p><input type='submit' value='" + buttonText + "' class='submit'></p>\n" +
+                "            <form action='" + response.encodeURL(MOBILE_APP_PROFILE_URL) + "' method='post' align=center>" +
+                "                <input type='submit' value='" + buttonText + "' class='submit-data-btn'>" +
                 "            </form>";
     }
 
@@ -42,8 +42,26 @@
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!--!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="style.css" type="text/css" /-->
+
+<!DOCTYPE html>
 <html>
 <head>
+
+    <!--meta charset="utf-8" /-->
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script><![endif]-->
+    <!--title></title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="style.css" rel="stylesheet"-->
+
     <%@include file = "/WEB-INF/includes/head_part.jspf"%>
 
     <script>
@@ -60,52 +78,89 @@
     </script>
 </head>
 <body>
-    <table width=100% height=100%>
+
+<div class="wrapper">
+
+    <header class="header">
+        <div class="header-user-data">
+            <div class="photo-block"><img src='<%=user.getVkPhoto100()%>'></div>
+            <div class="address-block">
+                <div class="address-line">
+                    Корпус: <%=user.getBuilding()%>
+                </div>
+                <div class="address-line">
+                    Секция: <%=user.getSection()%>
+                </div>
+                <div class="address-line">
+                    Этаж: <%=user.getFloor()%>
+                </div>
+                <div class="address-line">
+                    Квартира: <%=strFlat%>
+                </div>
+            </div>
+            <div class="data-btn-block">
+                <%=strProfileButton%>
+            </div>
+
+        </div>
+
+    </header><!-- .header-->
+
+    <div class="middle">
+
+        <div class="container">
+            <main class="content">
+                <div class="block-checkbox">
+                    <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/> Учитывать номер квартиры
+                </div>
+                <div class="block-section">
+                    <div class="block-section-title">
+                        <%=topNeighboursTitle%>
+                    </div>
+                    <%=HTMLHelper.getNeighboursTopHTML(user)%><BR>
+                </div>
+                <div class="block-section">
+                    <div class="block-section-title">
+                        <strong><%=floorNeighboursTitle%></strong>
+                    </div>
+                    <div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%></div><BR>
+                </div>
+                <div class="block-section">
+                    <div class="block-section-title">
+                        <strong><%=bottomNeighboursTitle%></strong>
+                    </div>
+                    <%=HTMLHelper.getNeighboursBottomHTML(user)%><BR>
+                </div>
+            </main><!-- .content -->
+        </div><!-- .container-->
+
+        <aside class="right-sidebar">
+            Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%>
+            <BR><BR>
+            <%=HTMLHelper.getStat()%>
+        </aside><!-- .right-sidebar -->
+
+    </div><!-- .middle-->
+
+</div><!-- .wrapper -->
+
+<footer class="footer">
+    Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a>
+</footer><!-- .footer -->
+
+
+
+<!--table width=100% height=100%>
         <tr>
             <td align=center valign=top width=30%>
-                <BR><a href='https://vk.com/id<%=user.getVk_id()%>'>
-                <img src='<%=user.getVkPhoto50()%>'><BR>
-                <%=user.getVkFirstName()%><BR>
-                <%=user.getVkLastName()%></a><BR>
-                <H2>Я здесь:</H2>
-                <p class='text-normal'>Корпус: <%=user.getBuilding()%></p>
-                <p class='text-normal'>Секция: <%=user.getSection()%></p>
-                <p class='text-normal'>Этаж: <%=user.getFloor()%></p>
-                <p class='text-normal'>Квартира: <%=strFlat%></p>
-                <BR>
                 <p class='text-normal'>
                     <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/>
                     Учитывать номер квартиры
                 </p>
-                <%=strProfileButton%>
-                <BR><BR>
-                Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a>
-            </td>
-            <td align=center valign=center width=50%>
-                <table width=100% height=100%>
-                    <tr>
-                        <td valign='top'>
-                            <H3><%=topNeighboursTitle%></H3><BR><%=HTMLHelper.getNeighboursTopHTML(user)%>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign='top'>
-                            <H3><%=floorNeighboursTitle%></H3><BR><div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%>
-                        </div></td>
-                    </tr>
-                    <tr>
-                        <td valign='top'>
-                            <H3><%=bottomNeighboursTitle%></H3><BR><%=HTMLHelper.getNeighboursBottomHTML(user)%>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td width=20% valign='top' align='left'>
-                <BR><BR><p class='text-total'><H3>Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%></H3></p>
-                <BR><%=HTMLHelper.getStat()%>
+
             </td>
         </tr>
-    </table>
+    </table-->
 
 </body>
 </html>
