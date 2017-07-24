@@ -20,7 +20,7 @@ body { margin: 0; }
 }
 
 .round-neighbour-photo {
-    border-radius: 25px; /* Радиус скругления */
+    border-radius: 50px; /* Радиус скругления */
     /*border: 0px solid black; /* Параметры рамки */
     /* box-shadow: 0 0 7px #666; /* Параметры тени */
 }
@@ -102,4 +102,4 @@ input.submit-profile {
 #container { height: 100%; width:100%; /*font-size: 0;*/ }
 
 #block-neighbour { display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/ }
-#block-neighbour { width: 100px; height: 100px; }
+#block-neighbour { width: 120px; height: 150px; }
