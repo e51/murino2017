@@ -102,7 +102,7 @@ body {
 	overflow: hidden;
 }
 .content {
-	padding: 0 90px 0 0;
+	padding: 0 0 0 0;
 }
 .profile-content {
 	padding: 0 0 0 0;
@@ -124,10 +124,10 @@ body {
 /* Footer
 -----------------------------------------------------------------------------*/
 .footer {
-	margin: -100px auto 0;
+	margin: -50px auto 0;
 	min-width: 320px;
 	max-width: 1000px;
-	height: 100px;
+	height: 50px;
 	background: #ffffff; /*#BFF08E;*/
 	position: relative;
 	text-align: center;
@@ -137,9 +137,30 @@ body {
 /*
 My styles -_-
  */
+
+.index-outer {
+	display: table;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+
+.index-middle {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.index-inner {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 100%;
+}
+
+
 .header-user-data { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; height: 100px; width: 100%; }
 .photo-block { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; width: 100px; height: 100px; }
-.address-block { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; width: 35%; height: 100px; margin: 0px; margin-left: 0px; }
+.address-block { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; width: 35%; height: 100px; margin: 5px; margin-left: 10px; }
 .address-cell { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 0px; width: 24%; height: 50px; }
 .address-cell-header { display: inline-block; *display: inline; zoom: 1; vertical-align: top; text-align: center; font-size: 16px; width: 42px; height: 20px; }
 .address-cell-body { display: inline-block; *display: inline; zoom: 1; vertical-align: middle; text-align: center; font-size: 20px; min-font-size: 14px; max-font-size: 22px; width: 42px; height: 30px; }
@@ -147,6 +168,8 @@ My styles -_-
 
 .address-line { display: inline-block; *display: inline; zoom: 1; vertical-align: top; text-align: left; font-size: 16px; width: 100%; height: 20px; }
 
+.view-new-user-block { vertical-align: middle; text-align: center; line-height: 35px; font-size: 20px; /*width: 100%;*/ /*height: 240px;*/ margin: 5px; }
+.us-block { vertical-align: middle; text-align: center; font-size: 30px; /*width: 100%;*/ /*height: 240px;*/ margin: 5px; }
 
 
 .block-checkbox { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 16px; height: 30px; width: 100%; margin: 5px; }
@@ -158,14 +181,24 @@ My styles -_-
 .profile-line { display: inline-block; *display: inline; zoom: 1; vertical-align: middle; font-size: 16px; height: 40px; width: 100%; margin: 5px; }
 
 input.submit-data-btn {
-	width: 100px;
-	height: 100px;
-	font-size: 18px;
+	width: 100%;
+	height: 50px;
+	font-size: 20px;
 	text-align: center;
 	white-space: normal;
+    /*
 	-webkit-appearance: none;
 	-webkit-border-radius: 0;
 	border-radius: 0;
+    */
+}
+
+input.submit-data-btn2 {
+	width: 250px;
+	height: 60px;
+	font-size: 20px;
+	text-align: center;
+	white-space: normal;
 }
 
 .round-neighbour-photo {

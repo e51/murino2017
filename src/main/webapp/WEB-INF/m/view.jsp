@@ -41,7 +41,9 @@
     logger.info(String.format("[m/view.jsp] %s show page", sid));
 %>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page isELIgnored="false"%>
 <!--!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -98,9 +100,10 @@
                     Квартира: <%=strFlat%>
                 </div>
             </div>
-            <div class="data-btn-block">
-                <%=strProfileButton%>
-            </div>
+
+            <!--div class="data-btn-block">
+            <%=strProfileButton%>
+            </div-->
 
         </div>
 
@@ -110,31 +113,62 @@
 
         <div class="container">
             <main class="content">
-                <div class="block-checkbox">
-                    <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/> Учитывать номер квартиры
-                </div>
-                <div class="block-section">
-                    <div class="block-section-title">
-                        <%=topNeighboursTitle%>
+                <c:choose>
+                    <c:when test="${user.isValid()}">
+                        <div class="block-checkbox">
+                            <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/> Учитывать номер квартиры
+                        </div>
+                        <div class="block-section">
+                            <div class="block-section-title">
+                                <%=topNeighboursTitle%>
+                            </div>
+                            <%=HTMLHelper.getNeighboursTopHTML(user)%><BR>
+                        </div>
+                        <div class="block-section">
+                            <div class="block-section-title">
+                                <strong><%=floorNeighboursTitle%></strong>
+                            </div>
+                            <div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%></div><BR>
+                        </div>
+                        <div class="block-section">
+                            <div class="block-section-title">
+                                <strong><%=bottomNeighboursTitle%></strong>
+                            </div>
+                            <%=HTMLHelper.getNeighboursBottomHTML(user)%><BR>
+                        </div>
+                        <%=strProfileButton%>
+                    </c:when>
+                    <c:otherwise>
+                    <div class="index-outer">
+                        <div class="index-middle">
+                            <div class="index-inner">
+                                <div class="view-new-user-block">
+                                <!--table height="240" width="100%"><tr><td class="view-new-user-block"-->
+                                    <BR>
+                                    Здесь будут отображаться Ваши соседи после ввода данных.
+
+                                    <BR><BR>
+
+                                    <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
+                                        <input type='submit' value='Ввести данные' class='submit-data-btn2'>
+                                        <BR><BR>
+                                    </form>
+                                    <BR><BR>
+
+                                </div>
+                                <!--/td></tr></table-->
+                            </div>
+                        </div>
                     </div>
-                    <%=HTMLHelper.getNeighboursTopHTML(user)%><BR>
-                </div>
-                <div class="block-section">
-                    <div class="block-section-title">
-                        <strong><%=floorNeighboursTitle%></strong>
-                    </div>
-                    <div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%></div><BR>
-                </div>
-                <div class="block-section">
-                    <div class="block-section-title">
-                        <strong><%=bottomNeighboursTitle%></strong>
-                    </div>
-                    <%=HTMLHelper.getNeighboursBottomHTML(user)%><BR>
-                </div>
+
+                    </c:otherwise>
+                </c:choose>
+
+
             </main><!-- .content -->
         </div><!-- .container-->
 
-        <aside class="right-sidebar">
+        <!--aside class="right-sidebar">
             Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%>
             <BR><BR>
             <%=HTMLHelper.getStat()%>
