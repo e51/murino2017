@@ -4,6 +4,7 @@
 <%@ page import="static local.tcltk.Constants.SID_PATTERN" %>
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
+<%@ page import="local.tcltk.User" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -14,6 +15,7 @@
 <%
     Logger logger = Logger.getLogger("m-verify.jsp");
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
+    User user = (User) session.getAttribute("user");
 
 //    Enumeration<String> names = request.getHeaderNames();
 //    logger.info("");
@@ -35,19 +37,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title><%=SITE_TITLE%></title>
+    <%@include file = "/WEB-INF/includes/head_part.jspf"%>
     <meta http-equiv="refresh" content="1; url=<%=response.encodeRedirectURL(MOBILE_APP_VIEW_URL)%>"/>
     <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>counter.css">
 </head>
 <body>
-<div class="index-outer">
-    <div class="index-middle">
-        <div class="index-inner">
-            <table width="100%" height="100%">
-                <tr><td valign="center" align="center">
-                    <div id="countdown" class="countdownHolder">
-                        <span class="counterText" style="top: 0px;">Нас уже:<BR><BR> </span>
-                        <span class="countDigits">
+    <div class="index-outer">
+        <div class="index-middle">
+            <div class="index-inner">
+                <div class="us-block">
+                    <BR>Нас уже:<BR><BR>
+                </div>
+                <!--table width="320" height="100%">
+                    <tr><td valign="center" align="center"-->
+                <div id="countdown" class="countdownHolder">
+                    <!--span class="counterText" style="top: 0px;"><BR>Нас уже:<BR><BR> </span-->
+                    <span class="countDigits">
                         <span class="position">
                             <span class="digit static" style="top: 0px; opacity: 1;"><%=count/100%></span>
                         </span>
@@ -58,13 +63,14 @@
                             <span class="digit static" style="top: 0px; opacity: 1;"><%=count%10%></span>
                         </span>
                     </span>
-                    </div>
-                    <img src="<%=SITE_ROOT%>img/giphy.gif">
-                </td></tr>
-            </table>
+                </div>
+                <img src="<%=SITE_ROOT%>img/giphy.gif">
+                <!--/td></tr>
+            </table-->
+            </div>
         </div>
     </div>
-</div>
+
 
 </body>
 </html>
