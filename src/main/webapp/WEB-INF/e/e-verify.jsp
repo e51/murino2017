@@ -65,7 +65,7 @@
                         </span>
                     </span>
                 </div>
-                <img src="<%=SITE_ROOT%>img/giphy.gif">
+                <img src="<%=SITE_ROOT%>img/giphy.gif" width="256" height="140">
                 <!--/td></tr>
             </table-->
             </div>

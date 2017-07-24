@@ -10,7 +10,10 @@
     /*background-color: #ccc;*/
     border-radius: 3px;
 }
-body { margin: 0; }
+body {
+    margin: 0;
+    background-color: #ffffff;
+}
 #neighbour {
     position: relative;
     overflow: auto;
