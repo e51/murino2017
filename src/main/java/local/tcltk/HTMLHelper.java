@@ -79,8 +79,7 @@ public class HTMLHelper {
 
         String json = getVKResponse(VK_API_CLASSIC_QUERY_URL + queryParams);
 
-//        logger.info("[fillNeighboursVKData] total url: " + VK_API_CLASSIC_QUERY_URL + queryParams);
-        logger.info("[fillNeighboursVKData] got json: " + json);
+//        logger.info("[fillNeighboursVKData] got json: " + json);
 
         // for example
 //        {"response":[{"id":764013,"first_name":"Алексей","last_name":"Горбунов","photo_50":"https:\/\/pp.userapi.com\/c628627\/v628627013\/4c713\/JTxd5RCWR-k.jpg","hidden":1},
@@ -113,6 +112,8 @@ public class HTMLHelper {
                         user.setVkPhoto200(String.valueOf(elementMap.get("photo_200")));
                         user.setVkPhoto100(String.valueOf(elementMap.get("photo_100")));
                         user.setVkPhoto50(String.valueOf(elementMap.get("photo_50")));
+
+                        logger.info("[fillNeighboursVKData] got neighbour: " + user); // >=1
                         break;
                     }
                 }

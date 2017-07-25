@@ -111,7 +111,7 @@ public class DatabaseManager {
                             rs.getInt("flat"),
                             rs.getInt("updates")
                     );
-                    logger.info("[getUserFromDB] found user: " + user);
+//                    logger.info("[getUserFromDB] found user: " + user);
                 }
                 // Clean-up environment
                 rs.close();
@@ -146,7 +146,7 @@ public class DatabaseManager {
                             rs.getInt("updates")
                     );
                     users.add(user);
-                    logger.info("[getUsersFromDB] found user: " + user);
+//                    logger.info("[getUsersFromDB] found user: " + user);
                 }
                 // Clean-up environment
                 rs.close();

@@ -102,8 +102,12 @@
                                     <H1><%=bottomNeighboursTitle%></H1><BR><%=HTMLHelper.getNeighboursBottomHTML(user)%>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <%=strProfileButton%>
+                                </td>
+                            </tr>
                         </table>
-                        <!--%=strProfileButton%-->
                     </c:when>
                     <c:otherwise>
                         <div class="block-section">

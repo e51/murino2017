@@ -34,7 +34,11 @@
 <html>
 <head>
     <title><%=SITE_TITLE%></title>
-    <meta http-equiv="refresh" content="1; url=<%=response.encodeRedirectURL(WEB_APP_VIEW_URL)%>"/>
+    <!--meta http-equiv="refresh" content="1; url=<%=response.encodeRedirectURL(WEB_APP_VIEW_URL)%>"/-->
+
+    <script type="text/JavaScript">
+        setTimeout("location.href = '<%=response.encodeURL(WEB_APP_VIEW_URL)%>';", 1000);
+    </script>
 </head>
 <body>
 <div class="index-outer">
