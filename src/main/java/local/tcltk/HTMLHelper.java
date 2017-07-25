@@ -285,7 +285,7 @@ public class HTMLHelper {
             count = 2;
         }
         if (user.getAppVersion() == EMBEDDED_APP_USER || user.getAppVersion() == WEB_SITE_USER) {
-            count = 5;
+            count = 7;
         }
 
         List<User> neighbours = DatabaseManager.getRandomUsersFromDB(count);
