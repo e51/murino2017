@@ -11,6 +11,7 @@ import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import static local.tcltk.Constants.*;
@@ -38,6 +39,12 @@ public class HTMLHelper {
      * @param message
      */
     public static void notify(String message) {
+
+        //don't send for tests
+        if (!SITE_PORT.isEmpty()) {
+            return;
+        }
+
         String contextParams = null;
         try {
             contextParams = "messages.send?user_id=" + ADMIN_VK_ID +
@@ -269,6 +276,36 @@ public class HTMLHelper {
         }
 
         return getNeighboursHTML(user, sql);
+    }
+
+    public static String getRandomNeighboursHTML(User user) {
+
+        int count = 2;
+        if (user.getAppVersion() == MOBILE_APP_USER) {
+            count = 2;
+        }
+        if (user.getAppVersion() == EMBEDDED_APP_USER || user.getAppVersion() == WEB_SITE_USER) {
+            count = 5;
+        }
+
+        List<User> neighbours = DatabaseManager.getRandomUsersFromDB(count);
+
+        fillNeighboursVKData(neighbours);
+
+        // 3 - show users
+        StringBuilder sb = new StringBuilder();
+
+        for (User usr : neighbours) {
+            sb.append("<div class='block-neighbour-promo'><img src='" +
+                    (user.getAppVersion() == WEB_SITE_USER ? usr.getVkPhoto100() : (user.getAppVersion() == EMBEDDED_APP_USER ? usr.getVkPhoto100() : usr.getVkPhoto100())) +
+                    "' class='blur'><BR></div>");
+        }
+
+        if (neighbours.isEmpty()) {
+            sb.append("пока нет соседей :(");
+        }
+
+        return sb.toString();
     }
 
 
