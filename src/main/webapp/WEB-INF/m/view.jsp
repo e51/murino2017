@@ -181,7 +181,7 @@
 
 <footer class="footer">
     <!--Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a-->
-    <a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Задать вопрос</a>
+    <a href='https://vk.com/write<%=ADMIN_VK_ID%>' target=_blank>Задать вопрос</a>
 
 </footer><!-- .footer -->
 

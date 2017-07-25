@@ -104,7 +104,7 @@
                 </p>
                 <!--%=strProfileButton%-->
                 <BR><BR>
-                <a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Спросить меня</a>
+                <a href='https://vk.com/write<%=ADMIN_VK_ID%>' target=_blank>Задать вопрос</a>
             </td>
             <td align=left valign=top width=50%>
                 <c:choose>
