@@ -201,10 +201,24 @@ input.submit-data-btn2 {
 	white-space: normal;
 }
 
+img.blur {
+	width: 100px;
+	height: 100px;
+	border-radius: 50px; /* Радиус скругления */
+	-webkit-filter: blur(2px);
+	filter: blur(2px);
+}
+
 .round-neighbour-photo {
 	border-radius: 50px; /* Радиус скругления */
 	/*border: 0px solid black; /* Параметры рамки */
 	/* box-shadow: 0 0 7px #666; /* Параметры тени */
+}
+
+.block-neighbour-promo {
+	display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/
+	width: 110px;
+	height: 150px;
 }
 
 #container { height: 100%; width:100%; /*font-size: 0;*/ }

@@ -3,6 +3,7 @@
 <%@ page import="local.tcltk.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
+<%@ page import="javax.swing.text.html.HTML" %>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -139,27 +140,25 @@
                         <%=strProfileButton%>
                     </c:when>
                     <c:otherwise>
-                    <div class="index-outer">
-                        <div class="index-middle">
-                            <div class="index-inner">
-                                <div class="view-new-user-block">
+                                <div class="block-section">
+                                    <div class="block-section-title">
+                                        <strong>Возможные соседи:</strong>
+                                    </div>
                                 <!--table height="240" width="100%"><tr><td class="view-new-user-block"-->
-                                    <BR>
+                                    <%=HTMLHelper.getRandomNeighboursHTML(user)%>
+                                    <!--BR>
                                     Здесь будут отображаться Ваши соседи после ввода данных.
 
+                                    <BR><BR-->
                                     <BR><BR>
-
                                     <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
-                                        <input type='submit' value='Ввести данные' class='submit-data-btn2'>
-                                        <BR><BR>
+                                        <input type='submit' value='Найти соседей' class='submit-data-btn2'>
+                                        <BR>
                                     </form>
-                                    <BR><BR>
+                                    <!--BR><BR-->
 
                                 </div>
                                 <!--/td></tr></table-->
-                            </div>
-                        </div>
-                    </div>
 
                     </c:otherwise>
                 </c:choose>
@@ -179,7 +178,9 @@
 </div><!-- .wrapper -->
 
 <footer class="footer">
-    Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a>
+    <!--Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a-->
+    <a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Задать вопрос</a>
+
 </footer><!-- .footer -->
 
 
