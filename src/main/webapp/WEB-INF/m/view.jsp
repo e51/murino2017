@@ -140,24 +140,26 @@
                         <%=strProfileButton%>
                     </c:when>
                     <c:otherwise>
-                                <div class="block-section">
-                                    <div class="block-section-title">
-                                        <strong>Возможные соседи:</strong>
-                                    </div>
-                                <!--table height="240" width="100%"><tr><td class="view-new-user-block"-->
-                                    <%=HTMLHelper.getRandomNeighboursHTML(user)%>
-                                    <!--BR>
-                                    Здесь будут отображаться Ваши соседи после ввода данных.
-
-                                    <BR><BR-->
-                                    <BR><BR>
-                                    <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
-                                        <input type='submit' value='Найти соседей' class='submit-data-btn2'>
-                                        <BR>
-                                    </form>
-                                    <!--BR><BR-->
-
+                            <div class="block-section">
+                                <div class="block-section-title">
+                                    <strong>Возможные соседи:</strong>
                                 </div>
+                                <!--table height="240" width="100%"><tr><td class="view-new-user-block"-->
+                                <div class="block-neighbours-promo">
+                                    <%=HTMLHelper.getRandomNeighboursHTML(user)%>
+                                </div>
+                                <!--BR>
+                                Здесь будут отображаться Ваши соседи после ввода данных.
+
+                                <BR><BR-->
+                                <!--BR><BR-->
+                                <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
+                                    <input type='submit' value='Найти соседей' class='submit-data-btn2'>
+                                    <BR>
+                                </form>
+                                <!--BR><BR-->
+
+                            </div>
                                 <!--/td></tr></table-->
 
                     </c:otherwise>

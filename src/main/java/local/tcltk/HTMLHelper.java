@@ -283,7 +283,7 @@ public class HTMLHelper {
 
         int count = 2;
         if (user.getAppVersion() == MOBILE_APP_USER) {
-            count = 2;
+            count = 3;
         }
         if (user.getAppVersion() == EMBEDDED_APP_USER || user.getAppVersion() == WEB_SITE_USER) {
             count = 7;
