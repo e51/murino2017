@@ -125,6 +125,41 @@ public class DatabaseManager {
         return user;
     }
 
+    public static List<User> getRandomUsersFromDB(int count) {
+        List<User> users = new ArrayList<>();
+
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                String sql = String.format("SELECT * FROM %s ORDER BY RANDOM() LIMIT %d;", TABLE_NAME, count);
+
+                ResultSet rs = statement.executeQuery(sql);
+
+                // Extract data from result set
+                while(rs.next()){
+                    //Retrieve by column name
+                    User user = new User(
+                            rs.getInt("vk_id"),
+                            rs.getInt("building"),
+                            rs.getInt("section"),
+                            rs.getInt("floor"),
+                            rs.getInt("flat"),
+                            rs.getInt("updates")
+                    );
+                    users.add(user);
+                    logger.info("[getUsersFromDB] found user: " + user);
+                }
+                // Clean-up environment
+                rs.close();
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+//            e.printStackTrace();
+            logger.error(String.format("[getUserFromDB] Error getting user from DB. %s: %s", e.getClass().getSimpleName(), e.getMessage()));
+//            throw e;
+        }
+
+        return users;
+    }
+
     /**
      * Get neighbours list to the user with sql query
      * @param user
