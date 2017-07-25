@@ -17,6 +17,14 @@
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
     User user = (User) session.getAttribute("user");
 
+//    logger.info("Request URI: " + request.getRequestURI());
+//    logger.info("Query string: " + request.getQueryString());
+//    logger.info("SID: " + request.getSession().getId());
+//    logger.info("Plane URL: " );
+//    logger.info("encodeURL: " + response.encodeURL("any"));
+//    logger.info("encodeRedirectURL: " + response.encodeRedirectURL("any"));
+//    logger.info("encodeRedirectURL: " + response.encodeURL(EMBEDDED_APP_VIEW_URL));
+//
 //    Enumeration<String> names = request.getHeaderNames();
 //    logger.info("");
 //    while (names.hasMoreElements()) {
@@ -29,7 +37,7 @@
 //    }
 //    logger.info("");
 //
-//    logger.info("- - - - - verify.jsp end - - - - - -");
+//    logger.info("- - - - - e-verify.jsp end - - - - - -");
 
     int count = DatabaseManager.getUsersCountByBuilding(0);
 
@@ -39,8 +47,12 @@
 <html>
 <head>
     <%@include file = "/WEB-INF/includes/head_part.jspf"%>
-    <meta http-equiv="refresh" content="1; url=<%=response.encodeRedirectURL(EMBEDDED_APP_VIEW_URL)%>"/>
+    <!--meta http-equiv="refresh" content="1; url=<%=response.encodeURL(EMBEDDED_APP_VIEW_URL)%>"/-->
     <link rel="stylesheet" type="text/css" href="<%=STYLES_URL%>counter.css">
+
+    <script type="text/JavaScript">
+        setTimeout("location.href = '<%=response.encodeURL(EMBEDDED_APP_VIEW_URL)%>';", 1000);
+    </script>
 </head>
 <body>
     <div class="index-outer">
@@ -71,7 +83,6 @@
             </div>
         </div>
     </div>
-
 
 </body>
 </html>
