@@ -22,6 +22,33 @@ body {
     height: 90px;
 }
 
+.block-neighbours-promo {
+    max-width: 70%;
+
+}
+.block-neighbour-promo {
+    display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/
+    width: 130px;
+    height: 150px;
+}
+
+input.submit-data-btn2 {
+    width: 250px;
+    height: 70px;
+    font-size: 20px;
+    text-align: center;
+    white-space: normal;
+}
+
+img.blur {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px; /* Радиус скругления */
+    -webkit-filter: blur(0px);
+    filter: blur(0px);
+}
+
+
 .round-neighbour-photo {
     border-radius: 50px; /* Радиус скругления */
     /*border: 0px solid black; /* Параметры рамки */
@@ -106,3 +133,6 @@ input.submit-profile {
 
 #block-neighbour { display: inline-block; *display: inline; zoom: 1; vertical-align: top; /*font-size: 12px;*/ }
 #block-neighbour { width: 150px; height: 150px; }
+
+.block-section { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 14px; width: 100%; min-height: 70px; margin: 5px; }
+.block-section-title { display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 24px; width: 100%; min-height: 50px; }

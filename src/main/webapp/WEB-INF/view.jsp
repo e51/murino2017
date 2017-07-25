@@ -1,9 +1,11 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="local.tcltk.HTMLHelper" %>
 <%@ page import="local.tcltk.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
 <%@ page import="java.util.Enumeration" %>
+<%@ page isELIgnored="false"%>
 <%--
   Created by IntelliJ IDEA.
   User: user
@@ -100,28 +102,57 @@
                     <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/>
                     Учитывать номер квартиры при<BR> поиске соседей сверху/снизу
                 </p>
-                <%=strProfileButton%>
+                <!--%=strProfileButton%-->
                 <BR><BR>
-                Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a>
+                <a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Спросить меня</a>
             </td>
-            <td align=center valign=center width=50%>
-                <table width=100% height=100%>
-                    <tr>
-                        <td valign='top'>
-                            <H1><%=topNeighboursTitle%></H1><BR><%=HTMLHelper.getNeighboursTopHTML(user)%>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign='top'>
-                            <H1><%=floorNeighboursTitle%></H1><BR><div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%>
-                        </div></td>
-                    </tr>
-                    <tr>
-                        <td valign='top'>
-                            <H1><%=bottomNeighboursTitle%></H1><BR><%=HTMLHelper.getNeighboursBottomHTML(user)%>
-                        </td>
-                    </tr>
-                </table>
+            <td align=left valign=top width=50%>
+                <c:choose>
+                    <c:when test="${user.isValid()}">
+                        <table width=100% height=100%>
+                            <tr>
+                                <td valign='top'>
+                                    <H1><%=topNeighboursTitle%></H1><BR><%=HTMLHelper.getNeighboursTopHTML(user)%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign='top'>
+                                    <H1><%=floorNeighboursTitle%></H1><BR><div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%>
+                                </div></td>
+                            </tr>
+                            <tr>
+                                <td valign='top'>
+                                    <H1><%=bottomNeighboursTitle%></H1><BR><%=HTMLHelper.getNeighboursBottomHTML(user)%>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--%=strProfileButton%-->
+                    </c:when>
+                    <c:otherwise>
+                        <div class="block-section">
+                            <div class="block-section-title">
+                                <strong>Возможные соседи:</strong>
+                            </div>
+                            <!--table height="240" width="100%"><tr><td class="view-new-user-block"-->
+                            <div class="block-neighbours-promo">
+                                <%=HTMLHelper.getRandomNeighboursHTML(user)%>
+                            </div>
+                            <!--BR>
+                            Здесь будут отображаться Ваши соседи после ввода данных.
+
+                            <BR><BR-->
+                            <BR><BR><BR><BR><BR><BR>
+                            <form action='<%=response.encodeURL(WEB_APP_PROFILE_URL)%>' method='post' align=center>
+                                <input type='submit' value='Найти соседей' class='submit-data-btn2'>
+                                <BR>
+                            </form>
+                            <!--BR><BR-->
+                        </div>
+                        <!--/td></tr></table-->
+
+                    </c:otherwise>
+                </c:choose>
+
             </td>
             <td width=20% valign='top' align='left'>
                 <BR><BR><p class='text-total'><H3>Нас уже: <%=DatabaseManager.getUsersCountByBuilding(0)%></H3></p>

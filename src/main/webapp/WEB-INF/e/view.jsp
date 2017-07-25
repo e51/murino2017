@@ -4,6 +4,7 @@
 <%@ page import="local.tcltk.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="local.tcltk.model.DatabaseManager" %>
+<%@ page isELIgnored="false"%>
 <%--
   Created by IntelliJ IDEA.
   User: user
