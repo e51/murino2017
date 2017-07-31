@@ -3,11 +3,14 @@ package local.tcltk.controller;
 import local.tcltk.controller.emb.ErrorActionEmbeddedApp;
 import local.tcltk.controller.emb.VerifyActionEmbeddedApp;
 import local.tcltk.controller.emb.HelpActionEmbeddedApp;
-import local.tcltk.controller.mobile.VerifyActionMobileApp;
+import local.tcltk.controller.emb.mobile.VerifyActionMobileApp;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+
+import static local.tcltk.Constants.PROJECT_NAME;
+import static local.tcltk.Constants.SITE_ROOT;
 
 public class ActionFactory {
 
@@ -50,6 +53,12 @@ public class ActionFactory {
 
         // get string after last "/"
         result = result.substring(result.lastIndexOf("/") + 1);
+
+//        System.out.println(result);
+//        //get string after base url
+//        result = result.substring(SITE_ROOT.length());
+//
+//        System.out.println(result);
 
         return result;
     }

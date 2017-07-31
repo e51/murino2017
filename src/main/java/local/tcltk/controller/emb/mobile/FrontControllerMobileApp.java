@@ -1,6 +1,8 @@
-package local.tcltk.controller;
+package local.tcltk.controller.emb.mobile;
 
 import local.tcltk.Building;
+import local.tcltk.controller.Action;
+import local.tcltk.controller.ActionFactory;
 import local.tcltk.exceptions.AuthException;
 import local.tcltk.exceptions.ProfileException;
 import local.tcltk.exceptions.VerifyException;
@@ -13,13 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
 
 import static local.tcltk.Constants.*;
 
-@WebServlet(name = "FrontController", urlPatterns = {"/verify", "/profile", "/view", "/auth", "/profile/", "/view/", "/auth/"})
-public class FrontController extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(FrontController.class);
+@WebServlet(name = "FrontControllerMobileApp", urlPatterns = {"/m/*"})
+public class FrontControllerMobileApp extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(FrontControllerMobileApp.class);
 
     static {
         if (STRUCTURE.isEmpty()) {
@@ -56,38 +57,24 @@ public class FrontController extends HttpServlet {
 //            }
 //            logger.info("");
 
-//            int status = response.getStatus();
-//            response.reset();
-//            response.setStatus(status);
-//
-//            for (String name : response.getHeaderNames()) {
-//                logger.info(name + ": " + response.getHeader(name));
-//            }
-
             action = ActionFactory.getAction(request);
             view = action.execute(request, response);
 
             if (view.equals(ActionFactory.getActionPart(request))) {
-                logger.info(String.format("[fc] %s Forwarding to %s.jsp", sid, view));
-                request.getRequestDispatcher("/WEB-INF/" + view + ".jsp").forward(request, response);
+                logger.info(String.format("[fc] %s Forwarding to %s", sid, view));
+                request.getRequestDispatcher("/WEB-INF/m/" + view + ".jsp").forward(request, response);
             } else {
                 logger.info(String.format("[fc] %s Redirecting to %s", sid, response.encodeRedirectURL(view)));
-//                response.sendRedirect(SITE_ROOT + view + "/"); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
-//                response.sendRedirect(response.encodeRedirectURL(SITE_ROOT + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
-                response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
+                response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
-        } catch (VerifyException | ProfileException | ViewException e) {
-            logger.error(e.getMessage());
-            logger.info(String.format("[fc] %s Redirecting to index: %s", sid, response.encodeRedirectURL(WEB_APP_ROOT_URL)));
-            response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL));
-        } catch (AuthException e) {
-            logger.error(e.getMessage());
-            logger.info(String.format("[fc] %s Redirecting to auth: %s", sid, response.encodeRedirectURL(WEB_APP_AUTH_URL)));
-            response.sendRedirect(response.encodeRedirectURL(WEB_APP_AUTH_URL));
+        } catch (VerifyException | ProfileException | ViewException | AuthException e) {
+            logger.error(String.format("[fc] %s Error: %s, %s", sid, e.getClass().getSimpleName(), e.getMessage()));
+            logger.info(String.format("[fc] %s Redirecting to the error page", sid));
+            response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + "error"));
         } catch (Exception e) {
-            logger.error(String.format("[fc] %s Execution action failed. %s, remote address: %s, requestURI: %s, action: %s, view: %s", sid, e, request.getRemoteAddr(), request.getRequestURI(), action, view));
-            logger.info(String.format("[fc] %s Redirecting to index: %s", sid, response.encodeRedirectURL(WEB_APP_ROOT_URL)));
-            response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL));
+            logger.error(String.format("[fc] %s Execution action failed: %s, %s, remote address: %s, requestURI: %s, action: %s, view: %s", sid, e.getClass().getSimpleName(), e.getMessage(), request.getRemoteAddr(), request.getRequestURI(), action, view));
+            logger.info(String.format("[fc] %s Redirecting to the error page", sid));
+            response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + "error"));
         }
     }
 }

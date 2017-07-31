@@ -1,4 +1,4 @@
-package local.tcltk.controller.mobile;
+package local.tcltk.controller.emb.mobile;
 
 import local.tcltk.HTMLHelper;
 import local.tcltk.User;
