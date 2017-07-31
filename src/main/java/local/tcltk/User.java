@@ -1,6 +1,5 @@
 package local.tcltk;
 
-import local.tcltk.controller.FrontController;
 import org.apache.log4j.Logger;
 
 import static local.tcltk.Constants.STRUCTURE;
