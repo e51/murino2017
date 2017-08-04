@@ -1,8 +1,13 @@
 package local.tcltk.model;
 
 import local.tcltk.User;
+import local.tcltk.exceptions.DAOException;
 import org.apache.log4j.Logger;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +19,40 @@ import static local.tcltk.Constants.*;
  */
 public class DatabaseManager {
     private static final Logger logger = Logger.getLogger(DatabaseManager.class);
+    private static Context context;
+    private static DataSource ds;
+
+    static {
+        // Obtain our environment naming context
+        Context initCtx = null;
+        try {
+            initCtx = new InitialContext();
+            context = (Context) initCtx.lookup("java:comp/env");
+
+            // Look up our data source
+            ds = (DataSource) context.lookup("jdbc/database");
+
+        } catch (NamingException e) {
+            logger.error(String.format("Error getting DataSource. %s %s", e.getClass().getSimpleName(), e.getMessage()));
+//            throw new DAOException("Error getting Datasource", e);
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Get connection to the Database
      * @return Connection
      */
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
+/*
         // Register JDBC driver
         Class.forName(JDBC_DRIVER);
 
         // Open a connection
         return DriverManager.getConnection(DB_URL, USER, PASS);
+*/
+
+        return ds.getConnection();
     }
 
     /**
@@ -92,6 +120,7 @@ public class DatabaseManager {
      * @return User
      */
     public static User getUserFromDB(long vk_id) {
+        long time1 = System.nanoTime();
         User user = null;
 
         try (Connection connection = DatabaseManager.getConnection()) {
@@ -122,10 +151,12 @@ public class DatabaseManager {
 //            throw e;
         }
 
+        logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
         return user;
     }
 
     public static List<User> getRandomUsersFromDB(int count) {
+        long time1 = System.nanoTime();
         List<User> users = new ArrayList<>();
 
         try (Connection connection = DatabaseManager.getConnection()) {
@@ -157,6 +188,7 @@ public class DatabaseManager {
 //            throw e;
         }
 
+        logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
         return users;
     }
 
@@ -167,6 +199,7 @@ public class DatabaseManager {
      * @return
      */
     public static List<User> getNeighboursFromDB(User user, String sql) {
+        long time1 = System.nanoTime();
         List<User> neighbours = new ArrayList<>();
 
         try (Connection connection = DatabaseManager.getConnection()) {
@@ -196,6 +229,7 @@ public class DatabaseManager {
             logger.error(String.format("[getNeighboursFromDB] Error getting neighbours from DB. %s: %s", e.getClass().getSimpleName(), e.getMessage()));
         }
 
+        logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
         return neighbours;
     }
 

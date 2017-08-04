@@ -25,6 +25,13 @@
       <scope>test</scope>
     </dependency>
 
+    <!--dependency>
+      <groupId>com.oracle</groupId>
+      <artifactId>ojdbc</artifactId>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/ojdbc8.jar</systemPath>
+    </dependency-->
+
     <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
     <dependency>
       <groupId>javax.servlet</groupId>
