@@ -103,6 +103,7 @@ public class VerifyActionEmbeddedApp implements Action {
         }
 
         logger.info(String.format("[verify] %s Authentication PASSED, sign is OK", sid));
+        logger.info(String.format("[verify] Query string: %s", request.getQueryString()));
 
         // parse parameters
         String api_url = request.getParameter("api_url");

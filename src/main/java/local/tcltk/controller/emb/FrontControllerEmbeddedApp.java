@@ -23,13 +23,6 @@ import static local.tcltk.Constants.*;
 public class FrontControllerEmbeddedApp extends HttpServlet {
     private static final Logger logger = Logger.getLogger(FrontControllerEmbeddedApp.class);
 
-    static {
-        if (STRUCTURE.isEmpty()) {
-            STRUCTURE.put(new Integer(1), new Building(1, 7, new Integer[]{12, 12, 12, 12, 12, 12, 12}, 15));
-            STRUCTURE.put(new Integer(2), new Building(2, 8, new Integer[]{12, 12, 12, 12, 12, 12, 12, 12}, 15));
-        }
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }

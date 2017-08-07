@@ -34,6 +34,13 @@ public class Building implements Comparable<Building> {
         return maxFloor;
     }
 
+    /**
+     *
+     * @param value - building number
+     * @param sectionsCount - count of sections in this building
+     * @param floorsCountBySection - count of floors in each section
+     * @param maxFlatsByFloor - max flats per floor
+     */
     public Building(int value, int sectionsCount, Integer[] floorsCountBySection, int maxFlatsByFloor) {
         this.value = value;
         this.sectionsCount = sectionsCount;
