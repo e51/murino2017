@@ -4,15 +4,14 @@ import local.tcltk.controller.emb.ErrorActionEmbeddedApp;
 import local.tcltk.controller.emb.VerifyActionEmbeddedApp;
 import local.tcltk.controller.emb.HelpActionEmbeddedApp;
 import local.tcltk.controller.emb.mobile.VerifyActionMobileApp;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static local.tcltk.Constants.PROJECT_NAME;
-import static local.tcltk.Constants.SITE_ROOT;
-
 public class ActionFactory {
+    private static final Logger logger = Logger.getLogger(ActionFactory.class);
 
     private static Map<String, Action> actions = new HashMap<>();
 
@@ -44,6 +43,12 @@ public class ActionFactory {
         // remove ";jsessionid=63565260D45BEA8264B98295D8201DBC"
         if (result.lastIndexOf(";") != -1) {
             result = result.substring(0, result.lastIndexOf(";"));
+        }
+
+        // remove last "/null"
+        if (result.endsWith("/null")) {
+            logger.error(String.format("[getActionPart] requestURI: %s contains /null! Cut it. User Agent: %s", request.getRequestURI(), request.getHeader("User-Agent")));
+            result = result.substring(0, result.length() - 5);
         }
 
         // remove last "/"
