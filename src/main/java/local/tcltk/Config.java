@@ -31,8 +31,5 @@ public class Config implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         // Do stuff during webapp's shutdown.
-
-        LinkedList list = new LinkedList();
-        list.getLast();
     }
 }

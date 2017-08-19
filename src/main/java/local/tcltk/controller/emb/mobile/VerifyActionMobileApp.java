@@ -85,6 +85,7 @@ public class VerifyActionMobileApp implements Action {
 //        logger.info("");
 
         logger.info(String.format("[verify] %s Start checking. Remote address: %s", sid, request.getRemoteAddr()));
+        logger.info(String.format("[verify] Query string: %s", request.getQueryString()));
 
         // get current session
         HttpSession session = request.getSession();
@@ -102,7 +103,6 @@ public class VerifyActionMobileApp implements Action {
         }
 
         logger.info(String.format("[verify] %s Authentication PASSED, sign is OK", sid));
-        logger.info(String.format("[verify] Query string: %s", request.getQueryString()));
 
         // parse parameters
         String api_url = request.getParameter("api_url");
