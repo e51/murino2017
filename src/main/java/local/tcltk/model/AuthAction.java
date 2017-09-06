@@ -1,11 +1,9 @@
-package local.tcltk.controller;
+package local.tcltk.model;
 
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import static local.tcltk.Constants.SITE_ROOT;
 
 public class AuthAction implements Action {
     private static final Logger logger = Logger.getLogger(AuthAction.class);

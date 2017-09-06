@@ -1,6 +1,8 @@
 package local.tcltk;
 
-import local.tcltk.model.DatabaseManager;
+import local.tcltk.model.dao.DatabaseManager;
+import local.tcltk.model.domain.Building;
+import local.tcltk.model.domain.User;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,7 +13,6 @@ import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import static local.tcltk.Constants.*;

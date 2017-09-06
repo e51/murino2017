@@ -1,4 +1,4 @@
-package local.tcltk;
+package local.tcltk.model.domain;
 
 import org.apache.log4j.Logger;
 

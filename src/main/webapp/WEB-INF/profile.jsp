@@ -1,5 +1,5 @@
 <%@ page import="static local.tcltk.Constants.*" %>
-<%@ page import="local.tcltk.User" %>
+<%@ page import="local.tcltk.model.domain.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="java.util.Enumeration" %>
 <%--

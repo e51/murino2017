@@ -1,10 +1,10 @@
-package local.tcltk.controller.emb;
+package local.tcltk.model.emb;
 
 import local.tcltk.HTMLHelper;
-import local.tcltk.User;
-import local.tcltk.controller.Action;
+import local.tcltk.model.domain.User;
+import local.tcltk.model.Action;
 import local.tcltk.exceptions.VerifyException;
-import local.tcltk.model.DatabaseManager;
+import local.tcltk.model.dao.UserDAO;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
@@ -144,7 +144,11 @@ public class VerifyActionEmbeddedApp implements Action {
 //        logger.info("[verify] {" + sid + "} looking for user from DB with vk_id = " + vk_id);
         logger.info(String.format("[verify] %s looking for user from DB with vk_id: %d", sid, vk_id));
         // get user with such id from DB
-        user = DatabaseManager.getUserFromDB(vk_id);
+//        user = DatabaseManager.getUserFromDB(vk_id);
+
+//        user = new UserDAO((DataSource) request.getServletContext().getAttribute("ds")).getEntityByVkId(vk_id);
+        user = new UserDAO().getEntityByVkId(vk_id);
+
         if (user == null) {
             // no user found - make a new one
 

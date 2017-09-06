@@ -1,14 +1,12 @@
-package local.tcltk.controller;
+package local.tcltk.model;
 
-import local.tcltk.User;
+import local.tcltk.model.domain.User;
 import local.tcltk.exceptions.AuthException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.util.Enumeration;
 
 import static local.tcltk.Constants.*;
 

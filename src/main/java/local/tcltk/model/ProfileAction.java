@@ -1,17 +1,16 @@
-package local.tcltk.controller;
+package local.tcltk.model;
 
 import local.tcltk.HTMLHelper;
-import local.tcltk.User;
+import local.tcltk.model.domain.User;
+import local.tcltk.exceptions.DAOException;
 import local.tcltk.exceptions.ProfileException;
-import local.tcltk.model.DatabaseManager;
+import local.tcltk.model.dao.DatabaseManager;
+import local.tcltk.model.dao.UserDAO;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.sql.SQLException;
-import java.util.Enumeration;
 
 import static local.tcltk.Constants.*;
 
@@ -127,14 +126,16 @@ public class ProfileAction implements Action {
 
                 try {
                     if (insert) {   // new user
-                        DatabaseManager.createNewUserDB(user);
+                        //DatabaseManager.createNewUserDB(user);
+                        new UserDAO().insert(user);
 
                         // send a message to make admin happy
                         HTMLHelper.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
                     } else {        // update old user record
-                        DatabaseManager.updateUserInDB(user);
+                        //DatabaseManager.updateUserInDB(user);
+                        new UserDAO().update(user);
                     }
-                } catch (SQLException | ClassNotFoundException e) {
+                } catch (DAOException e) {
                     // error updating - return old values
                     logger.error(String.format("[profile] %s Modify Database FAILED - %s, %s (building=%d, section=%d, floor=%d, flat=%d)",
                             sid, e.getClass().getSimpleName(), e.getMessage(), building, section, floor, flat));

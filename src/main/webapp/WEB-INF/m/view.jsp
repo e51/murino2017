@@ -1,8 +1,8 @@
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="local.tcltk.HTMLHelper" %>
-<%@ page import="local.tcltk.User" %>
+<%@ page import="local.tcltk.model.domain.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="local.tcltk.model.DatabaseManager" %>
+<%@ page import="local.tcltk.model.dao.DatabaseManager" %>
 <%@ page import="javax.swing.text.html.HTML" %>
 <%--
   Created by IntelliJ IDEA.
@@ -44,7 +44,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page isELIgnored="false"%>
+<%@ page isELIgnored="false" %>
 <!--!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -65,7 +65,7 @@
     <meta name="description" content="" />
     <link href="style.css" rel="stylesheet"-->
 
-    <%@include file = "/WEB-INF/includes/head_part.jspf"%>
+    <%@ include file = "/WEB-INF/includes/head_part.jspf" %>
 
     <script>
         function use_flat_func(){

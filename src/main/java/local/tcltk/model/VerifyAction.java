@@ -1,9 +1,9 @@
-package local.tcltk.controller;
+package local.tcltk.model;
 
 import local.tcltk.HTMLHelper;
-import local.tcltk.User;
+import local.tcltk.model.domain.User;
 import local.tcltk.exceptions.VerifyException;
-import local.tcltk.model.DatabaseManager;
+import local.tcltk.model.dao.UserDAO;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,8 +12,6 @@ import org.json.simple.parser.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.util.Enumeration;
 
 import static local.tcltk.Constants.*;
 
@@ -147,7 +145,11 @@ public class VerifyAction implements Action {
 //        logger.info("[verify] {" + sid + "} looking for user from DB with vk_id = " + vk_id);
         logger.info(String.format("[verify] %s looking for user from DB with vk_id: %d", sid, vk_id));
         // get user with such id from DB
-        user = DatabaseManager.getUserFromDB(vk_id);
+//        user = DatabaseManager.getUserFromDB(vk_id);
+
+//        user = new UserDAO((DataSource) request.getServletContext().getAttribute("ds")).getEntityByVkId(vk_id);
+        user = new UserDAO().getEntityByVkId(vk_id);
+
         if (user == null) {
             // no user found - make a new one
 

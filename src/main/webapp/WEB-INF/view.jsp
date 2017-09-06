@@ -1,9 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="local.tcltk.HTMLHelper" %>
-<%@ page import="local.tcltk.User" %>
+<%@ page import="local.tcltk.model.domain.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="local.tcltk.model.DatabaseManager" %>
+<%@ page import="local.tcltk.model.dao.DatabaseManager" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page isELIgnored="false"%>
 <%--
@@ -70,7 +70,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <%@include file = "/WEB-INF/includes/head_part.jspf"%>
+    <%@ include file = "/WEB-INF/includes/head_part.jspf" %>
 
     <script>
         function use_flat_func(){

@@ -1,4 +1,4 @@
-package local.tcltk.controller;
+package local.tcltk.model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

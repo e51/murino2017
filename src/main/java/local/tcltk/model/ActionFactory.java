@@ -1,9 +1,9 @@
-package local.tcltk.controller;
+package local.tcltk.model;
 
-import local.tcltk.controller.emb.ErrorActionEmbeddedApp;
-import local.tcltk.controller.emb.VerifyActionEmbeddedApp;
-import local.tcltk.controller.emb.HelpActionEmbeddedApp;
-import local.tcltk.controller.emb.mobile.VerifyActionMobileApp;
+import local.tcltk.model.emb.ErrorActionEmbeddedApp;
+import local.tcltk.model.emb.VerifyActionEmbeddedApp;
+import local.tcltk.model.emb.HelpActionEmbeddedApp;
+import local.tcltk.model.emb.mobile.VerifyActionMobileApp;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
