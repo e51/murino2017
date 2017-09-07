@@ -201,26 +201,26 @@ public class User {
         boolean result = true;
 
         if (!STRUCTURE.keySet().contains(new Integer(building))) {
-            logger.error(String.format("[isValid] INVALID building. No such building (building=%d)", building));
+//            logger.error(String.format("[isValid] INVALID building. No such building (building=%d)", building));
             return false;
         }
 
         if (section < 1 || section > STRUCTURE.get(new Integer(building)).getSectionsCount()) {
-            logger.error(String.format("[isValid] INVALID section. No such section (building=%d, section=%d)", building, section));
+//            logger.error(String.format("[isValid] INVALID section. No such section (building=%d, section=%d)", building, section));
             return false;
 //            result = false;
         }
 
         try {
             if (floor < 1 || floor > STRUCTURE.get(new Integer(building)).getFloorsCountBySection()[section - 1]) {
-                logger.error(String.format("[isValid] INVALID floor. No such floor (building=%d, section=%d, floor=%d)", building, section, floor));
+//                logger.error(String.format("[isValid] INVALID floor. No such floor (building=%d, section=%d, floor=%d)", building, section, floor));
                 return false;
 //                result = false;
             }
         } catch (Exception e) {
             // In case of ArrayIndexOutOfBounds exception
 //            e.printStackTrace();
-            logger.error(String.format("[isValid] INVALID floor. Got %s for: (building=%d, section=%d, floor=%d)", e.getClass().getSimpleName(), building, section, floor));
+//            logger.error(String.format("[isValid] INVALID floor. Got %s for: (building=%d, section=%d, floor=%d)", e.getClass().getSimpleName(), building, section, floor));
             return false;
 //            result = false;
         }

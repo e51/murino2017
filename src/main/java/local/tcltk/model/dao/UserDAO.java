@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static local.tcltk.Constants.TABLE_NAME;
 
@@ -14,7 +16,6 @@ public class UserDAO {
     private DataSource ds;
 
     public UserDAO() {
-//        this.ds = DatabaseManager.getDataSource();
         this(DatabaseManager.getDataSource());
     }
 
@@ -63,6 +64,136 @@ public class UserDAO {
 
         return user;
     }
+
+    public List<User> getRandomNeighbours(int count) throws DAOException {
+        long time1 = System.nanoTime();
+        List<User> users = new ArrayList<>();
+
+        try (Connection connection = ds.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                String sql = String.format("SELECT * FROM %s ORDER BY RANDOM() LIMIT %d;", TABLE_NAME, count);
+
+                ResultSet rs = statement.executeQuery(sql);
+
+                // Extract data from result set
+                while(rs.next()){
+                    //Retrieve by column name
+                    User user = new User(
+                            rs.getInt("vk_id"),
+                            rs.getInt("building"),
+                            rs.getInt("section"),
+                            rs.getInt("floor"),
+                            rs.getInt("flat"),
+                            rs.getInt("updates")
+                    );
+                    users.add(user);
+//                    logger.info("[getUsersFromDB] found user: " + user);
+                }
+                // Clean-up environment
+                rs.close();
+            }
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            logger.error(String.format("[getUserFromDB] Error getting user from DB. %s: %s", e.getClass().getSimpleName(), e.getMessage()));
+            throw new DAOException(String.format("[getUserFromDB] Error getting user from DB. %s: %s", e.getClass().getSimpleName(), e.getMessage()), e);
+        }
+
+        logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
+        return users;
+    }
+
+    /**
+     * Get neighbours list to the user with sql query
+     * @param user
+     * @param sql
+     * @return
+     */
+    private List<User> getNeighboursFromDB(User user, String sql) {
+        long time1 = System.nanoTime();
+        List<User> neighbours = new ArrayList<>();
+
+        if (user.isValid()) {
+            try (Connection connection = ds.getConnection()) {
+                try (Statement statement = connection.createStatement()) {
+                    ResultSet rs = statement.executeQuery(sql);
+
+                    // Extract data from result set
+                    while (rs.next()) {
+                        //Retrieve by column name
+                        User neighbour = new User(
+                                rs.getInt("vk_id"),
+                                rs.getInt("building"),
+                                rs.getInt("section"),
+                                rs.getInt("floor"),
+                                rs.getInt("flat"),
+                                rs.getInt("updates")
+                        );
+
+                        if (!neighbour.equals(user)) {
+                            neighbours.add(neighbour);
+                        }
+                    }
+                    // Clean-up environment
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                logger.error(String.format("[getNeighboursFromDB] Error getting neighbours from DB. %s: %s", e.getClass().getSimpleName(), e.getMessage()));
+            }
+        }
+
+        logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
+        return neighbours;
+    }
+
+    public List<User> getTopNeighbours(User user) {
+        String sql = "SELECT * FROM " +  TABLE_NAME + " WHERE" +
+                " building = '" + user.getBuilding() + "' AND" +
+                " section = '" + user.getSection() + "' AND" +
+                " floor = '" + (user.getFloor() + 1) + "'";
+//                " floor = '" + (user.getFloor() + 1) + "' AND" +
+//                " flat = '" + user.getFlat() + "'";
+
+        if (user.isUseFlat() && user.getFlat() != 0) {
+//        if (user.getFlat() != 0) {
+            sql = sql + " AND" +
+                    " flat = '" + user.getFlat() + "'";
+        }
+
+        List<User> neighbours = getNeighboursFromDB(user, sql);
+
+        return neighbours;
+    }
+
+    public List<User> getFloorNeighbours(User user) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE" +
+                " building = '" + user.getBuilding() + "' AND" +
+                " section = '" + user.getSection() + "' AND" +
+                " floor = '" + user.getFloor() + "'";
+
+        List<User> neighbours = getNeighboursFromDB(user, sql);
+
+        return neighbours;
+    }
+
+    public List<User> getBottomNeighbours(User user) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE" +
+                " building = '" + user.getBuilding() + "' AND" +
+                " section = '" + user.getSection() + "' AND" +
+                " floor = '" + (user.getFloor() - 1) + "'";
+//                " floor = '" + (user.getFloor() - 1) + "' AND" +
+//                " flat = '" + user.getFlat() + "'";
+
+        if (user.isUseFlat() && user.getFlat() != 0) {
+//        if (user.getFlat() != 0) {
+            sql = sql + " AND" +
+                    " flat = '" + user.getFlat() + "'";
+        }
+
+        List<User> neighbours = getNeighboursFromDB(user, sql);
+
+        return neighbours;
+    }
+
 
     /**
      * Insert a new user record in the Database
@@ -124,5 +255,46 @@ public class UserDAO {
         }
 
     }
+
+    /**
+     * Get count of elements for some sql query
+     * @param sql - query for execute
+     * @return int count
+     */
+    private int getCount(String sql) {
+        int result = 0;
+
+        try (Connection connection = ds.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                ResultSet rs = statement.executeQuery(sql);
+
+                while(rs.next()){
+                    result = rs.getInt(1);
+                }
+
+                rs.close();
+            }
+        } catch (SQLException e) {
+            logger.error(String.format("[getCount] Error: %s, %s ", e.getClass().getSimpleName(), e.getMessage()));
+        }
+
+        return result;
+    }
+
+    /**
+     * Get users count by building number
+     * @param building: 0 = all
+     * @return
+     */
+    public int getUsersCountByBuilding(int building) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM " + TABLE_NAME);
+
+        if (building != 0) {
+            sql.append(" WHERE building = " + building);
+        }
+
+        return getCount(sql.toString());
+    }
+
 
 }

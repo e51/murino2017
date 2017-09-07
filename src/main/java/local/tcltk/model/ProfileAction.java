@@ -1,6 +1,7 @@
 package local.tcltk.model;
 
 import local.tcltk.HTMLHelper;
+import local.tcltk.model.dao.VkDAO;
 import local.tcltk.model.domain.User;
 import local.tcltk.exceptions.DAOException;
 import local.tcltk.exceptions.ProfileException;
@@ -103,7 +104,8 @@ public class ProfileAction implements Action {
             // insert a new user record or already have one? -- should be changed to database request for user.id?
             // valid user can be only from DB, invalid - no record in DB
 //        boolean insert = user.isValid() ? false : true;
-            boolean insert = DatabaseManager.getUserFromDB(user.getVk_id()) != null ? false : true;
+            //boolean insert = DatabaseManager.getUserFromDB(user.getVk_id()) != null ? false : true;
+            boolean insert = new UserDAO().getEntityByVkId(user.getVk_id()) != null ? false : true;
 
             logger.info(String.format("[profile] %s Have to insert a new record? : %s", sid, insert));
 
@@ -130,7 +132,8 @@ public class ProfileAction implements Action {
                         new UserDAO().insert(user);
 
                         // send a message to make admin happy
-                        HTMLHelper.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
+                        //HTMLHelper.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
+                        new VkDAO().notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
                     } else {        // update old user record
                         //DatabaseManager.updateUserInDB(user);
                         new UserDAO().update(user);

@@ -1,5 +1,7 @@
 package local.tcltk.model;
 
+import local.tcltk.model.dao.UserDAO;
+import local.tcltk.model.dao.VkDAO;
 import local.tcltk.model.domain.User;
 import local.tcltk.exceptions.AuthException;
 import org.apache.log4j.Logger;
@@ -7,6 +9,8 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 
 import static local.tcltk.Constants.*;
 
@@ -46,11 +50,49 @@ public class ViewAction implements Action {
             // Mustn't be here without user object in the session. Have to login again - redirect to /auth/
 
 //            throw new ViewException(String.format("[view] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
-            logger.error(String.format("[view] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
+            logger.error(String.format("[ViewAction] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
             throw new AuthException("No user object");
 //            result = "auth";
 //            return result;
         }
+
+
+        if (user.isValid()) {
+            // valid user, fill his neighbours lists
+            logger.info(String.format("[ViewAction] %s got user object: %s, preparing neighbours", sid, user));
+
+            // top
+            List<User> topNeighbours = new UserDAO().getTopNeighbours(user);
+            new VkDAO().fillNeighboursVKData(topNeighbours);
+            request.setAttribute("topNeighbours", topNeighbours);
+
+            // floor
+            List<User> floorNeighbours = new UserDAO().getFloorNeighbours(user);
+            new VkDAO().fillNeighboursVKData(floorNeighbours);
+            request.setAttribute("floorNeighbours", floorNeighbours);
+
+            // bottom
+            List<User> bottomNeighbours = new UserDAO().getBottomNeighbours(user);
+            new VkDAO().fillNeighboursVKData(bottomNeighbours);
+            request.setAttribute("bottomNeighbours", bottomNeighbours);
+
+        } else {
+            // a new user - show random neighbours
+            logger.info(String.format("[ViewAction] %s got a new user object: %s, preparing random neighbours", sid, user));
+
+            int count = 2;
+            if (user.getAppVersion() == MOBILE_APP_USER) {
+                count = 3;
+            }
+            if (user.getAppVersion() == EMBEDDED_APP_USER || user.getAppVersion() == WEB_SITE_USER) {
+                count = 7;
+            }
+
+            List<User> randomNeighbours = new UserDAO().getRandomNeighbours(count);
+            new VkDAO().fillNeighboursVKData(randomNeighbours);
+            request.setAttribute("randomNeighbours", randomNeighbours);
+        }
+
 
         String use_flat = request.getParameter("f");
 
@@ -60,7 +102,7 @@ public class ViewAction implements Action {
             user.setUseFlat(false);
         }
 
-        logger.info(String.format("[view] %s got user object: %s, show neighbours", sid, user));
+//        logger.info(String.format("[view] %s got user object: %s, show neighbours", sid, user));
 
         result = "view";
         return result;

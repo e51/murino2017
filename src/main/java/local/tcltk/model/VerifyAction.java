@@ -1,6 +1,7 @@
 package local.tcltk.model;
 
 import local.tcltk.HTMLHelper;
+import local.tcltk.model.dao.VkDAO;
 import local.tcltk.model.domain.User;
 import local.tcltk.exceptions.VerifyException;
 import local.tcltk.model.dao.UserDAO;
@@ -12,6 +13,8 @@ import org.json.simple.parser.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 
 import static local.tcltk.Constants.*;
 
@@ -82,7 +85,8 @@ public class VerifyAction implements Action {
                 "&redirect_uri=" + WEB_APP_VK_REDIRECT_URI +
                 "&code=" + code;
 
-        String json = HTMLHelper.getVKResponse(VK_WEB_APP_GET_TOKEN_URL + contextParams);
+        //String json = HTMLHelper.getVKResponse(VK_WEB_APP_GET_TOKEN_URL + contextParams);
+        String json = new VkDAO().getVKResponse(VK_WEB_APP_GET_TOKEN_URL + contextParams);
 
 //        logger.info("[verify] " + sid + " VK response json: " + json);
         logger.info(String.format("[verify] %s VK response json: %s", sid, json));
@@ -159,7 +163,8 @@ public class VerifyAction implements Action {
             logger.info(String.format("[verify] %s no user found in DB. A new user detected. Creating object: %s", sid, user));
 
             // send a message to make admin happy
-            HTMLHelper.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
+            //HTMLHelper.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
+            new VkDAO().notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
         }
 
         user.setToken(accessToken);
@@ -168,7 +173,8 @@ public class VerifyAction implements Action {
 
         logger.info("[verify] " + sid + " verification PASSED.");
 
-        HTMLHelper.fillUserInfo(user);
+        //HTMLHelper.fillUserInfo(user);
+        new VkDAO().fillUserInfo(user);
 
 //        response.sendRedirect(response.encodeRedirectURL(WEB_APP_VIEW_URL));
         result = "verify";

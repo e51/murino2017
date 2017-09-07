@@ -1,6 +1,7 @@
 package local.tcltk.model.emb;
 
 import local.tcltk.HTMLHelper;
+import local.tcltk.model.dao.VkDAO;
 import local.tcltk.model.domain.User;
 import local.tcltk.model.Action;
 import local.tcltk.exceptions.VerifyException;
@@ -158,7 +159,8 @@ public class VerifyActionEmbeddedApp implements Action {
             logger.info(String.format("[verify] %s no user found in DB. A new user detected. Creating object: %s", sid, user));
 
             // send a message to make admin happy
-            HTMLHelper.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
+            //HTMLHelper.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
+            new VkDAO().notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
         }
 
         user.setToken(access_token);
@@ -167,7 +169,8 @@ public class VerifyActionEmbeddedApp implements Action {
 
         logger.info(String.format("[verify] %s verification PASSED.", sid));
 
-        HTMLHelper.fillUserInfo(user);
+        //HTMLHelper.fillUserInfo(user);
+        new VkDAO().fillUserInfo(user);
 
         result = "e-verify";
         return result;
