@@ -66,6 +66,8 @@ public class VerifyActionEmbeddedApp implements Action {
         User user = null;               // user object - create user after successful authentication
         String result = null;           // return to index by default
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
+        UserDAO userDAO = new UserDAO();
+        VkDAO vkDAO = new VkDAO();
 
 //        logger.info("Request URI: " + request.getRequestURI());
 //        logger.info("Query string: " + request.getQueryString());
@@ -148,7 +150,7 @@ public class VerifyActionEmbeddedApp implements Action {
 //        user = DatabaseManager.getUserFromDB(vk_id);
 
 //        user = new UserDAO((DataSource) request.getServletContext().getAttribute("ds")).getEntityByVkId(vk_id);
-        user = new UserDAO().getEntityByVkId(vk_id);
+        user = userDAO.getEntityByVkId(vk_id);
 
         if (user == null) {
             // no user found - make a new one
@@ -160,17 +162,19 @@ public class VerifyActionEmbeddedApp implements Action {
 
             // send a message to make admin happy
             //HTMLHelper.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
-            new VkDAO().notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
+            vkDAO.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
         }
 
         user.setToken(access_token);
         user.setAppVersion(EMBEDDED_APP_USER);
         session.setAttribute("user", user);
+        session.setAttribute("userDAO", userDAO);
+        session.setAttribute("vkDAO", vkDAO);
 
         logger.info(String.format("[verify] %s verification PASSED.", sid));
 
         //HTMLHelper.fillUserInfo(user);
-        new VkDAO().fillUserInfo(user);
+        vkDAO.fillUserInfo(user);
 
         result = "e-verify";
         return result;

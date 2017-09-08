@@ -51,6 +51,20 @@ public class ProfileAction implements Action {
 
         logger.info(String.format("[profile] %s Start. Got user object: %s, got action: %s", sid, user, action));
 
+        UserDAO userDAO = (UserDAO) session.getAttribute("userDAO");
+        VkDAO vkDAO = (VkDAO) session.getAttribute("vkDAO");
+
+        if (userDAO == null) {
+            // should never happens, but just in case..
+            userDAO = new UserDAO();
+            logger.error(String.format("[ViewAction] missing userDAO session object. Create a new one.", sid));
+        }
+        if (vkDAO == null) {
+            // should never happens, but just in case..
+            vkDAO = new VkDAO();
+            logger.error(String.format("[ViewAction] missing vkDAO session object. Create a new one.", sid));
+        }
+
         if (user == null) {
             // Mustn't be here without user object in session. Have to login again - redirect to index.
 //            throw new ProfileException("[profile] " + sid + " no user object. Redirecting to index. Request: " + request.getRequestURI() + "?" + request.getQueryString() + " IP: " + request.getRemoteAddr());
@@ -105,7 +119,7 @@ public class ProfileAction implements Action {
             // valid user can be only from DB, invalid - no record in DB
 //        boolean insert = user.isValid() ? false : true;
             //boolean insert = DatabaseManager.getUserFromDB(user.getVk_id()) != null ? false : true;
-            boolean insert = new UserDAO().getEntityByVkId(user.getVk_id()) != null ? false : true;
+            boolean insert = userDAO.getEntityByVkId(user.getVk_id()) != null ? false : true;
 
             logger.info(String.format("[profile] %s Have to insert a new record? : %s", sid, insert));
 
@@ -129,14 +143,14 @@ public class ProfileAction implements Action {
                 try {
                     if (insert) {   // new user
                         //DatabaseManager.createNewUserDB(user);
-                        new UserDAO().insert(user);
+                        userDAO.insert(user);
 
                         // send a message to make admin happy
                         //HTMLHelper.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
-                        new VkDAO().notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
+                        vkDAO.notify("Новый жилец:\nhttps://vk.com/id" + user.getVk_id());
                     } else {        // update old user record
                         //DatabaseManager.updateUserInDB(user);
-                        new UserDAO().update(user);
+                        userDAO.update(user);
                     }
                 } catch (DAOException e) {
                     // error updating - return old values

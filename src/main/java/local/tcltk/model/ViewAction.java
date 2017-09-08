@@ -45,6 +45,19 @@ public class ViewAction implements Action {
         // get current session
         HttpSession session = request.getSession();
         user = (User) session.getAttribute("user");
+        UserDAO userDAO = (UserDAO) session.getAttribute("userDAO");
+        VkDAO vkDAO = (VkDAO) session.getAttribute("vkDAO");
+
+        if (userDAO == null) {
+            // should never happens, but just in case..
+            userDAO = new UserDAO();
+            logger.error(String.format("[ViewAction] missing userDAO session object. Create a new one.", sid));
+        }
+        if (vkDAO == null) {
+            // should never happens, but just in case..
+            vkDAO = new VkDAO();
+            logger.error(String.format("[ViewAction] missing vkDAO session object. Create a new one.", sid));
+        }
 
         if (user == null) {
             // Mustn't be here without user object in the session. Have to login again - redirect to /auth/
@@ -62,18 +75,18 @@ public class ViewAction implements Action {
             logger.info(String.format("[ViewAction] %s got user object: %s, preparing neighbours", sid, user));
 
             // top
-            List<User> topNeighbours = new UserDAO().getTopNeighbours(user);
-            new VkDAO().fillNeighboursVKData(topNeighbours);
+            List<User> topNeighbours = userDAO.getTopNeighbours(user);
+            vkDAO.fillNeighboursVKData(topNeighbours);
             request.setAttribute("topNeighbours", topNeighbours);
 
             // floor
-            List<User> floorNeighbours = new UserDAO().getFloorNeighbours(user);
-            new VkDAO().fillNeighboursVKData(floorNeighbours);
+            List<User> floorNeighbours = userDAO.getFloorNeighbours(user);
+            vkDAO.fillNeighboursVKData(floorNeighbours);
             request.setAttribute("floorNeighbours", floorNeighbours);
 
             // bottom
-            List<User> bottomNeighbours = new UserDAO().getBottomNeighbours(user);
-            new VkDAO().fillNeighboursVKData(bottomNeighbours);
+            List<User> bottomNeighbours = userDAO.getBottomNeighbours(user);
+            vkDAO.fillNeighboursVKData(bottomNeighbours);
             request.setAttribute("bottomNeighbours", bottomNeighbours);
 
         } else {
@@ -88,8 +101,8 @@ public class ViewAction implements Action {
                 count = 7;
             }
 
-            List<User> randomNeighbours = new UserDAO().getRandomNeighbours(count);
-            new VkDAO().fillNeighboursVKData(randomNeighbours);
+            List<User> randomNeighbours = userDAO.getRandomNeighbours(count);
+            vkDAO.fillNeighboursVKData(randomNeighbours);
             request.setAttribute("randomNeighbours", randomNeighbours);
         }
 
