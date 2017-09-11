@@ -51,6 +51,17 @@ public class ProfileAction implements Action {
 
         logger.info(String.format("[profile] %s Start. Got user object: %s, got action: %s", sid, user, action));
 
+        if (user == null) {
+            // Mustn't be here without user object in session. Have to login again - redirect to index.
+//            throw new ProfileException("[profile] " + sid + " no user object. Redirecting to index. Request: " + request.getRequestURI() + "?" + request.getQueryString() + " IP: " + request.getRemoteAddr());
+
+            throw new ProfileException(String.format("[profile] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
+
+//            logger.error(String.format("[profile] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
+//            result = "auth";
+//            return result;
+        }
+
         UserDAO userDAO = (UserDAO) session.getAttribute("userDAO");
         VkDAO vkDAO = (VkDAO) session.getAttribute("vkDAO");
 
@@ -63,17 +74,6 @@ public class ProfileAction implements Action {
             // should never happens, but just in case..
             vkDAO = new VkDAO();
             logger.error(String.format("[ViewAction] missing vkDAO session object. Create a new one.", sid));
-        }
-
-        if (user == null) {
-            // Mustn't be here without user object in session. Have to login again - redirect to index.
-//            throw new ProfileException("[profile] " + sid + " no user object. Redirecting to index. Request: " + request.getRequestURI() + "?" + request.getQueryString() + " IP: " + request.getRemoteAddr());
-
-            throw new ProfileException(String.format("[profile] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
-
-//            logger.error(String.format("[profile] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
-//            result = "auth";
-//            return result;
         }
 
         // have update attempts?

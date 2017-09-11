@@ -152,25 +152,32 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td valign='top'>
-                                    <H1><%=bottomNeighboursTitle%></H1><BR>
-                                    <c:choose>
-                                        <c:when test="${fn:length(requestScope.bottomNeighbours) gt 0}">
-                                            <c:forEach var="user" items="${requestScope.bottomNeighbours}">
-                                                <div id='block-neighbour'>
-                                                    <a href='https://vk.com/id${user.vk_id}' target='_blank'>
-                                                        <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
-                                                    </a><BR>
-                                                </div>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            пока нет соседей :(
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                            </tr>
+                            <c:choose>
+                                <c:when test="${user.floor == 1}">
+                                    <!-- nobody below us -->
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td valign='top'>
+                                            <H1><%=bottomNeighboursTitle%></H1><BR>
+                                            <c:choose>
+                                                <c:when test="${fn:length(requestScope.bottomNeighbours) gt 0}">
+                                                    <c:forEach var="user" items="${requestScope.bottomNeighbours}">
+                                                        <div id='block-neighbour'>
+                                                            <a href='https://vk.com/id${user.vk_id}' target='_blank'>
+                                                                <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
+                                                            </a><BR>
+                                                        </div>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    пока нет соседей :(
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
                             <tr>
                                 <td>
                                     <%=strProfileButton%>

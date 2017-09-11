@@ -45,6 +45,17 @@ public class ViewAction implements Action {
         // get current session
         HttpSession session = request.getSession();
         user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            // Mustn't be here without user object in the session. Have to login again - redirect to /auth/
+
+//            throw new ViewException(String.format("[view] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
+            logger.error(String.format("[ViewAction] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
+            throw new AuthException("No user object");
+//            result = "auth";
+//            return result;
+        }
+
         UserDAO userDAO = (UserDAO) session.getAttribute("userDAO");
         VkDAO vkDAO = (VkDAO) session.getAttribute("vkDAO");
 
@@ -57,16 +68,6 @@ public class ViewAction implements Action {
             // should never happens, but just in case..
             vkDAO = new VkDAO();
             logger.error(String.format("[ViewAction] missing vkDAO session object. Create a new one.", sid));
-        }
-
-        if (user == null) {
-            // Mustn't be here without user object in the session. Have to login again - redirect to /auth/
-
-//            throw new ViewException(String.format("[view] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
-            logger.error(String.format("[ViewAction] %s no user object. Request: %s?%s, remote address: %s", sid, request.getRequestURI(), request.getQueryString(), request.getRemoteAddr()));
-            throw new AuthException("No user object");
-//            result = "auth";
-//            return result;
         }
 
 

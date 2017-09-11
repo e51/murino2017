@@ -67,9 +67,9 @@
     <table width=100% height=100%>
         <tr>
             <td align=center valign=top width=30%>
-                <BR><a href='https://vk.com/id${user.vk_id}<%--=user.getVk_id()--%>'><img src='${user.vkPhoto200}<%--=user.getVkPhoto200()--%>'><BR>
+                <BR><a href='https://vk.com/id${user.vk_id}'><img src='${user.vkPhoto200}'><BR>
                 ${user.vkFirstName}<BR>
-                ${user.vkLastName}<%--=user.getVkLastName()--%></a><BR>
+                ${user.vkLastName}</a><BR>
                 <H1>Я здесь:</H1>
                 <p class='text-normal'>Корпус: ${user.building}</p>
                 <p class='text-normal'>Секция: ${user.section}</p>
@@ -128,25 +128,32 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td valign='top'>
-                                    <H1><%=bottomNeighboursTitle%></H1><BR>
-                                    <c:choose>
-                                        <c:when test="${fn:length(requestScope.bottomNeighbours) gt 0}">
-                                            <c:forEach var="user" items="${requestScope.bottomNeighbours}">
-                                                <div id='block-neighbour'>
-                                                    <a href='https://vk.com/id${user.vk_id}' target='_blank'>
-                                                        <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
-                                                    </a><BR>
-                                                </div>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            пока нет соседей :(
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                            </tr>
+                            <c:choose>
+                                <c:when test="${user.floor == 1}">
+                                    <!-- nobody below us -->
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td valign='top'>
+                                            <H1><%=bottomNeighboursTitle%></H1><BR>
+                                            <c:choose>
+                                                <c:when test="${fn:length(requestScope.bottomNeighbours) gt 0}">
+                                                    <c:forEach var="user" items="${requestScope.bottomNeighbours}">
+                                                        <div id='block-neighbour'>
+                                                            <a href='https://vk.com/id${user.vk_id}' target='_blank'>
+                                                                <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
+                                                            </a><BR>
+                                                        </div>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    пока нет соседей :(
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
                             <tr>
                                 <td>
                                     <%=strProfileButton%>

@@ -1,5 +1,6 @@
 package local.tcltk.model;
 
+import local.tcltk.model.emb.VerifyErrorActionEmbeddedApp;
 import local.tcltk.model.emb.ErrorActionEmbeddedApp;
 import local.tcltk.model.emb.VerifyActionEmbeddedApp;
 import local.tcltk.model.emb.HelpActionEmbeddedApp;
@@ -23,6 +24,7 @@ public class ActionFactory {
 
         actions.put("e-verify", new VerifyActionEmbeddedApp()); // Embedded app
         actions.put("error", new ErrorActionEmbeddedApp());     // Embedded and Mobile app
+        actions.put("auth-error", new VerifyErrorActionEmbeddedApp());     // Embedded and Mobile app
         actions.put("help", new HelpActionEmbeddedApp());       // Embedded and Mobile app
 
         actions.put("m-verify", new VerifyActionMobileApp());   // Mobile app

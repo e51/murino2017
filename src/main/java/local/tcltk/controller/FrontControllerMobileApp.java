@@ -59,7 +59,11 @@ public class FrontControllerMobileApp extends HttpServlet {
                 logger.info(String.format("[fc] %s Redirecting to %s", sid, response.encodeRedirectURL(view)));
                 response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
-        } catch (VerifyException | ProfileException | ViewException | AuthException e) {
+        } catch (VerifyException e) {
+            logger.error(String.format("[fc] %s Error: %s, %s", sid, e.getClass().getSimpleName(), e.getMessage()));
+            logger.info(String.format("[fc] %s Redirecting to the error page", sid));
+            response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + "auth-error"));
+        } catch (ProfileException | ViewException | AuthException e) {
             logger.error(String.format("[fc] %s Error: %s, %s", sid, e.getClass().getSimpleName(), e.getMessage()));
             logger.info(String.format("[fc] %s Redirecting to the error page", sid));
             response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + "error"));
