@@ -112,25 +112,29 @@
                 <c:choose>
                     <c:when test="${user.isValid()}">
                         <table width=100% height=100%>
-                            <tr>
-                                <td valign='top'>
-                                    <H1><%=topNeighboursTitle%></H1><BR>
-                                    <c:choose>
-                                        <c:when test="${fn:length(requestScope.topNeighbours) gt 0}">
-                                            <c:forEach var="user" items="${requestScope.topNeighbours}">
-                                                <div id='block-neighbour'>
-                                                    <a href='https://vk.com/id${user.vk_id}' target='_blank'>
-                                                        <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
-                                                    </a><BR>
-                                                </div>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            пока нет соседей :(
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                            </tr>
+                            <c:choose>
+                                <c:when test="${requestScope.topNeighbours != null}">
+                                    <tr>
+                                        <td valign='top'>
+                                            <H1><%=topNeighboursTitle%></H1><BR>
+                                            <c:choose>
+                                                <c:when test="${fn:length(requestScope.topNeighbours) gt 0}">
+                                                    <c:forEach var="user" items="${requestScope.topNeighbours}">
+                                                        <div id='block-neighbour'>
+                                                            <a href='https://vk.com/id${user.vk_id}' target='_blank'>
+                                                                <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
+                                                            </a><BR>
+                                                        </div>
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    пока нет соседей :(
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
+                                </c:when>
+                            </c:choose>
                             <tr>
                                 <td valign='top'>
                                     <H1><%=floorNeighboursTitle%></H1><BR>
@@ -153,10 +157,7 @@
                                 </td>
                             </tr>
                             <c:choose>
-                                <c:when test="${user.floor == 1}">
-                                    <!-- nobody below us -->
-                                </c:when>
-                                <c:otherwise>
+                                <c:when test="${requestScope.bottomNeighbours != null}">
                                     <tr>
                                         <td valign='top'>
                                             <H1><%=bottomNeighboursTitle%></H1><BR>
@@ -176,7 +177,7 @@
                                             </c:choose>
                                         </td>
                                     </tr>
-                                </c:otherwise>
+                                </c:when>
                             </c:choose>
                             <tr>
                                 <td>

@@ -119,26 +119,30 @@
                         <!--div class="block-checkbox">
                             <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/> Учитывать номер квартиры
                         </div-->
-                        <div class="block-section">
-                            <div class="block-section-title">
-                                <%=topNeighboursTitle%>
-                            </div>
-                            <c:choose>
-                                <c:when test="${fn:length(requestScope.topNeighbours) gt 0}">
-                                    <c:forEach var="user" items="${requestScope.topNeighbours}">
-                                        <div id='block-neighbour'>
-                                            <a href='https://vk.com/id${user.vk_id}' target='_blank'>
-                                                <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
-                                            </a><BR>
-                                        </div>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    пока нет соседей :(
-                                </c:otherwise>
-                            </c:choose>
-                            <BR>
-                        </div>
+                        <c:choose>
+                            <c:when test="${requestScope.topNeighbours != null}">
+                                <div class="block-section">
+                                    <div class="block-section-title">
+                                        <%=topNeighboursTitle%>
+                                    </div>
+                                    <c:choose>
+                                        <c:when test="${fn:length(requestScope.topNeighbours) gt 0}">
+                                            <c:forEach var="user" items="${requestScope.topNeighbours}">
+                                                <div id='block-neighbour'>
+                                                    <a href='https://vk.com/id${user.vk_id}' target='_blank'>
+                                                        <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
+                                                    </a><BR>
+                                                </div>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            пока нет соседей :(
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <BR>
+                                </div>
+                            </c:when>
+                        </c:choose>
                         <div class="block-section">
                             <div class="block-section-title">
                                 <strong><%=floorNeighboursTitle%></strong>
@@ -162,10 +166,7 @@
                             </div><BR>
                         </div>
                         <c:choose>
-                            <c:when test="${user.floor == 1}">
-                                <!-- nobody below us -->
-                            </c:when>
-                            <c:otherwise>
+                            <c:when test="${requestScope.bottomNeighbours != null}">
                                 <div class="block-section">
                                     <div class="block-section-title">
                                         <strong><%=bottomNeighboursTitle%></strong>
@@ -186,9 +187,8 @@
                                     </c:choose>
                                     <BR>
                                 </div>
-                            </c:otherwise>
+                            </c:when>
                         </c:choose>
-
                         <%=strProfileButton%>
                     </c:when>
                     <c:otherwise>

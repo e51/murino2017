@@ -76,8 +76,11 @@ public class ViewAction implements Action {
             logger.info(String.format("[ViewAction] %s got user object: %s, preparing neighbours", sid, user));
 
             // top
-            List<User> topNeighbours = userDAO.getTopNeighbours(user);
-            vkDAO.fillNeighboursVKData(topNeighbours);
+            List<User> topNeighbours = null;
+            if (user.getFloor() != (STRUCTURE.get(new Integer(user.getBuilding()))).getFloorsCountBySection()[user.getSection() - 1]) {
+                topNeighbours = userDAO.getTopNeighbours(user);
+                vkDAO.fillNeighboursVKData(topNeighbours);
+            }
             request.setAttribute("topNeighbours", topNeighbours);
 
             // floor
@@ -86,9 +89,13 @@ public class ViewAction implements Action {
             request.setAttribute("floorNeighbours", floorNeighbours);
 
             // bottom
-            List<User> bottomNeighbours = userDAO.getBottomNeighbours(user);
-            vkDAO.fillNeighboursVKData(bottomNeighbours);
+            List<User> bottomNeighbours = null;
+            if (user.getFloor() != 1) {
+                bottomNeighbours = userDAO.getBottomNeighbours(user);
+                vkDAO.fillNeighboursVKData(bottomNeighbours);
+            }
             request.setAttribute("bottomNeighbours", bottomNeighbours);
+
 
         } else {
             // a new user - show random neighbours
