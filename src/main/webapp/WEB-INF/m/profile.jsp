@@ -50,7 +50,7 @@
                             Например:
                         </div>
                         <div class="profile-line">
-                            &nbsp;Корпус (по ДДУ)<font color="red"><b>*</b></font>: <input type='text' name='building' value='<%=user.getBuilding()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
+                            &nbsp;Корпус<font color="red"><b>*</b></font>: <input type='text' name='building' value='<%=user.getBuilding()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1
                         </div>
                         <div class="profile-line">
                             <p>&nbsp;Секция<font color="red"><b>*</b></font>: <input type='text' name='section' value='<%=user.getSection()%>' size='9' class="input-style"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7
@@ -66,7 +66,7 @@
                             <input type='submit' value=' Сохранить ' class='submit-profile'>
                         </div>
                         <BR><BR><BR>
-                        <!--div>При заполнении используйте <strong>строительный</strong> адрес квартиры.</div-->
+                        <div>PS Корпус по ДДУ</div>
                         <BR>
                     </form>
                     <BR>
