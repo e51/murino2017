@@ -1,12 +1,12 @@
 package local.tcltk;
 
+import local.tcltk.model.dao.DatabaseManager;
+import local.tcltk.model.domain.Building;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-
-import java.util.LinkedList;
 
 import static local.tcltk.Constants.STRUCTURE;
 
@@ -24,6 +24,9 @@ public class Config implements ServletContextListener {
             STRUCTURE.put(new Integer(1), new Building(1, 7, new Integer[]{12, 12, 12, 12, 12, 12, 12}, 15));
             STRUCTURE.put(new Integer(2), new Building(2, 8, new Integer[]{12, 12, 12, 12, 12, 12, 12, 12}, 15));
         }
+
+        // set application variable - DataSource ds
+        sce.getServletContext().setAttribute("ds", DatabaseManager.getDataSource());
 
         logger.info("STRUCTURE: " + STRUCTURE);
     }

@@ -1,10 +1,11 @@
-package local.tcltk.controller.emb;
+package local.tcltk.model.emb.mobile;
 
 import local.tcltk.HTMLHelper;
-import local.tcltk.User;
-import local.tcltk.controller.Action;
+import local.tcltk.model.dao.VkDAO;
+import local.tcltk.model.domain.User;
+import local.tcltk.model.Action;
 import local.tcltk.exceptions.VerifyException;
-import local.tcltk.model.DatabaseManager;
+import local.tcltk.model.dao.UserDAO;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
@@ -13,15 +14,14 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 
 import static local.tcltk.Constants.*;
 
-public class VerifyActionEmbeddedApp implements Action {
-    private static final Logger logger = Logger.getLogger(VerifyActionEmbeddedApp.class);
+public class VerifyActionMobileApp implements Action {
+    private static final Logger logger = Logger.getLogger(VerifyActionMobileApp.class);
 
     private boolean isAuthPassed(HttpServletRequest request) throws NoSuchAlgorithmException, InvalidKeyException {
         StringBuilder data = new StringBuilder();
@@ -65,8 +65,10 @@ public class VerifyActionEmbeddedApp implements Action {
         User user = null;               // user object - create user after successful authentication
         String result = null;           // return to index by default
         String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
+        UserDAO userDAO = new UserDAO();
+        VkDAO vkDAO = new VkDAO();
 
-//        logger.info("Request URI: " + request.getRequestURI());
+        //        logger.info("Request URI: " + request.getRequestURI());
 //        logger.info("Query string: " + request.getQueryString());
 //        logger.info("SID: " + request.getSession().getId());
 //        logger.info("Plane URL: " );
@@ -144,7 +146,9 @@ public class VerifyActionEmbeddedApp implements Action {
 //        logger.info("[verify] {" + sid + "} looking for user from DB with vk_id = " + vk_id);
         logger.info(String.format("[verify] %s looking for user from DB with vk_id: %d", sid, vk_id));
         // get user with such id from DB
-        user = DatabaseManager.getUserFromDB(vk_id);
+        //user = DatabaseManager.getUserFromDB(vk_id);
+        user = userDAO.getEntityByVkId(vk_id);
+
         if (user == null) {
             // no user found - make a new one
 
@@ -154,18 +158,22 @@ public class VerifyActionEmbeddedApp implements Action {
             logger.info(String.format("[verify] %s no user found in DB. A new user detected. Creating object: %s", sid, user));
 
             // send a message to make admin happy
-            HTMLHelper.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
+            //HTMLHelper.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
+            vkDAO.notify("Новый посетитель:\nhttps://vk.com/id" + vk_id);
         }
 
         user.setToken(access_token);
-        user.setAppVersion(EMBEDDED_APP_USER);
+        user.setAppVersion(MOBILE_APP_USER);
         session.setAttribute("user", user);
+        session.setAttribute("userDAO", userDAO);
+        session.setAttribute("vkDAO", vkDAO);
 
         logger.info(String.format("[verify] %s verification PASSED.", sid));
 
-        HTMLHelper.fillUserInfo(user);
+        //HTMLHelper.fillUserInfo(user);
+        vkDAO.fillUserInfo(user);
 
-        result = "e-verify";
+        result = "m-verify";
         return result;
     }
 }

@@ -1,4 +1,4 @@
-package local.tcltk;
+package local.tcltk.model.domain;
 
 import java.util.Arrays;
 import java.util.Collections;

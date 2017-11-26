@@ -13,7 +13,7 @@
     User user = null;
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-    logger.info(String.format("[m/error] %s show error page", sid));
+    logger.info(String.format("[error] %s show error page", sid));
     logger.info(String.format("User Agent: %s", request.getHeader("User-Agent")));
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -31,7 +31,7 @@
                 Пожалуйста, скорее сообщите мне об этом, и я всё исправлю.<BR>
             </p>
             <BR><BR>
-            Обратная связь: <a href="https://m.vk.com/id<%=ADMIN_VK_ID%>" target="_blank">мой vk</a>
+            Обратная связь: <a href="https://vk.com/id<%=ADMIN_VK_ID%>" target="_blank">мой vk</a>
         </div>
     </div>
 </div>

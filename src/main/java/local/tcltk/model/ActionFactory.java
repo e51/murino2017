@@ -1,9 +1,10 @@
-package local.tcltk.controller;
+package local.tcltk.model;
 
-import local.tcltk.controller.emb.ErrorActionEmbeddedApp;
-import local.tcltk.controller.emb.VerifyActionEmbeddedApp;
-import local.tcltk.controller.emb.HelpActionEmbeddedApp;
-import local.tcltk.controller.emb.mobile.VerifyActionMobileApp;
+import local.tcltk.model.emb.VerifyErrorActionEmbeddedApp;
+import local.tcltk.model.emb.ErrorActionEmbeddedApp;
+import local.tcltk.model.emb.VerifyActionEmbeddedApp;
+import local.tcltk.model.emb.HelpActionEmbeddedApp;
+import local.tcltk.model.emb.mobile.VerifyActionMobileApp;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class ActionFactory {
 
         actions.put("e-verify", new VerifyActionEmbeddedApp()); // Embedded app
         actions.put("error", new ErrorActionEmbeddedApp());     // Embedded and Mobile app
+        actions.put("auth-error", new VerifyErrorActionEmbeddedApp());     // Embedded and Mobile app
         actions.put("help", new HelpActionEmbeddedApp());       // Embedded and Mobile app
 
         actions.put("m-verify", new VerifyActionMobileApp());   // Mobile app

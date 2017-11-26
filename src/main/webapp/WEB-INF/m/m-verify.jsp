@@ -3,8 +3,8 @@
 <%@ page import="static local.tcltk.Constants.SID_SIZE" %>
 <%@ page import="static local.tcltk.Constants.SID_PATTERN" %>
 <%@ page import="static local.tcltk.Constants.*" %>
-<%@ page import="local.tcltk.model.DatabaseManager" %>
-<%@ page import="local.tcltk.User" %>
+<%@ page import="local.tcltk.model.dao.DatabaseManager" %>
+<%@ page import="local.tcltk.model.domain.User" %>
 <%--
   Created by IntelliJ IDEA.
   User: user

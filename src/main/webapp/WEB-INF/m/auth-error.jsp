@@ -9,11 +9,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%
-    Logger logger = Logger.getLogger("error.jsp");
+    Logger logger = Logger.getLogger("auth-error.jsp");
     User user = null;
     String sid = String.format(SID_PATTERN, request.getSession().getId().substring(request.getSession().getId().length() - SID_SIZE));
 
-    logger.info(String.format("[m/error] %s show error page", sid));
+    logger.info(String.format("[m/auth-error] %s show error page", sid));
     logger.info(String.format("User Agent: %s", request.getHeader("User-Agent")));
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -25,11 +25,12 @@
 <div class="index-outer">
     <div class="index-middle">
         <div class="index-inner">
-            <H1>Произошла ошибка :(</H1>
-            <p class="text-normal"><BR><BR>
-                Дальнейшая работа приложения невозможна.<BR>
-                Пожалуйста, скорее сообщите мне об этом, и я всё исправлю.<BR>
-            </p>
+            <H1>Не можем опознать Вас :(</H1>
+            <div class="div-help-page">
+                <p><BR><BR>
+                    Возможно, Вы пытаетесь зайти от имени сообщества, а не от имени своей личной странички.<BR>
+                </p>
+            </div>
             <BR><BR>
             Обратная связь: <a href="https://m.vk.com/id<%=ADMIN_VK_ID%>" target="_blank">мой vk</a>
         </div>

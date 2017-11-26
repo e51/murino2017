@@ -1,8 +1,10 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="local.tcltk.HTMLHelper" %>
-<%@ page import="local.tcltk.User" %>
+<%@ page import="local.tcltk.model.domain.User" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="local.tcltk.model.DatabaseManager" %>
+<%@ page import="local.tcltk.model.dao.DatabaseManager" %>
 <%@ page import="javax.swing.text.html.HTML" %>
 <%--
   Created by IntelliJ IDEA.
@@ -42,9 +44,8 @@
     logger.info(String.format("[m/view.jsp] %s show page", sid));
 %>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page isELIgnored="false"%>
+<%@ page isELIgnored="false" %>
 <!--!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -65,7 +66,7 @@
     <meta name="description" content="" />
     <link href="style.css" rel="stylesheet"-->
 
-    <%@include file = "/WEB-INF/includes/head_part.jspf"%>
+    <%@ include file = "/WEB-INF/includes/head_part.jspf" %>
 
     <script>
         function use_flat_func(){
@@ -86,19 +87,19 @@
 
     <header class="header">
         <div class="header-user-data">
-            <div class="photo-block"><img src='<%=user.getVkPhoto100()%>'></div>
+            <div class="photo-block"><img src='${user.vkPhoto100}<%--=user.getVkPhoto100()--%>'></div>
             <div class="address-block">
                 <div class="address-line">
-                    Корпус: <%=user.getBuilding()%>
+                    Корпус: ${user.building}
                 </div>
                 <div class="address-line">
-                    Секция: <%=user.getSection()%>
+                    Секция: ${user.section}
                 </div>
                 <div class="address-line">
-                    Этаж: <%=user.getFloor()%>
+                    Этаж: ${user.floor}
                 </div>
                 <div class="address-line">
-                    Квартира: <%=strFlat%>
+                    Квартира: ${user.flat}
                 </div>
             </div>
 
@@ -111,32 +112,83 @@
     </header><!-- .header-->
 
     <div class="middle">
-
         <div class="container">
             <main class="content">
                 <c:choose>
                     <c:when test="${user.isValid()}">
-                        <div class="block-checkbox">
+                        <!--div class="block-checkbox">
                             <input type='checkbox' name='use_flat' id='use_flat' value='1' onclick='return use_flat_func();' <%=flatCheckbox%>/> Учитывать номер квартиры
-                        </div>
-                        <div class="block-section">
-                            <div class="block-section-title">
-                                <%=topNeighboursTitle%>
-                            </div>
-                            <%=HTMLHelper.getNeighboursTopHTML(user)%><BR>
-                        </div>
+                        </div-->
+                        <c:choose>
+                            <c:when test="${requestScope.topNeighbours != null}">
+                                <div class="block-section">
+                                    <div class="block-section-title">
+                                        <%=topNeighboursTitle%>
+                                    </div>
+                                    <c:choose>
+                                        <c:when test="${fn:length(requestScope.topNeighbours) gt 0}">
+                                            <c:forEach var="user" items="${requestScope.topNeighbours}">
+                                                <div id='block-neighbour'>
+                                                    <a href='https://vk.com/id${user.vk_id}' target='_blank'>
+                                                        <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
+                                                    </a><BR>
+                                                </div>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            пока нет соседей :(
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <BR>
+                                </div>
+                            </c:when>
+                        </c:choose>
                         <div class="block-section">
                             <div class="block-section-title">
                                 <strong><%=floorNeighboursTitle%></strong>
                             </div>
-                            <div id='container'><%=HTMLHelper.getNeighboursSectionHTML(user)%></div><BR>
+                            <div id='container'>
+                                <%--=HTMLHelper.getNeighboursSectionHTML(user)--%>
+                                <c:choose>
+                                    <c:when test="${fn:length(requestScope.floorNeighbours) gt 0}">
+                                        <c:forEach var="user" items="${requestScope.floorNeighbours}">
+                                            <div id='block-neighbour'>
+                                                <a href='https://vk.com/id${user.vk_id}' target='_blank'>
+                                                    <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
+                                                </a><BR>
+                                            </div>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        пока нет соседей :(
+                                    </c:otherwise>
+                                </c:choose>
+                            </div><BR>
                         </div>
-                        <div class="block-section">
-                            <div class="block-section-title">
-                                <strong><%=bottomNeighboursTitle%></strong>
-                            </div>
-                            <%=HTMLHelper.getNeighboursBottomHTML(user)%><BR>
-                        </div>
+                        <c:choose>
+                            <c:when test="${requestScope.bottomNeighbours != null}">
+                                <div class="block-section">
+                                    <div class="block-section-title">
+                                        <strong><%=bottomNeighboursTitle%></strong>
+                                    </div>
+                                    <c:choose>
+                                        <c:when test="${fn:length(requestScope.bottomNeighbours) gt 0}">
+                                            <c:forEach var="user" items="${requestScope.bottomNeighbours}">
+                                                <div id='block-neighbour'>
+                                                    <a href='https://vk.com/id${user.vk_id}' target='_blank'>
+                                                        <img src='${user.vkPhoto100}' class='round-neighbour-photo'><BR>${user.vkFirstName}<BR>${user.vkLastName}
+                                                    </a><BR>
+                                                </div>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            пока нет соседей :(
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <BR>
+                                </div>
+                            </c:when>
+                        </c:choose>
                         <%=strProfileButton%>
                     </c:when>
                     <c:otherwise>
@@ -144,14 +196,11 @@
                                 <div class="block-section-title">
                                     <strong>Возможные соседи:</strong>
                                 </div>
-                                <!--table height="240" width="100%"><tr><td class="view-new-user-block"-->
                                 <div class="block-neighbours-promo">
-                                    <%=HTMLHelper.getRandomNeighboursHTML(user)%>
+                                    <c:forEach var="user" items="${requestScope.randomNeighbours}">
+                                        <div class='block-neighbour-promo'><img src='${user.vkPhoto100}' class='blur'><BR></div>
+                                    </c:forEach>
                                 </div>
-                                <!--BR>
-                                Здесь будут отображаться Ваши соседи после ввода данных.
-
-                                <BR><BR-->
                                 <!--BR><BR-->
                                 <form action='<%=response.encodeURL(MOBILE_APP_PROFILE_URL)%>' method='post' align=center>
                                     <input type='submit' value='Найти соседей' class='submit-data-btn2'>
@@ -160,11 +209,8 @@
                                 <!--BR><BR-->
 
                             </div>
-                                <!--/td></tr></table-->
-
                     </c:otherwise>
                 </c:choose>
-
 
             </main><!-- .content -->
         </div><!-- .container-->
@@ -180,9 +226,7 @@
 </div><!-- .wrapper -->
 
 <footer class="footer">
-    <!--Есть вопросы?<BR><a href='https://vk.com/id<%=ADMIN_VK_ID%>' target=_blank>Пишите</a-->
-    <a href='https://vk.com/write<%=ADMIN_VK_ID%>' target=_blank>Задать вопрос</a>
-
+    <a href='https://m.vk.com/write<%=ADMIN_VK_ID%>' target=_blank>Задать вопрос</a>
 </footer><!-- .footer -->
 
 

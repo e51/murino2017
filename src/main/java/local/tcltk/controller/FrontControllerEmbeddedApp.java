@@ -1,8 +1,7 @@
-package local.tcltk.controller.emb.mobile;
+package local.tcltk.controller;
 
-import local.tcltk.Building;
-import local.tcltk.controller.Action;
-import local.tcltk.controller.ActionFactory;
+import local.tcltk.model.Action;
+import local.tcltk.model.ActionFactory;
 import local.tcltk.exceptions.AuthException;
 import local.tcltk.exceptions.ProfileException;
 import local.tcltk.exceptions.VerifyException;
@@ -18,9 +17,9 @@ import java.io.IOException;
 
 import static local.tcltk.Constants.*;
 
-@WebServlet(name = "FrontControllerMobileApp", urlPatterns = {"/m/*"})
-public class FrontControllerMobileApp extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(FrontControllerMobileApp.class);
+@WebServlet(name = "FrontControllerEmbeddedApp", urlPatterns = {"/e/*"})
+public class FrontControllerEmbeddedApp extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(FrontControllerEmbeddedApp.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -54,20 +53,24 @@ public class FrontControllerMobileApp extends HttpServlet {
             view = action.execute(request, response);
 
             if (view.equals(ActionFactory.getActionPart(request))) {
-                logger.info(String.format("[fc] %s Forwarding to %s", sid, view));
-                request.getRequestDispatcher("/WEB-INF/m/" + view + ".jsp").forward(request, response);
+                logger.info(String.format("[fc] %s Forwarding to %s.jsp", sid, view));
+                request.getRequestDispatcher("/WEB-INF/e/" + view + ".jsp").forward(request, response);
             } else {
                 logger.info(String.format("[fc] %s Redirecting to %s", sid, response.encodeRedirectURL(view)));
-                response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
+                response.sendRedirect(response.encodeRedirectURL(EMBEDDED_APP_ROOT_URL + view + "/")); // We'd like to fire redirect in case of a view change as result of the action (PRG pattern).
             }
-        } catch (VerifyException | ProfileException | ViewException | AuthException e) {
+        } catch (VerifyException e) {
             logger.error(String.format("[fc] %s Error: %s, %s", sid, e.getClass().getSimpleName(), e.getMessage()));
             logger.info(String.format("[fc] %s Redirecting to the error page", sid));
-            response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + "error"));
+            response.sendRedirect(response.encodeRedirectURL(EMBEDDED_APP_ROOT_URL + "auth-error"));
+        } catch (ProfileException | ViewException | AuthException e) {
+            logger.error(String.format("[fc] %s Error: %s, %s", sid, e.getClass().getSimpleName(), e.getMessage()));
+            logger.info(String.format("[fc] %s Redirecting to the error page", sid));
+            response.sendRedirect(response.encodeRedirectURL(EMBEDDED_APP_ROOT_URL + "error"));
         } catch (Exception e) {
             logger.error(String.format("[fc] %s Execution action failed: %s, %s, remote address: %s, requestURI: %s, action: %s, view: %s", sid, e.getClass().getSimpleName(), e.getMessage(), request.getRemoteAddr(), request.getRequestURI(), action, view));
             logger.info(String.format("[fc] %s Redirecting to the error page", sid));
-            response.sendRedirect(response.encodeRedirectURL(MOBILE_APP_ROOT_URL + "error"));
+            response.sendRedirect(response.encodeRedirectURL(EMBEDDED_APP_ROOT_URL + "error"));
         }
     }
 }

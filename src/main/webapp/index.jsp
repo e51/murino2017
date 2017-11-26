@@ -1,7 +1,7 @@
 <%@ page import="static local.tcltk.Constants.*" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="local.tcltk.model.DatabaseManager" %>
-<%@ page import="local.tcltk.User" %>
+<%@ page import="local.tcltk.model.dao.DatabaseManager" %>
+<%@ page import="local.tcltk.model.domain.User" %>
 <%@ page import="java.util.Enumeration" %>
 <%
     Logger logger = Logger.getLogger("index.jsp");

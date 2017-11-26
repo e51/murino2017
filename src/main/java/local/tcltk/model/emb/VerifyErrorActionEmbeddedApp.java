@@ -1,13 +1,13 @@
-package local.tcltk.controller.emb;
+package local.tcltk.model.emb;
 
-import local.tcltk.controller.Action;
+import local.tcltk.model.Action;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ErrorActionEmbeddedApp implements Action {
+public class VerifyErrorActionEmbeddedApp implements Action {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return "error";
+        return "auth-error";
     }
 }

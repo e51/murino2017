@@ -1,7 +1,6 @@
-package local.tcltk.model;
+package local.tcltk.model.dao;
 
-import local.tcltk.User;
-import local.tcltk.exceptions.DAOException;
+import local.tcltk.model.domain.User;
 import org.apache.log4j.Logger;
 
 import javax.naming.Context;
@@ -39,6 +38,10 @@ public class DatabaseManager {
         }
     }
 
+    public static DataSource getDataSource() {
+        return ds;
+    }
+
     /**
      * Get connection to the Database
      * @return Connection
@@ -59,6 +62,7 @@ public class DatabaseManager {
      * Insert a new user record in the Database
      * @param user
      */
+/*
     public static void createNewUserDB(User user) throws SQLException, ClassNotFoundException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (Statement statement = connection.createStatement()) {
@@ -84,11 +88,13 @@ public class DatabaseManager {
             throw e;
         }
     }
+*/
 
     /**
      * Update a user database record
      * @param user
      */
+/*
     public static void updateUserInDB(User user) throws SQLException, ClassNotFoundException {
         try (Connection connection = DatabaseManager.getConnection()) {
             try (Statement statement = connection.createStatement()) {
@@ -113,12 +119,14 @@ public class DatabaseManager {
             throw e;
         }
     }
+*/
 
     /**
      * Find user in database by vk_id
      * @param vk_id
      * @return User
      */
+/*
     public static User getUserFromDB(long vk_id) {
         long time1 = System.nanoTime();
         User user = null;
@@ -154,7 +162,9 @@ public class DatabaseManager {
         logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
         return user;
     }
+*/
 
+/*
     public static List<User> getRandomUsersFromDB(int count) {
         long time1 = System.nanoTime();
         List<User> users = new ArrayList<>();
@@ -191,6 +201,7 @@ public class DatabaseManager {
         logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
         return users;
     }
+*/
 
     /**
      * Get neighbours list to the user with sql query
@@ -198,6 +209,7 @@ public class DatabaseManager {
      * @param sql
      * @return
      */
+/*
     public static List<User> getNeighboursFromDB(User user, String sql) {
         long time1 = System.nanoTime();
         List<User> neighbours = new ArrayList<>();
@@ -232,6 +244,7 @@ public class DatabaseManager {
         logger.info(String.format("Elapsed time: %dms", (System.nanoTime() - time1) / 1_000_000));
         return neighbours;
     }
+*/
 
     /**
      * Get count of elements for some sql query

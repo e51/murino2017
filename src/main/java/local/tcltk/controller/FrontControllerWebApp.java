@@ -1,10 +1,8 @@
 package local.tcltk.controller;
 
-import local.tcltk.Building;
-import local.tcltk.exceptions.AuthException;
-import local.tcltk.exceptions.ProfileException;
-import local.tcltk.exceptions.VerifyException;
-import local.tcltk.exceptions.ViewException;
+import local.tcltk.exceptions.*;
+import local.tcltk.model.Action;
+import local.tcltk.model.ActionFactory;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -16,7 +14,7 @@ import java.io.IOException;
 
 import static local.tcltk.Constants.*;
 
-@WebServlet(name = "FrontController", urlPatterns = {"/verify", "/profile", "/view", "/auth", "/profile/", "/view/", "/auth/"})
+@WebServlet(name = "FrontController", urlPatterns = {"/verify", "/profile", "/view", "/auth", "/error", "/profile/", "/view/", "/auth/"})
 public class FrontControllerWebApp extends HttpServlet {
     private static final Logger logger = Logger.getLogger(FrontControllerWebApp.class);
 
@@ -72,6 +70,10 @@ public class FrontControllerWebApp extends HttpServlet {
             logger.error(e.getMessage());
             logger.info(String.format("[fc] %s Redirecting to index: %s", sid, response.encodeRedirectURL(WEB_APP_ROOT_URL)));
             response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL));
+        } catch (DAOException e) {
+            logger.error(e.getMessage());
+            logger.info(String.format("[fc] %s Redirecting to the error page", sid));
+            response.sendRedirect(response.encodeRedirectURL(WEB_APP_ROOT_URL + "error"));
         } catch (AuthException e) {
             logger.error(e.getMessage());
             logger.info(String.format("[fc] %s Redirecting to auth: %s", sid, response.encodeRedirectURL(WEB_APP_AUTH_URL)));
