@@ -1,4 +1,5 @@
 target/
 .idea
 src/main/java/local/tcltk/Constants.java
+src/main/webapp/META-INF/
 *.iml
